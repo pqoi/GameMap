@@ -71,7 +71,7 @@ public class Map {
         Random random = new Random();
 
         System.out.println("Welcome to");
-        System.out.println("https://patorjk.com/text-color-fader/#google_vignette");
+        System.out.println("<div><span style=\"color: #fff800\">I</span><span style=\"color: #fff808\"> </span><span style=\"color: #fff80f\">w</span><span style=\"color: #fff917\">a</span><span style=\"color: #fff91e\">n</span><span style=\"color: #fff926\">t</span><span style=\"color: #fff92e\"> </span><span style=\"color: #fff935\">t</span><span style=\"color: #fffa3d\">o</span><span style=\"color: #fffa44\"> </span><span style=\"color: #fffa4c\">b</span><span style=\"color: #fffa53\">e</span><span style=\"color: #fffa59\"> </span><span style=\"color: #fffb60\">E</span><span style=\"color: #fffb66\">n</span><span style=\"color: #fffb6d\">g</span><span style=\"color: #fffb74\">i</span><span style=\"color: #fffb7a\">n</span><span style=\"color: #fffc81\">e</span><span style=\"color: #fffc87\">e</span><span style=\"color: #fffc8e\">r</span></div>");
 
 
         System.out.println(Map.showMap("Home"));
