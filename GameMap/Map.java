@@ -70,10 +70,43 @@ public class Map {
         Scanner scan = new Scanner(System.in);
         Random random = new Random();
 
-        System.out.println("Welcome to");
-        System.out.println("<div><span style=\"color: #fff800\">I</span><span style=\"color: #fff808\"> </span><span style=\"color: #fff80f\">w</span><span style=\"color: #fff917\">a</span><span style=\"color: #fff91e\">n</span><span style=\"color: #fff926\">t</span><span style=\"color: #fff92e\"> </span><span style=\"color: #fff935\">t</span><span style=\"color: #fffa3d\">o</span><span style=\"color: #fffa44\"> </span><span style=\"color: #fffa4c\">b</span><span style=\"color: #fffa53\">e</span><span style=\"color: #fffa59\"> </span><span style=\"color: #fffb60\">E</span><span style=\"color: #fffb66\">n</span><span style=\"color: #fffb6d\">g</span><span style=\"color: #fffb74\">i</span><span style=\"color: #fffb7a\">n</span><span style=\"color: #fffc81\">e</span><span style=\"color: #fffc87\">e</span><span style=\"color: #fffc8e\">r</span></div>");
+         // ANSI color codes for different shades of yellow
+         String[] colors = {
+            "\u001B[38;5;226m", // Bright yellow
+            "\u001B[38;5;220m", // Gold
+            "\u001B[38;5;214m", // Orange-yellow
+            "\u001B[38;5;208m", // Dark orange
+            "\u001B[38;5;202m"  // Reddish-orange
+        };
+
+        // Reset color
+        String reset = "\u001B[0m";
+
+        // Text with colors
+        String text = colors[0] + "W" +     
+                      colors[1] + "E" + 
+                      colors[2] + "L" + 
+                      colors[3] + "C" + 
+                      colors[4] + "O" + 
+                      colors[0] + "M" + 
+                      colors[1] + "E" + 
+                      colors[2] + " " + 
+                      colors[3] + "T" + 
+                      colors[4] + "O" + 
+                      
+                      reset; // Reset color after text
 
 
+
+        System.out.println("                                                 "+text);
+        System.out.println("  ___                     _   _        _                      _____             _                      ");
+        System.out.println(" |_ _|_      ____ _ _ __ | |_| |_ ___ | |__   ___  __ _ _ __ | ____|_ __   __ _(_)_ __   ___  ___ _ __ ");
+        System.out.println("  | |\\ \\ /\\ / / _` | '_ \\| __| __/ _ \\| '_ \\ / _ \\/ _` | '_ \\|  _| | '_ \\ / _` | | '_ \\ / _ \\/ _ \\ '__|");
+        System.out.println("  | | \\ V  V / (_| | | | | |_| || (_) | |_) |  __/ (_| | | | | |___| | | | (_| | | | | |  __/  __/ |   ");
+        System.out.println(" |___| \\_/\\_/ \\__,_|_| |_|\\__|\\__\\___/|_.__/ \\___|\\__,_|_| |_|_____|_| |_|\\__, |_|_| |_|\\___|\\___|_|   ");
+        System.out.println("                                                                          |___/                        ");
+        
+        
         System.out.println(Map.showMap("Home"));
     }
 }
