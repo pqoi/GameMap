@@ -69,6 +69,11 @@ public class Map {
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
         Random random = new Random();
+
+        System.out.println("Welcome to");
+        System.out.println("https://patorjk.com/text-color-fader/#google_vignette");
+
+
         System.out.println(Map.showMap("Home"));
     }
 }
