@@ -71,7 +71,7 @@ public class Map {
 
     }
     static void introduction(){
-        println("                               Coming from a poor family, I have always dreamed of becoming an engineer to provide a better life for my loved ones. \" +\r\n" + //
+        println("                                Coming from a poor family, I have always dreamed of becoming an engineer to provide a better life for my loved ones. \" +\r\n" + //
                         "                       \"Today marks a crucial step toward that dream—the entrance exam for a prestigious public university. \" +\r\n" + //
                         "                       \"To achieve my goal, I must pass a series of challenging exams that will test my knowledge and skills. \" +\r\n" + //
                         "                       \"The road ahead won’t be easy, but I am determined to succeed.");
