@@ -120,10 +120,25 @@ public class Map {
 
             switch (choice) {
                 case 1:
-                    println("Starting the game...");
+                    
                     println("Enter Username:");
-                    String username = scan.next();
-                    introduction();
+                    String username = scan.next(); // Get user input for username
+                    
+                    println(username + ", welcome to the game!");
+                    println("Starting the game...");
+                    introduction(); // Call introduction method
+                    
+                    println("Your first choice is Engineering.");
+                    println("Please enter your second and third choice of courses:");
+                    
+                    String choice2 = scan.next(); // Get second choice
+                    String choice3 = scan.next(); // Get third choice
+                    
+                    println("Your chosen courses:");
+                    println("1. Engineering");
+                    println("2. " + choice2);
+                    println("3. " + choice3);
+                    
                     
                     // Generate a random starting room
                     String[] mapLoc = {"Room 1", "Room 2", "Room 3", "Room 4", "Room 5"};
