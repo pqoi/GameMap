@@ -83,33 +83,21 @@ public class Map {
         
     }
     static void printWelcomeText() {
-        // ANSI color codes for different shades of yellow
-        String[] colors = {
-            "\u001B[38;5;226m", // Bright yellow
-            "\u001B[38;5;220m", // Gold
-            "\u001B[38;5;214m", // Orange-yellow
-            "\u001B[38;5;208m", // Dark orange
-            "\u001B[38;5;202m"  // Reddish-orange
-        };
-    
-        // Reset color
-        String reset = "\u001B[0m";
-    
-        // Text with colors
-        String text = colors[0] + "W" +     
-                      colors[1] + "E" + 
-                      colors[2] + "L" + 
-                      colors[3] + "C" + 
-                      colors[4] + "O" + 
-                      colors[0] + "M" + 
-                      colors[1] + "E" + 
-                      colors[2] + " " + 
-                      colors[3] + "T" + 
-                      colors[4] + "O" + 
-                      reset; // Reset color after text
-        // Print the text
-        println(text);
+        println("\u001B[33m"); // Yellow color
+        println("██     ██ ███████ ██       ██████  ██████  ███    ███ ███████     ");
+        println("██     ██ ██      ██      ██      ██    ██ ████  ████ ██          ");
+        println("██  █  ██ █████   ██      ██      ██    ██ ██ ████ ██ █████        ");
+        println("██ ███ ██ ██      ██      ██      ██    ██ ██  ██  ██ ██           ");
+        println(" ███ ███  ███████ ███████  ██████  ██████  ██      ██ ███████      ");
+        System.out.println();
+        println("                  ████████  ██████ ");
+        println("                     ██    ██    ██");
+        println("                     ██    ██    ██");
+        println("                     ██    ██    ██");
+        println("                     ██     ██████ ");
+        println("\u001B[0m"); // Reset color
     }
+    
     static void showMenu(Scanner scan) {
         while (true) {
             println("1. Start");
