@@ -7,6 +7,9 @@ public class Map {
     static void println(String print) {
         System.out.println(print);
     }
+    static void print(String print) {
+        System.out.print(print);
+    }
 
 
     static String showMap(String currentLoc) {
@@ -70,30 +73,28 @@ public class Map {
     return map;
 
     }
-    static void introduction(){
-        println("                                Coming from a poor family, I have always dreamed of becoming an engineer to provide a better life for my loved ones. \" +\r\n" + //
-                        "                       \"Today marks a crucial step toward that dream—the entrance exam for a prestigious public university. \" +\r\n" + //
-                        "                       \"To achieve my goal, I must pass a series of challenging exams that will test my knowledge and skills. \" +\r\n" + //
-                        "                       \"The road ahead won’t be easy, but I am determined to succeed.");
+    static void Title(){
+        println("  ___                     _   _        _                      _____             _                      ");
+        println(" |_ _|_      ____ _ _ __ | |_| |_ ___ | |__   ___  __ _ _ __ | ____|_ __   __ _(_)_ __   ___  ___ _ __ ");
+        println("  | |\\ \\ /\\ / / _` | '_ \\| __| __/ _ \\| '_ \\ / _ \\/ _` | '_ \\|  _| | '_ \\ / _` | | '_ \\ / _ \\/ _ \\ '__|");
+        println("  | | \\ V  V / (_| | | | | |_| || (_) | |_) |  __/ (_| | | | | |___| | | | (_| | | | | |  __/  __/ |   ");
+        println(" |___| \\_/\\_/ \\__,_|_| |_|\\__|\\__\\___/|_.__/ \\___|\\__,_|_| |_|_____|_| |_|\\__, |_|_| |_|\\___|\\___|_|   ");
+        println("                                                                          |___/                        ");
         
     }
-
-    public static void main(String[] args) {
-        Scanner scan = new Scanner(System.in);
-        Random random = new Random();
-
-         // ANSI color codes for different shades of yellow
-         String[] colors = {
+    static void printWelcomeText() {
+        // ANSI color codes for different shades of yellow
+        String[] colors = {
             "\u001B[38;5;226m", // Bright yellow
             "\u001B[38;5;220m", // Gold
             "\u001B[38;5;214m", // Orange-yellow
             "\u001B[38;5;208m", // Dark orange
             "\u001B[38;5;202m"  // Reddish-orange
         };
-
+    
         // Reset color
         String reset = "\u001B[0m";
-
+    
         // Text with colors
         String text = colors[0] + "W" +     
                       colors[1] + "E" + 
@@ -105,23 +106,46 @@ public class Map {
                       colors[2] + " " + 
                       colors[3] + "T" + 
                       colors[4] + "O" + 
-                      
                       reset; // Reset color after text
-
-
-
-        println("                                                 "+text);
-        println("  ___                     _   _        _                      _____             _                      ");
-        println(" |_ _|_      ____ _ _ __ | |_| |_ ___ | |__   ___  __ _ _ __ | ____|_ __   __ _(_)_ __   ___  ___ _ __ ");
-        println("  | |\\ \\ /\\ / / _` | '_ \\| __| __/ _ \\| '_ \\ / _ \\/ _` | '_ \\|  _| | '_ \\ / _` | | '_ \\ / _ \\/ _ \\ '__|");
-        println("  | | \\ V  V / (_| | | | | |_| || (_) | |_) |  __/ (_| | | | | |___| | | | (_| | | | | |  __/  __/ |   ");
-        println(" |___| \\_/\\_/ \\__,_|_| |_|\\__|\\__\\___/|_.__/ \\___|\\__,_|_| |_|_____|_| |_|\\__, |_|_| |_|\\___|\\___|_|   ");
-        println("                                                                          |___/                        ");
-        
+        // Print the text
+        println(text);
+    }
+    static void Menu(){
         println("1.Start");
         println("2.How to Play");
         println("3.About");
         println("Choose key to proceed: ");
+    }
+    static void howToPlay() {
+        println(
+            "You will start in a randomly assigned room and answer the questions in that room. " +
+            "After that, you will navigate through different rooms, each representing a different subject, and take the exams in each one. " +
+            "Once all exams are completed, your results will determine whether you pass or fail.\n\n" +
+            
+            "If you pass, you will proceed to the entrance exam for the engineering course. " +
+            "The result will then determine if you qualify for the engineering course. " +
+            "If you pass, the game will time-skip four years, leading to the board exam to officially become an engineer.\n\n" +
+            
+            "You have two chances to retake the board exam if you fail."
+        );
+    }
+    static void introduction() {
+        println(
+            "Coming from a poor family, I have always dreamed of becoming an engineer to provide a better life for my loved ones.\n"+
+            "Today marks a crucial step toward that dream—the entrance exam for a prestigious public university.\n "+
+            "To achieve my goal, I must pass a series of challenging exams that will test my knowledge and skills.\n"+
+            "The road ahead won’t be easy, but I am determined to succeed."
+        );
+    }
+
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+        Random random = new Random();
+
+
+        print("                                                 ");printWelcomeText();
+        Title();
+        Menu();
         int choice = scan.nextInt();
 
         
@@ -132,6 +156,7 @@ public class Map {
                 break;
             case 2:
                 println("How to Play");
+                howToPlay();
             case 3:
                 println("About");
                 break;
