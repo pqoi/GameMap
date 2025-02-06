@@ -122,6 +122,7 @@ public class Map {
                 case 1:
                     println("Starting the game...");
                     println("Enter Username:");
+                    String username = scan.next();
                     introduction();
                     
                     // Generate a random starting room
