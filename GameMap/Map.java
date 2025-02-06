@@ -110,24 +110,53 @@ public class Map {
         // Print the text
         println(text);
     }
-    static void Menu(){
-        println("1.Start");
-        println("2.How to Play");
-        println("3.About");
-        println("Choose key to proceed: ");
-    }
-    static void howToPlay() {
-        println(
-            "You will start in a randomly assigned room and answer the questions in that room. " +
-            "After that, you will navigate through different rooms, each representing a different subject, and take the exams in each one. " +
-            "Once all exams are completed, your results will determine whether you pass or fail.\n\n" +
-            
-            "If you pass, you will proceed to the entrance exam for the engineering course. " +
-            "The result will then determine if you qualify for the engineering course. " +
-            "If you pass, the game will time-skip four years, leading to the board exam to officially become an engineer.\n\n" +
-            
-            "You have two chances to retake the board exam if you fail."
-        );
+    static void showMenu(Scanner scan) {
+        while (true) {
+            println("1. Start");
+            println("2. How to Play");
+            println("3. About");
+            println("Choose key to proceed: ");
+            int choice = scan.nextInt();
+
+            switch (choice) {
+                case 1:
+                    introduction();
+                    
+                    // Generate a random starting room
+                    String[] mapLoc = {"Room 1", "Room 2", "Room 3", "Room 4", "Room 5"};
+                    Random rand = new Random();
+                    String randomRoom = mapLoc[rand.nextInt(mapLoc.length)]; // Pick a random room
+
+                    System.out.println(showMap(randomRoom)); // Display the map with the random room
+                    return; // Exit the menu after starting the game
+
+                case 2:
+                    println("How to Play");
+                    println(
+                        "You will start in a randomly assigned room and answer the questions in that room. " +
+                        "After that, you will navigate through different rooms, each representing a different subject, and take the exams in each one. " +
+                        "Once all exams are completed, your results will determine whether you pass or fail.\n\n" +
+                        
+                        "If you pass, you will proceed to the entrance exam for the engineering course. " +
+                        "The result will then determine if you qualify for the engineering course. " +
+                        "If you pass, the game will time-skip four years, leading to the board exam to officially become an engineer.\n\n" +
+                        
+                        "You have two chances to retake the board exam if you fail."
+                    );
+                    break;
+                case 3:
+                    System.out.println("About");
+                    System.out.println(
+                        "\"I Want to Be an Engineer\" is a story-based console game in Java that follows a young boy on his journey to achieving his dream of becoming an engineer. " +
+                        "The player will take the entrance exam at a public university and must navigate different exam rooms, answer subject-related questions, and achieve the required scores to qualify for an engineering course. " +
+                        "After four years in university, the player will take the board exam and, if successful, become a licensed engineer."
+                    );
+                    break;
+                default:
+                    println("Invalid choice, please try again.");
+                    break;
+            }
+        }
     }
     static void introduction() {
         println(
@@ -145,24 +174,9 @@ public class Map {
 
         print("                                                 ");printWelcomeText();
         Title();
-        Menu();
-        int choice = scan.nextInt();
-
+        showMenu(scan);
+       
         
-        switch (choice) {
-            case 1:
-                introduction();
-                println(Map.showMap("Room 1"));
-                break;
-            case 2:
-                println("How to Play");
-                howToPlay();
-            case 3:
-                println("About");
-                break;
-            default:
-                break;
-        }
        
     }
 }
