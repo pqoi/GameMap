@@ -1,6 +1,7 @@
 package GameMap;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -15,20 +16,20 @@ public class Map {
         System.out.print(print);
     }
 
-
+    private static Integer dist1, dist2, dist3, dist4, dist5, dist6, dist7, dist8;
     static String showMap(String currentLoc) {
         Random rand = new Random();
     
-        // Generate random distances for each connection
-        int dist1 = rand.nextInt(100) + 1; // Room 1 to Intersection 2
-        int dist2 = rand.nextInt(100) + 1; // Intersection 2 to Room 2
-        int dist3 = rand.nextInt(100) + 1; // Intersection 2 to Room 5
-        int dist4 = rand.nextInt(100) + 1; // Room 1 to Room 4
-        int dist5 = rand.nextInt(100) + 1; // Room 2 to Room 3
-        int dist6 = rand.nextInt(100) + 1; // Intersection 1 to Room 5
-        int dist7 = rand.nextInt(100) + 1; // Room 4 to Intersection 1
-        int dist8 = rand.nextInt(100) + 1; // Room 3 to Intersection 1
-    
+        if (dist1 == null) {
+            dist1 = rand.nextInt(100) + 1; 
+            dist2 = rand.nextInt(100) + 1; 
+            dist3 = rand.nextInt(100) + 1; 
+            dist4 = rand.nextInt(100) + 1; 
+            dist5 = rand.nextInt(100) + 1; 
+            dist6 = rand.nextInt(100) + 1; 
+            dist7 = rand.nextInt(100) + 1; 
+            dist8 = rand.nextInt(100) + 1; 
+        }
         String[] mapLoc = {"Room 1 ", "Room 2", "Room 3", "Room 4", "Room 5", "Intersection 1", "Intersection 2"};
         String[] currentAd = new String[7];
     
@@ -270,40 +271,171 @@ public class Map {
         return "Room " + choice;
     }
     static void showRoutesAndFindShortest(String currentLoc, String destination) {
-        Random rand = new Random();
-        
-        // Distance mappings (you may need to adjust connections)
+        // Use stored distances instead of generating new ones
         HashMap<String, Integer> distances = new HashMap<>();
-        distances.put("Room 1-Intersection 2", rand.nextInt(100) + 1);
-        distances.put("Intersection 2-Room 2", rand.nextInt(100) + 1);
-        distances.put("Intersection 2-Room 5", rand.nextInt(100) + 1);
-        distances.put("Room 1-Room 4", rand.nextInt(100) + 1);
-        distances.put("Room 2-Room 3", rand.nextInt(100) + 1);
-        distances.put("Intersection 1-Room 5", rand.nextInt(100) + 1);
-        distances.put("Room 4-Intersection 1", rand.nextInt(100) + 1);
-        distances.put("Room 3-Intersection 1", rand.nextInt(100) + 1);
-        
+        distances.put("Room 1-Intersection 2", dist1);
+        distances.put("Intersection 2-Room 2", dist2);
+        distances.put("Intersection 2-Room 5", dist3);
+        distances.put("Room 1-Room 4", dist4);
+        distances.put("Room 2-Room 3", dist5);
+        distances.put("Intersection 1-Room 5", dist6);
+        distances.put("Room 4-Intersection 1", dist7);
+        distances.put("Room 3-Intersection 1", dist8);
+    
         // Possible paths
         List<String> routes = new ArrayList<>();
         List<Integer> routeDistances = new ArrayList<>();
-
+        // Room 1 possible routes
         if (currentLoc.equals("Room 1")) {
             if (destination.equals("Room 2")) {
                 routes.add("Room 1 → Intersection 2 → Room 2");
                 routeDistances.add(distances.get("Room 1-Intersection 2") + distances.get("Intersection 2-Room 2"));
             }
-            if (destination.equals("Room 5")) {
-                routes.add("Room 1 → Intersection 2 → Room 5");
-                routeDistances.add(distances.get("Room 1-Intersection 2") + distances.get("Intersection 2-Room 5"));
+            if (destination.equals("Room 3")) {
+                routes.add("Room 1 → Intersection 2 → Room 2 → Room 3");
+                routeDistances.add(distances.get("Room 1-Intersection 2") + distances.get("Intersection 2-Room 2") + distances.get("Room 2-Room 3"));
             }
             if (destination.equals("Room 4")) {
                 routes.add("Room 1 → Room 4");
                 routeDistances.add(distances.get("Room 1-Room 4"));
             }
+            if (destination.equals("Room 5")) {
+                routes.add("Room 1 → Intersection 2 → Room 5");
+                routeDistances.add(distances.get("Room 1-Intersection 2") + distances.get("Intersection 2-Room 5"));
+                routes.add("Room 1 → Room 4 → Intersection 1 → Room 5");
+                routeDistances.add(distances.get("Room 1-Room 4") + distances.get("Room 4-Intersection 1") + distances.get("Intersection 1-Room 5"));
+            }
         }
         
-        // Add more conditions for other rooms...
+        // Room 2 possible routes
+        if (currentLoc.equals("Room 2")) {
+            if (destination.equals("Room 1")) {
+                routes.add("Room 2 → Intersection 2 → Room 1");
+                routeDistances.add(distances.get("Intersection 2-Room 2") + distances.get("Room 1-Intersection 2"));
+            }
+            if (destination.equals("Room 3")) {
+                routes.add("Room 2 → Room 3");
+                routeDistances.add(distances.get("Room 2-Room 3"));
+            }
+            if (destination.equals("Room 4")) {
+                routes.add("Room 2 → Intersection 2 → Room 1 → Room 4");
+                routeDistances.add(distances.get("Intersection 2-Room 2") + distances.get("Room 1-Intersection 2") + distances.get("Room 1-Room 4"));
+            }
+            if (destination.equals("Room 5")) {
+                routes.add("Room 2 → Intersection 2 → Room 5");
+                routeDistances.add(distances.get("Intersection 2-Room 2") + distances.get("Intersection 2-Room 5"));
+            }
+        }
+        
+        // Room 3 possible routes
+        if (currentLoc.equals("Room 3")) {
+            if (destination.equals("Room 1")) {
+                routes.add("Room 3 → Room 2 → Intersection 2 → Room 1");
+                routeDistances.add(distances.get("Room 2-Room 3") + distances.get("Intersection 2-Room 2") + distances.get("Room 1-Intersection 2"));
+            }
+            if (destination.equals("Room 2")) {
+                routes.add("Room 3 → Room 2");
+                routeDistances.add(distances.get("Room 2-Room 3"));
+            }
+            if (destination.equals("Room 4")) {
+                routes.add("Room 3 → Intersection 1 → Room 4");
+                routeDistances.add(distances.get("Room 3-Intersection 1") + distances.get("Room 4-Intersection 1"));
+            }
+            if (destination.equals("Room 5")) {
+                routes.add("Room 3 → Intersection 1 → Room 5");
+                routeDistances.add(distances.get("Room 3-Intersection 1") + distances.get("Intersection 1-Room 5"));
+            }
+        }
+    
+        // Room 4 possible routes
+        if (currentLoc.equals("Room 4")) {
+            if (destination.equals("Room 1")) {
+                routes.add("Room 4 → Room 1");
+                routeDistances.add(distances.get("Room 1-Room 4"));
+            }
+            if (destination.equals("Room 2")) {
+                routes.add("Room 4 → Intersection 1 → Room 5 → Intersection 2 → Room 2");
+                routeDistances.add(distances.get("Room 4-Intersection 1") + distances.get("Intersection 1-Room 5") + distances.get("Intersection 2-Room 5") + distances.get("Intersection 2-Room 2"));
+            }
+            if (destination.equals("Room 3")) {
+                routes.add("Room 4 → Intersection 1 → Room 3");
+                routeDistances.add(distances.get("Room 4-Intersection 1") + distances.get("Room 3-Intersection 1"));
+            }
+            if (destination.equals("Room 5")) {
+                routes.add("Room 4 → Intersection 1 → Room 5");
+                routeDistances.add(distances.get("Room 4-Intersection 1") + distances.get("Intersection 1-Room 5"));
+            }
+        }
 
+        // Room 5 possible routes
+        if (currentLoc.equals("Room 5")) {
+            if (destination.equals("Room 1")) {
+                routes.add("Room 5 → Intersection 2 → Room 1");
+                routeDistances.add(distances.get("Intersection 2-Room 5") + distances.get("Room 1-Intersection 2"));
+            }
+            if (destination.equals("Room 2")) {
+                routes.add("Room 5 → Intersection 2 → Room 2");
+                routeDistances.add(distances.get("Intersection 2-Room 5") + distances.get("Intersection 2-Room 2"));
+            }
+            if (destination.equals("Room 3")) {
+                routes.add("Room 5 → Intersection 1 → Room 3");
+                routeDistances.add(distances.get("Intersection 1-Room 5") + distances.get("Room 3-Intersection 1"));
+            }
+            if (destination.equals("Room 4")) {
+                routes.add("Room 5 → Intersection 1 → Room 4");
+                routeDistances.add(distances.get("Intersection 1-Room 5") + distances.get("Room 4-Intersection 1"));
+            }
+        }
+
+        // Intersection 1 possible routes
+        if (currentLoc.equals("Intersection 1")) {
+            if (destination.equals("Room 1")) {
+                routes.add("Intersection 1 → Room 4 → Room 1");
+                routeDistances.add(distances.get("Room 4-Intersection 1") + distances.get("Room 1-Room 4"));
+            }
+            if (destination.equals("Room 2")) {
+                routes.add("Intersection 1 → Room 5 → Intersection 2 → Room 2");
+                routeDistances.add(distances.get("Intersection 1-Room 5") + distances.get("Intersection 2-Room 5") + distances.get("Intersection 2-Room 2"));
+            }
+            if (destination.equals("Room 3")) {
+                routes.add("Intersection 1 → Room 3");
+                routeDistances.add(distances.get("Room 3-Intersection 1"));
+            }
+            if (destination.equals("Room 4")) {
+                routes.add("Intersection 1 → Room 4");
+                routeDistances.add(distances.get("Room 4-Intersection 1"));
+            }
+            if (destination.equals("Room 5")) {
+                routes.add("Intersection 1 → Room 5");
+                routeDistances.add(distances.get("Intersection 1-Room 5"));
+            }
+        }
+
+        // Intersection 2 possible routes
+        if (currentLoc.equals("Intersection 2")) {
+            if (destination.equals("Room 1")) {
+                routes.add("Intersection 2 → Room 1");
+                routeDistances.add(distances.get("Room 1-Intersection 2"));
+            }
+            if (destination.equals("Room 2")) {
+                routes.add("Intersection 2 → Room 2");
+                routeDistances.add(distances.get("Intersection 2-Room 2"));
+            }
+            if (destination.equals("Room 3")) {
+                routes.add("Intersection 2 → Room 2 → Room 3");
+                routeDistances.add(distances.get("Intersection 2-Room 2") + distances.get("Room 2-Room 3"));
+            }
+            if (destination.equals("Room 4")) {
+                routes.add("Intersection 2 → Room 5 → Intersection 1 → Room 4");
+                routeDistances.add(distances.get("Intersection 2-Room 5") + distances.get("Intersection 1-Room 5") + distances.get("Room 4-Intersection 1"));
+            }
+            if (destination.equals("Room 5")) {
+                routes.add("Intersection 2 → Room 5");
+                routeDistances.add(distances.get("Intersection 2-Room 5"));
+            }
+        }
+
+    
         // Find the shortest path
         int minIndex = 0;
         for (int i = 1; i < routeDistances.size(); i++) {
@@ -311,13 +443,13 @@ public class Map {
                 minIndex = i;
             }
         }
-
+    
         // Display the available routes
         println("\nAvailable Routes:");
         for (int i = 0; i < routes.size(); i++) {
             println(routes.get(i) + " - " + routeDistances.get(i) + "m");
         }
-
+    
         // Display the shortest path
         if (!routes.isEmpty()) {
             println("\nShortest Path: " + routes.get(minIndex) + " (" + routeDistances.get(minIndex) + "m)");
@@ -326,7 +458,66 @@ public class Map {
             println("No available path found.");
         }
     }
+    static String[] mapLoc = {"Room 1", "Room 2", "Room 3", "Room 4", "Room 5", "Intersection 1", "Intersection 2"};
+    static String currentLocation = getRandomLocation(); // Start at a random location
 
+    static String getRandomLocation() {
+        Random rand = new Random();
+        return mapLoc[rand.nextInt(mapLoc.length)]; // Pick a random room/intersection
+    }
+    static void moveTo(String destination) {
+        System.out.println("\nMoving from " + currentLocation + " to " + destination + "...");
+        
+        if (isValidMove(currentLocation, destination)) {
+            currentLocation = destination; // Update location
+            System.out.println("You have arrived at " + currentLocation);
+            showMap(); // Refresh the map
+        } else {
+            System.out.println("Invalid move. Try again.");
+        }
+    }
+    static boolean isValidMove(String currentLoc, String destination) {
+        HashMap<String, List<String>> validMoves = new HashMap<>();
+        validMoves.put("Room 1", Arrays.asList("Room 2", "Room 4", "Room 5"));
+        validMoves.put("Room 2", Arrays.asList("Room 1", "Room 3", "Room 5"));
+        validMoves.put("Room 3", Arrays.asList("Room 2", "Intersection 1"));
+        validMoves.put("Room 4", Arrays.asList("Room 1", "Intersection 1"));
+        validMoves.put("Room 5", Arrays.asList("Room 1", "Room 2", "Intersection 1", "Intersection 2"));
+        validMoves.put("Intersection 1", Arrays.asList("Room 3", "Room 4", "Room 5"));
+        validMoves.put("Intersection 2", Arrays.asList("Room 1", "Room 2", "Room 5"));
+
+        return validMoves.containsKey(currentLoc) && validMoves.get(currentLoc).contains(destination);
+    }
+    static void showMap() {
+        System.out.println("\nCurrent Map:");
+        for (String loc : mapLoc) {
+            if (loc.equals(currentLocation)) {
+                System.out.println("[" + loc + "] ← You are here");
+            } else {
+                System.out.println(loc);
+            }
+        }
+    }
+    static void gameLoop() {
+        Scanner scanner = new Scanner(System.in);
+        
+        while (true) {
+            showMap();
+            System.out.println("\nEnter your destination (or type 'exit' to quit): ");
+            String destination = scanner.nextLine();
+    
+            if (destination.equalsIgnoreCase("exit")) {
+                System.out.println("Exiting the game.");
+                break;
+            }
+    
+            moveTo(destination);
+        }
+    
+        scanner.close();
+    }
+        
+    
     
 
     
@@ -340,7 +531,7 @@ public class Map {
         String selectedDestination = MenuDestination(currentLocation, scan);
         showRoutesAndFindShortest(currentLocation, selectedDestination);
          
-        
+        gameLoop();
        
     }
 }
