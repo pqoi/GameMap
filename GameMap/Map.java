@@ -467,15 +467,16 @@ public class Map {
     }
     static void moveTo(String destination) {
         System.out.println("\nMoving from " + currentLocation + " to " + destination + "...");
-        
+    
         if (isValidMove(currentLocation, destination)) {
-            currentLocation = destination; // Update location
+            currentLocation = destination; // Update the player's location
             System.out.println("You have arrived at " + currentLocation);
-            showMap(); // Refresh the map
+            System.out.println(showMap(currentLocation)); // Refresh the map with new position
         } else {
             System.out.println("Invalid move. Try again.");
         }
     }
+    
     static boolean isValidMove(String currentLoc, String destination) {
         HashMap<String, List<String>> validMoves = new HashMap<>();
         validMoves.put("Room 1", Arrays.asList("Room 2", "Room 4", "Room 5"));
@@ -516,6 +517,16 @@ public class Map {
     
         scanner.close();
     }
+    public static void moveUser(String newLocation) {
+        if (isValidMove(currentLocation, newLocation)) { // Validate the move
+            currentLocation = newLocation; // Update the user's position
+            System.out.println("You moved to: " + currentLocation);
+            System.out.println(showMap(currentLocation)); // Display the updated map
+        } else {
+            System.out.println("Invalid move. Try again.");
+        }
+    }
+    
         
     
     
@@ -530,8 +541,18 @@ public class Map {
         askQuestion(currentLocation, scan);
         String selectedDestination = MenuDestination(currentLocation, scan);
         showRoutesAndFindShortest(currentLocation, selectedDestination);
-         
-        gameLoop();
+        while (true) {
+            System.out.println("\nEnter your destination (Room 1-5 or Intersection 1-2), or 'exit' to quit:");
+            String destination = scan.nextLine();
+    
+            if (destination.equalsIgnoreCase("exit")) {
+                System.out.println("Game Over!");
+                break;
+            }
+    
+            moveUser(destination);
+        }
+        gameLoop(); 
        
     }
 }
