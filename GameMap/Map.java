@@ -73,29 +73,32 @@ public class Map {
     
         return map;
     }
-    static void printWelcomeText() {
-        println("\u001B[33m"); // Yellow color
-        println("██     ██ ███████ ██       ██████  ██████  ███    ███ ███████     ");
-        println("██     ██ ██      ██      ██      ██    ██ ████  ████ ██          ");
-        println("██  █  ██ █████   ██      ██      ██    ██ ██ ████ ██ █████        ");
-        println("██ ███ ██ ██      ██      ██      ██    ██ ██  ██  ██ ██           ");
-        println(" ███ ███  ███████ ███████  ██████  ██████  ██      ██ ███████      ");
-        System.out.println();
-        println("                  ████████  ██████ ");
-        println("                     ██    ██    ██");
-        println("                     ██    ██    ██");
-        println("                     ██    ██    ██");
-        println("                     ██     ██████ ");
-        println("\u001B[0m"); // Reset color
-    }
+
     static void Title(){
-        println("  ___                     _   _        _                      _____             _                      ");
-        println(" |_ _|_      ____ _ _ __ | |_| |_ ___ | |__   ___  __ _ _ __ | ____|_ __   __ _(_)_ __   ___  ___ _ __ ");
-        println("  | |\\ \\ /\\ / / _` | '_ \\| __| __/ _ \\| '_ \\ / _ \\/ _` | '_ \\|  _| | '_ \\ / _` | | '_ \\ / _ \\/ _ \\ '__|");
-        println("  | | \\ V  V / (_| | | | | |_| || (_) | |_) |  __/ (_| | | | | |___| | | | (_| | | | | |  __/  __/ |   ");
-        println(" |___| \\_/\\_/ \\__,_|_| |_|\\__|\\__\\___/|_.__/ \\___|\\__,_|_| |_|_____|_| |_|\\__, |_|_| |_|\\___|\\___|_|   ");
-        println("                                                                          |___/                        ");
-        
+
+        println("\u001B[33m"); // Yellow color
+        println("                                           ██     ██     ██  █████  ███    ██ ████████    ████████  ██████      ██████  ███████ ");
+        println("                                           ██     ██     ██ ██   ██ ████   ██    ██          ██    ██    ██     ██   ██ ██      ");
+        println("                                           ██     ██  █  ██ ███████ ██ ██  ██    ██          ██    ██    ██     ██████  █████   ");
+        println("                                           ██     ██ ███ ██ ██   ██ ██  ██ ██    ██          ██    ██    ██     ██   ██ ██      ");
+        println("                                           ██      ███ ███  ██   ██ ██   ████    ██          ██     ██████      ██████  ███████ ");
+        println("\u001B[0m"); // Reset color
+        System.out.println();
+        println("\u001B[33m"); // Yellow color
+        println("                                                                            █████  ███    ██ ");
+        println("                                                                           ██   ██ ████   ██ ");
+        println("                                                                           ███████ ██ ██  ██ ");
+        println("                                                                           ██   ██ ██  ██ ██ ");
+        println("                                                                           ██   ██ ██   ████ ");
+        println("\u001B[0m"); //
+        System.out.println();
+        println("\u001B[33m"); // Yellow color
+        println("                                                   ███████ ███    ██  ██████  ██ ███    ██ ███████ ███████ ██████  ");
+        println("                                                   ██      ████   ██ ██       ██ ████   ██ ██      ██      ██   ██ ");
+        println("                                                   █████   ██ ██  ██ ██   ███ ██ ██ ██  ██ █████   █████   ██████  ");
+        println("                                                   ██      ██  ██ ██ ██    ██ ██ ██  ██ ██ ██      ██      ██   ██ ");
+        println("                                                   ███████ ██   ████  ██████  ██ ██   ████ ███████ ███████ ██   ██ ");
+        println("\u001B[0m"); // Reset color
     }
     
     static String showMenu(Scanner scan) {
@@ -208,9 +211,6 @@ public class Map {
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
         Random random = new Random();
-
-
-        print("                                                 ");printWelcomeText();
         Title();
         // Capture the player's starting location
         String currentLocation = showMenu(scan);
