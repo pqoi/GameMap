@@ -288,102 +288,108 @@ public class Map {
         // Room 1 possible routes
         if (currentLoc.equals("Room 1")) {
             if (destination.equals("Room 2")) {
-                routes.add("Room 1 → Intersection 2 → Room 2");
-                routeDistances.add(distances.get("Room 1-Intersection 2") + distances.get("Intersection 2-Room 2"));
+                routes.add("Room 1 to (" + dist1 + "m) Intersection 2 to (" + dist2 + "m) Room 2");
+                routeDistances.add(dist1 + dist2);
             }
             if (destination.equals("Room 3")) {
-                routes.add("Room 1 → Intersection 2 → Room 2 → Room 3");
-                routeDistances.add(distances.get("Room 1-Intersection 2") + distances.get("Intersection 2-Room 2") + distances.get("Room 2-Room 3"));
+                routes.add("Room 1 to (" + dist1 + "m) Intersection 2 to (" + dist2 + "m) Room 2 to (" + dist5 + "m) Room 3");
+                routeDistances.add(dist1 + dist2 + dist5);
             }
             if (destination.equals("Room 4")) {
-                routes.add("Room 1 → Room 4");
-                routeDistances.add(distances.get("Room 1-Room 4"));
+                routes.add("Room 1 to (" + dist4 + "m) Room 4");
+                routeDistances.add(dist4);
             }
             if (destination.equals("Room 5")) {
-                routes.add("Room 1 → Intersection 2 → Room 5");
-                routeDistances.add(distances.get("Room 1-Intersection 2") + distances.get("Intersection 2-Room 5"));
-                routes.add("Room 1 → Room 4 → Intersection 1 → Room 5");
-                routeDistances.add(distances.get("Room 1-Room 4") + distances.get("Room 4-Intersection 1") + distances.get("Intersection 1-Room 5"));
+                routes.add("Room 1 to (" + dist1 + "m) Intersection 2 to (" + dist3 + "m) Room 5");
+                routeDistances.add(dist1 + dist3);
+                routes.add("Room 1 to (" + dist4 + "m) Room 4 to (" + dist7 + "m) Intersection 1 to (" + dist6 + "m) Room 5");
+                routeDistances.add(dist4 + dist7 + dist6);
             }
         }
         
-        // Room 2 possible routes
         if (currentLoc.equals("Room 2")) {
             if (destination.equals("Room 1")) {
-                routes.add("Room 2 → Intersection 2 → Room 1");
-                routeDistances.add(distances.get("Intersection 2-Room 2") + distances.get("Room 1-Intersection 2"));
+                routes.add("Room 2 to (" + dist2 + "m) Intersection 2 to (" + dist1 + "m) Room 1");
+                routeDistances.add(dist2 + dist1);
             }
             if (destination.equals("Room 3")) {
-                routes.add("Room 2 → Room 3");
-                routeDistances.add(distances.get("Room 2-Room 3"));
+                routes.add("Room 2 to (" + dist5 + "m) Room 3");
+                routeDistances.add(dist5);
             }
             if (destination.equals("Room 4")) {
-                routes.add("Room 2 → Intersection 2 → Room 1 → Room 4");
-                routeDistances.add(distances.get("Intersection 2-Room 2") + distances.get("Room 1-Intersection 2") + distances.get("Room 1-Room 4"));
+                routes.add("Room 2 to (" + dist2 + "m) Intersection 2 to (" + dist1 + "m) Room 1 to (" + dist4 + "m) Room 4");
+                routeDistances.add(dist2 + dist1 + dist4);
             }
             if (destination.equals("Room 5")) {
-                routes.add("Room 2 → Intersection 2 → Room 5");
-                routeDistances.add(distances.get("Intersection 2-Room 2") + distances.get("Intersection 2-Room 5"));
+                routes.add("Room 2 to (" + dist2 + "m) Intersection 2 to (" + dist3 + "m) Room 5");
+                routeDistances.add(dist2 + dist3);
             }
         }
-        
         // Room 3 possible routes
         if (currentLoc.equals("Room 3")) {
             if (destination.equals("Room 1")) {
-                routes.add("Room 3 → Room 2 → Intersection 2 → Room 1");
-                routeDistances.add(distances.get("Room 2-Room 3") + distances.get("Intersection 2-Room 2") + distances.get("Room 1-Intersection 2"));
+                routes.add("Room 3 to (" + dist5 + "m) Room 2 to (" + dist2 + "m) Room 1");
+                routeDistances.add(dist5 + dist2);
+                routes.add("Room 3 to (" + dist8 + "m) Intersection 1 to (" + dist7 + "m) Room 1");
+                routeDistances.add(dist8 + dist7);
+                routes.add("Room 3 to (" + dist8 + "m) Intersection 1 to (" + dist3 + "m) Intersection 2 to (" + dist1 + "m) Room 1");
+                routeDistances.add(dist8 + dist3 + dist1);
             }
             if (destination.equals("Room 2")) {
-                routes.add("Room 3 → Room 2");
-                routeDistances.add(distances.get("Room 2-Room 3"));
+                routes.add("Room 3 to (" + dist5 + "m) Room 2");
+                routeDistances.add(dist5);
+                routes.add("Room 3 to (" + dist8 + "m) Intersection 1 to (" + dist2 + "m) Room 2");
+                routeDistances.add(dist8 + dist2);
             }
             if (destination.equals("Room 4")) {
-                routes.add("Room 3 → Intersection 1 → Room 4");
-                routeDistances.add(distances.get("Room 3-Intersection 1") + distances.get("Room 4-Intersection 1"));
+                routes.add("Room 3 to (" + dist6 + "m) Room 5 to (" + dist7 + "m) Room 4");
+                routeDistances.add(dist6 + dist7);
+                routes.add("Room 3 to (" + dist8 + "m) Intersection 1 to (" + dist7 + "m) Room 4");
+                routeDistances.add(dist8 + dist7);
             }
             if (destination.equals("Room 5")) {
-                routes.add("Room 3 → Intersection 1 → Room 5");
-                routeDistances.add(distances.get("Room 3-Intersection 1") + distances.get("Intersection 1-Room 5"));
+                routes.add("Room 3 to (" + dist8 + "m) Intersection 1 to (" + dist6 + "m) Room 5");
+                routeDistances.add(dist8 + dist6);
+                routes.add("Room 3 to (" + dist6 + "m) Room 4 to (" + dist3 + "m) Room 5");
+                routeDistances.add(dist6 + dist3);
             }
-        }
-    
-        // Room 4 possible routes
+        }   
+        
         if (currentLoc.equals("Room 4")) {
             if (destination.equals("Room 1")) {
-                routes.add("Room 4 → Room 1");
-                routeDistances.add(distances.get("Room 1-Room 4"));
+                routes.add("Room 4 to (" + dist4 + "m) Room 1");
+                routeDistances.add(dist4);
             }
             if (destination.equals("Room 2")) {
-                routes.add("Room 4 → Intersection 1 → Room 5 → Intersection 2 → Room 2");
-                routeDistances.add(distances.get("Room 4-Intersection 1") + distances.get("Intersection 1-Room 5") + distances.get("Intersection 2-Room 5") + distances.get("Intersection 2-Room 2"));
+                routes.add("Room 4 to (" + dist7 + "m) Intersection 1 to (" + dist6 + "m) Room 5 to (" + dist3 + "m) Intersection 2 to (" + dist2 + "m) Room 2");
+                routeDistances.add(dist7 + dist6 + dist3 + dist2);
             }
             if (destination.equals("Room 3")) {
-                routes.add("Room 4 → Intersection 1 → Room 3");
-                routeDistances.add(distances.get("Room 4-Intersection 1") + distances.get("Room 3-Intersection 1"));
+                routes.add("Room 4 to (" + dist7 + "m) Intersection 1 to (" + dist8 + "m) Room 3");
+                routeDistances.add(dist7 + dist8);
             }
             if (destination.equals("Room 5")) {
-                routes.add("Room 4 → Intersection 1 → Room 5");
-                routeDistances.add(distances.get("Room 4-Intersection 1") + distances.get("Intersection 1-Room 5"));
+                routes.add("Room 4 to (" + dist7 + "m) Intersection 1 to (" + dist6 + "m) Room 5");
+                routeDistances.add(dist7 + dist6);
             }
         }
 
-        // Room 5 possible routes
         if (currentLoc.equals("Room 5")) {
             if (destination.equals("Room 1")) {
-                routes.add("Room 5 → Intersection 2 → Room 1");
-                routeDistances.add(distances.get("Intersection 2-Room 5") + distances.get("Room 1-Intersection 2"));
+                routes.add("Room 5 to (" + dist3 + "m) Intersection 2 to (" + dist1 + "m) Room 1");
+                routeDistances.add(dist3 + dist1);
             }
             if (destination.equals("Room 2")) {
-                routes.add("Room 5 → Intersection 2 → Room 2");
-                routeDistances.add(distances.get("Intersection 2-Room 5") + distances.get("Intersection 2-Room 2"));
+                routes.add("Room 5 to (" + dist3 + "m) Intersection 2 to (" + dist2 + "m) Room 2");
+                routeDistances.add(dist3 + dist2);
             }
             if (destination.equals("Room 3")) {
-                routes.add("Room 5 → Intersection 1 → Room 3");
-                routeDistances.add(distances.get("Intersection 1-Room 5") + distances.get("Room 3-Intersection 1"));
+                routes.add("Room 5 to (" + dist6 + "m) Intersection 1 to (" + dist8 + "m) Room 3");
+                routeDistances.add(dist6 + dist8);
             }
             if (destination.equals("Room 4")) {
-                routes.add("Room 5 → Intersection 1 → Room 4");
-                routeDistances.add(distances.get("Intersection 1-Room 5") + distances.get("Room 4-Intersection 1"));
+                routes.add("Room 5 to (" + dist6 + "m) Intersection 1 to (" + dist7 + "m) Room 4");
+                routeDistances.add(dist6 + dist7);
             }
         }
 
@@ -415,42 +421,58 @@ public class Map {
         if (currentLoc.equals("Intersection 2")) {
             if (destination.equals("Room 1")) {
                 routes.add("Intersection 2 → Room 1");
-                routeDistances.add(distances.get("Room 1-Intersection 2"));
+                routeDistances.add(dist1);
+                routes.add("Intersection 2 → Room 5 → Intersection 1 → Room 4 → Room 1");
+                routeDistances.add(dist3 + dist6 + dist7 + dist4);
+                routes.add("Intersection 2 → Room 2 → Room 3 → Intersection 1 → Room 4 → Room 1");
+                routeDistances.add(dist2 + dist5 + dist8 + dist7 + dist4);
             }
             if (destination.equals("Room 2")) {
                 routes.add("Intersection 2 → Room 2");
-                routeDistances.add(distances.get("Intersection 2-Room 2"));
+                routeDistances.add(dist2);
+                routes.add("Intersection 2 → Room 1 → Room 4 → Intersection 1 → Room 3 → Room 2");
+                routeDistances.add(dist1 + dist4 + dist7 + dist8 + dist5);
+                routes.add("Intersection 2 → Room 5 → Intersection 1 → Room 3 → Room 2");
+                routeDistances.add(dist3 + dist6 + dist8 + dist5);
             }
             if (destination.equals("Room 3")) {
                 routes.add("Intersection 2 → Room 2 → Room 3");
-                routeDistances.add(distances.get("Intersection 2-Room 2") + distances.get("Room 2-Room 3"));
+                routeDistances.add(dist2 + dist5);
+                routes.add("Intersection 2 → Room 5 → Intersection 1 → Room 3");
+                routeDistances.add(dist3 + dist6 + dist8);
+                routes.add("Intersection 2 → Room 1 → Room 4 → Intersection 1 → Room 3");
+                routeDistances.add(dist1 + dist4 + dist7 + dist8);
             }
             if (destination.equals("Room 4")) {
                 routes.add("Intersection 2 → Room 5 → Intersection 1 → Room 4");
-                routeDistances.add(distances.get("Intersection 2-Room 5") + distances.get("Intersection 1-Room 5") + distances.get("Room 4-Intersection 1"));
+                routeDistances.add(dist3 + dist6 + dist7);
+                routes.add("Intersection 2 → Room 2 → Room 3 → Intersection 1 → Room 4");
+                routeDistances.add(dist2 + dist5 + dist8 + dist7);
+                routes.add("Intersection 2 → Room 1 → Room 4");
+                routeDistances.add(dist1 + dist4);
             }
             if (destination.equals("Room 5")) {
                 routes.add("Intersection 2 → Room 5");
-                routeDistances.add(distances.get("Intersection 2-Room 5"));
+                routeDistances.add(dist3);
+                routes.add("Intersection 2 → Room 2 → Room 3 → Intersection 1 → Room 5");
+                routeDistances.add(dist2 + dist5 + dist8 + dist6);
+                routes.add("Intersection 2 → Room 1 → Room 4 → Intersection 1 → Room 5");
+                routeDistances.add(dist1 + dist4 + dist7 + dist6);
             }
         }
 
-    
-        // Find the shortest path
         int minIndex = 0;
         for (int i = 1; i < routeDistances.size(); i++) {
             if (routeDistances.get(i) < routeDistances.get(minIndex)) {
                 minIndex = i;
             }
         }
-    
-        // Display the available routes
-        println("\nAvailable Routes:");
+        
+        System.out.println("All possible routes:");
         for (int i = 0; i < routes.size(); i++) {
-            println(routes.get(i) + " - " + routeDistances.get(i) + "m");
+            System.out.println(routes.get(i) + " (Total distance: " + routeDistances.get(i) + "m)");
         }
-    
-        // Display the shortest path
+        
         if (!routes.isEmpty()) {
             println("\nShortest Path: " + routes.get(minIndex) + " (" + routeDistances.get(minIndex) + "m)");
             println("Estimated Travel Time: " + routeDistances.get(minIndex) + " seconds");
