@@ -1,5 +1,8 @@
 package com.GameMap;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -271,314 +274,263 @@ public class Map {
         return "Room " + choice;
     }
     static void showRoutesAndFindShortest(String currentLoc, String destination) {
-        // Use stored distances instead of generating new ones
-        HashMap<String, Integer> distances = new HashMap<>();
-        distances.put("Room 1-Intersection 2", dist1);
-        distances.put("Intersection 2-Room 2", dist2);
-        distances.put("Intersection 2-Room 5", dist3);
-        distances.put("Room 1-Room 4", dist4);
-        distances.put("Room 2-Room 3", dist5);
-        distances.put("Intersection 1-Room 5", dist6);
-        distances.put("Room 4-Intersection 1", dist7);
-        distances.put("Room 3-Intersection 1", dist8);
-    
-        // Possible paths
-        List<String> routes = new ArrayList<>();
-        List<Integer> routeDistances = new ArrayList<>();
-        // Room 1 possible routes
+        String[] routeNames = {
+            "Room 1-Intersection 2", "Intersection 2-Room 2", "Intersection 2-Room 5", 
+            "Room 1-Room 4", "Room 2-Room 3", "Intersection 1-Room 5", 
+            "Room 4-Intersection 1", "Room 3-Intersection 1"
+        };
+        int[] distances = {dist1, dist2, dist3, dist4, dist5, dist6, dist7, dist8};
+        
+        String[] routes = new String[100];
+        int[] routeDistances = new int[100];
+        int routeCount = 0;
+        
         if (currentLoc.equals("Room 1")) {
             if (destination.equals("Room 2")) {
-                routes.add("Room 1 to (" + dist1 + "m) Intersection 2 to (" + dist2 + "m) Room 2");
-                routeDistances.add(dist1 + dist2);
+                routes[routeCount] = "Room 1 to (" + dist1 + "m) Intersection 2 to (" + dist2 + "m) Room 2";
+                routeDistances[routeCount++] = dist1 + dist2;
             }
             if (destination.equals("Room 3")) {
-                routes.add("Room 1 to (" + dist1 + "m) Intersection 2 to (" + dist2 + "m) Room 2 to (" + dist5 + "m) Room 3");
-                routeDistances.add(dist1 + dist2 + dist5);
+                routes[routeCount] = "Room 1 to (" + dist1 + "m) Intersection 2 to (" + dist2 + "m) Room 2 to (" + dist5 + "m) Room 3";
+                routeDistances[routeCount++] = dist1 + dist2 + dist5;
             }
             if (destination.equals("Room 4")) {
-                routes.add("Room 1 to (" + dist4 + "m) Room 4");
-                routeDistances.add(dist4);
+                routes[routeCount] = "Room 1 to (" + dist4 + "m) Room 4";
+                routeDistances[routeCount++] = dist4;
             }
             if (destination.equals("Room 5")) {
-                routes.add("Room 1 to (" + dist1 + "m) Intersection 2 to (" + dist3 + "m) Room 5");
-                routeDistances.add(dist1 + dist3);
-                routes.add("Room 1 to (" + dist4 + "m) Room 4 to (" + dist7 + "m) Intersection 1 to (" + dist6 + "m) Room 5");
-                routeDistances.add(dist4 + dist7 + dist6);
+                routes[routeCount] = "Room 1 to (" + dist1 + "m) Intersection 2 to (" + dist3 + "m) Room 5";
+                routeDistances[routeCount++] = dist1 + dist3;
+                routes[routeCount] = "Room 1 to (" + dist4 + "m) Room 4 to (" + dist7 + "m) Intersection 1 to (" + dist6 + "m) Room 5";
+                routeDistances[routeCount++] = dist4 + dist7 + dist6;
             }
         }
-        
+        //possible route room 2
         if (currentLoc.equals("Room 2")) {
             if (destination.equals("Room 1")) {
-                routes.add("Room 2 to (" + dist2 + "m) Intersection 2 to (" + dist1 + "m) Room 1");
-                routeDistances.add(dist2 + dist1);
+                routes[routeCount] = "Room 2 to (" + dist2 + "m) Intersection 2 to (" + dist1 + "m) Room 1";
+                routeDistances[routeCount++] = dist2 + dist1;
             }
             if (destination.equals("Room 3")) {
-                routes.add("Room 2 to (" + dist5 + "m) Room 3");
-                routeDistances.add(dist5);
+                routes[routeCount] = "Room 2 to (" + dist5 + "m) Room 3";
+                routeDistances[routeCount++] = dist5;
             }
             if (destination.equals("Room 4")) {
-                routes.add("Room 2 to (" + dist2 + "m) Intersection 2 to (" + dist1 + "m) Room 1 to (" + dist4 + "m) Room 4");
-                routeDistances.add(dist2 + dist1 + dist4);
+                routes[routeCount] = "Room 2 to (" + dist2 + "m) Intersection 2 to (" + dist1 + "m) Room 1 to (" + dist4 + "m) Room 4";
+                routeDistances[routeCount++] = dist2 + dist1 + dist4;
             }
             if (destination.equals("Room 5")) {
-                routes.add("Room 2 to (" + dist2 + "m) Intersection 2 to (" + dist3 + "m) Room 5");
-                routeDistances.add(dist2 + dist3);
+                routes[routeCount] = "Room 2 to (" + dist2 + "m) Intersection 2 to (" + dist3 + "m) Room 5";
+                routeDistances[routeCount++] = dist2 + dist3;
             }
         }
         // Room 3 possible routes
         if (currentLoc.equals("Room 3")) {
             if (destination.equals("Room 1")) {
-                routes.add("Room 3 to (" + dist5 + "m) Room 2 to (" + dist2 + "m) Room 1");
-                routeDistances.add(dist5 + dist2);
-                routes.add("Room 3 to (" + dist8 + "m) Intersection 1 to (" + dist7 + "m) Room 1");
-                routeDistances.add(dist8 + dist7);
-                routes.add("Room 3 to (" + dist8 + "m) Intersection 1 to (" + dist3 + "m) Intersection 2 to (" + dist1 + "m) Room 1");
-                routeDistances.add(dist8 + dist3 + dist1);
+                routes[routeCount] = "Room 3 to (" + dist5 + "m) Room 2 to (" + dist2 + "m) Room 1";
+                routeDistances[routeCount++] = dist5 + dist2;
+                routes[routeCount] = "Room 3 to (" + dist8 + "m) Intersection 1 to (" + dist7 + "m) Room 1";
+                routeDistances[routeCount++] = dist8 + dist7;
+                routes[routeCount] = "Room 3 to (" + dist8 + "m) Intersection 1 to (" + dist3 + "m) Intersection 2 to (" + dist1 + "m) Room 1";
+                routeDistances[routeCount++] = dist8 + dist3 + dist1;
             }
             if (destination.equals("Room 2")) {
-                routes.add("Room 3 to (" + dist5 + "m) Room 2");
-                routeDistances.add(dist5);
-                routes.add("Room 3 to (" + dist8 + "m) Intersection 1 to (" + dist2 + "m) Room 2");
-                routeDistances.add(dist8 + dist2);
+                routes[routeCount] = "Room 3 to (" + dist5 + "m) Room 2";
+                routeDistances[routeCount++] = dist5;
+                routes[routeCount] = "Room 3 to (" + dist8 + "m) Intersection 1 to (" + dist2 + "m) Room 2";
+                routeDistances[routeCount++] = dist8 + dist2;
             }
             if (destination.equals("Room 4")) {
-                routes.add("Room 3 to (" + dist6 + "m) Room 5 to (" + dist7 + "m) Room 4");
-                routeDistances.add(dist6 + dist7);
-                routes.add("Room 3 to (" + dist8 + "m) Intersection 1 to (" + dist7 + "m) Room 4");
-                routeDistances.add(dist8 + dist7);
+                routes[routeCount] = "Room 3 to (" + dist6 + "m) Room 5 to (" + dist7 + "m) Room 4";
+                routeDistances[routeCount++] = dist6 + dist7;
+                routes[routeCount] = "Room 3 to (" + dist8 + "m) Intersection 1 to (" + dist7 + "m) Room 4";
+                routeDistances[routeCount++] = dist8 + dist7;
             }
             if (destination.equals("Room 5")) {
-                routes.add("Room 3 to (" + dist8 + "m) Intersection 1 to (" + dist6 + "m) Room 5");
-                routeDistances.add(dist8 + dist6);
-                routes.add("Room 3 to (" + dist6 + "m) Room 4 to (" + dist3 + "m) Room 5");
-                routeDistances.add(dist6 + dist3);
+                routes[routeCount] = "Room 3 to (" + dist8 + "m) Intersection 1 to (" + dist6 + "m) Room 5";
+                routeDistances[routeCount++] = dist8 + dist6;
+                routes[routeCount] = "Room 3 to (" + dist6 + "m) Room 4 to (" + dist3 + "m) Room 5";
+                routeDistances[routeCount++] = dist6 + dist3;
             }
         }   
         
         if (currentLoc.equals("Room 4")) {
             if (destination.equals("Room 1")) {
-                routes.add("Room 4 to (" + dist4 + "m) Room 1");
-                routeDistances.add(dist4);
+                routes[routeCount] = "Room 4 to (" + dist4 + "m) Room 1";
+                routeDistances[routeCount++] = dist4;
             }
             if (destination.equals("Room 2")) {
-                routes.add("Room 4 to (" + dist7 + "m) Intersection 1 to (" + dist6 + "m) Room 5 to (" + dist3 + "m) Intersection 2 to (" + dist2 + "m) Room 2");
-                routeDistances.add(dist7 + dist6 + dist3 + dist2);
+                routes[routeCount] = "Room 4 to (" + dist7 + "m) Intersection 1 to (" + dist6 + "m) Room 5 to (" + dist3 + "m) Intersection 2 to (" + dist2 + "m) Room 2";
+                routeDistances[routeCount++] = dist7 + dist6 + dist3 + dist2;
             }
             if (destination.equals("Room 3")) {
-                routes.add("Room 4 to (" + dist7 + "m) Intersection 1 to (" + dist8 + "m) Room 3");
-                routeDistances.add(dist7 + dist8);
+                routes[routeCount] = "Room 4 to (" + dist7 + "m) Intersection 1 to (" + dist8 + "m) Room 3";
+                routeDistances[routeCount++] = dist7 + dist8;
             }
             if (destination.equals("Room 5")) {
-                routes.add("Room 4 to (" + dist7 + "m) Intersection 1 to (" + dist6 + "m) Room 5");
-                routeDistances.add(dist7 + dist6);
+                routes[routeCount] = "Room 4 to (" + dist7 + "m) Intersection 1 to (" + dist6 + "m) Room 5";
+                routeDistances[routeCount++] = dist7 + dist6;
             }
         }
 
         if (currentLoc.equals("Room 5")) {
             if (destination.equals("Room 1")) {
-                routes.add("Room 5 to (" + dist3 + "m) Intersection 2 to (" + dist1 + "m) Room 1");
-                routeDistances.add(dist3 + dist1);
+                routes[routeCount] = "Room 5 to (" + dist3 + "m) Intersection 2 to (" + dist1 + "m) Room 1";
+                routeDistances[routeCount++] = dist3 + dist1;
             }
             if (destination.equals("Room 2")) {
-                routes.add("Room 5 to (" + dist3 + "m) Intersection 2 to (" + dist2 + "m) Room 2");
-                routeDistances.add(dist3 + dist2);
+                routes[routeCount] = "Room 5 to (" + dist3 + "m) Intersection 2 to (" + dist2 + "m) Room 2";
+                routeDistances[routeCount++] = dist3 + dist2;
             }
             if (destination.equals("Room 3")) {
-                routes.add("Room 5 to (" + dist6 + "m) Intersection 1 to (" + dist8 + "m) Room 3");
-                routeDistances.add(dist6 + dist8);
+                routes[routeCount] = "Room 5 to (" + dist6 + "m) Intersection 1 to (" + dist8 + "m) Room 3";
+                routeDistances[routeCount++] = dist6 + dist8;
             }
             if (destination.equals("Room 4")) {
-                routes.add("Room 5 to (" + dist6 + "m) Intersection 1 to (" + dist7 + "m) Room 4");
-                routeDistances.add(dist6 + dist7);
+                routes[routeCount] = "Room 5 to (" + dist6 + "m) Intersection 1 to (" + dist7 + "m) Room 4";
+                routeDistances[routeCount++] = dist6 + dist7;
             }
         }
 
         // Intersection 1 possible routes
         if (currentLoc.equals("Intersection 1")) {
             if (destination.equals("Room 1")) {
-                routes.add("Intersection 1 → Room 4 → Room 1");
-                routeDistances.add(distances.get("Room 4-Intersection 1") + distances.get("Room 1-Room 4"));
+                routes[routeCount] = "Intersection 1 → Room 4 → Room 1";
+                routeDistances[routeCount++] = distances[6] + distances[3];
             }
             if (destination.equals("Room 2")) {
-                routes.add("Intersection 1 → Room 5 → Intersection 2 → Room 2");
-                routeDistances.add(distances.get("Intersection 1-Room 5") + distances.get("Intersection 2-Room 5") + distances.get("Intersection 2-Room 2"));
+                routes[routeCount] = "Intersection 1 → Room 5 → Intersection 2 → Room 2";
+                routeDistances[routeCount++] = distances[5] + distances[2] + distances[1];
             }
             if (destination.equals("Room 3")) {
-                routes.add("Intersection 1 → Room 3");
-                routeDistances.add(distances.get("Room 3-Intersection 1"));
+                routes[routeCount] = "Intersection 1 → Room 3";
+                routeDistances[routeCount++] = distances[7];
             }
             if (destination.equals("Room 4")) {
-                routes.add("Intersection 1 → Room 4");
-                routeDistances.add(distances.get("Room 4-Intersection 1"));
+                routes[routeCount] = "Intersection 1 → Room 4";
+                routeDistances[routeCount++] = distances[6];
             }
             if (destination.equals("Room 5")) {
-                routes.add("Intersection 1 → Room 5");
-                routeDistances.add(distances.get("Intersection 1-Room 5"));
+                routes[routeCount] = "Intersection 1 → Room 5";
+                routeDistances[routeCount++] = distances[5];
             }
         }
-
         // Intersection 2 possible routes
         if (currentLoc.equals("Intersection 2")) {
             if (destination.equals("Room 1")) {
-                routes.add("Intersection 2 → Room 1");
-                routeDistances.add(dist1);
-                routes.add("Intersection 2 → Room 5 → Intersection 1 → Room 4 → Room 1");
-                routeDistances.add(dist3 + dist6 + dist7 + dist4);
-                routes.add("Intersection 2 → Room 2 → Room 3 → Intersection 1 → Room 4 → Room 1");
-                routeDistances.add(dist2 + dist5 + dist8 + dist7 + dist4);
+                routes[routeCount] = "Intersection 2 to (" + dist1 + "m) Room 1";
+                routeDistances[routeCount++] = dist1;
+                routes[routeCount] = "Intersection 2 to (" + dist3 + "m) Room 5 to (" + dist6 + "m) Intersection 1 to (" + dist7 + "m) Room 4 to (" + dist4 + "m) Room 1";
+                routeDistances[routeCount++] = dist3 + dist6 + dist7 + dist4;
+                routes[routeCount] = "Intersection 2 to (" + dist2 + "m) Room 2 to (" + dist5 + "m) Room 3 to (" + dist8 + "m) Intersection 1 to (" + dist7 + "m) Room 4 to (" + dist4 + "m) Room 1";
+                routeDistances[routeCount++] = dist2 + dist5 + dist8 + dist7 + dist4;
             }
             if (destination.equals("Room 2")) {
-                routes.add("Intersection 2 → Room 2");
-                routeDistances.add(dist2);
-                routes.add("Intersection 2 → Room 1 → Room 4 → Intersection 1 → Room 3 → Room 2");
-                routeDistances.add(dist1 + dist4 + dist7 + dist8 + dist5);
-                routes.add("Intersection 2 → Room 5 → Intersection 1 → Room 3 → Room 2");
-                routeDistances.add(dist3 + dist6 + dist8 + dist5);
+                routes[routeCount] = "Intersection 2 to (" + dist2 + "m) Room 2";
+                routeDistances[routeCount++] = dist2;
+                routes[routeCount] = "Intersection 2 to (" + dist1 + "m) Room 1 to (" + dist4 + "m) Room 4 to (" + dist7 + "m) Intersection 1 to (" + dist8 + "m) Room 3 to (" + dist5 + "m) Room 2";
+                routeDistances[routeCount++] = dist1 + dist4 + dist7 + dist8 + dist5;
+                routes[routeCount] = "Intersection 2 to (" + dist3 + "m) Room 5 to (" + dist6 + "m) Intersection 1 to (" + dist8 + "m) Room 3 to (" + dist5 + "m) Room 2";
+                routeDistances[routeCount++] = dist3 + dist6 + dist8 + dist5;
             }
             if (destination.equals("Room 3")) {
-                routes.add("Intersection 2 → Room 2 → Room 3");
-                routeDistances.add(dist2 + dist5);
-                routes.add("Intersection 2 → Room 5 → Intersection 1 → Room 3");
-                routeDistances.add(dist3 + dist6 + dist8);
-                routes.add("Intersection 2 → Room 1 → Room 4 → Intersection 1 → Room 3");
-                routeDistances.add(dist1 + dist4 + dist7 + dist8);
+                routes[routeCount] = "Intersection 2 to (" + dist2 + "m) Room 2 to (" + dist5 + "m) Room 3";
+                routeDistances[routeCount++] = dist2 + dist5;
+                routes[routeCount] = "Intersection 2 to (" + dist3 + "m) Room 5 to (" + dist6 + "m) Intersection 1 to (" + dist8 + "m) Room 3";
+                routeDistances[routeCount++] = dist3 + dist6 + dist8;
+                routes[routeCount] = "Intersection 2 to (" + dist1 + "m) Room 1 to (" + dist4 + "m) Room 4 to (" + dist7 + "m) Intersection 1 to (" + dist8 + "m) Room 3";
+                routeDistances[routeCount++] = dist1 + dist4 + dist7 + dist8;
             }
             if (destination.equals("Room 4")) {
-                routes.add("Intersection 2 → Room 5 → Intersection 1 → Room 4");
-                routeDistances.add(dist3 + dist6 + dist7);
-                routes.add("Intersection 2 → Room 2 → Room 3 → Intersection 1 → Room 4");
-                routeDistances.add(dist2 + dist5 + dist8 + dist7);
-                routes.add("Intersection 2 → Room 1 → Room 4");
-                routeDistances.add(dist1 + dist4);
+                routes[routeCount] = "Intersection 2 to (" + dist3 + "m) Room 5 to (" + dist6 + "m) Intersection 1 to (" + dist7 + "m) Room 4";
+                routeDistances[routeCount++] = dist3 + dist6 + dist7;
+                routes[routeCount] = "Intersection 2 to (" + dist2 + "m) Room 2 to (" + dist5 + "m) Room 3 to (" + dist8 + "m) Intersection 1 to (" + dist7 + "m) Room 4";
+                routeDistances[routeCount++] = dist2 + dist5 + dist8 + dist7;
+                routes[routeCount] = "Intersection 2 to (" + dist1 + "m) Room 1 to (" + dist4 + "m) Room 4";
+                routeDistances[routeCount++] = dist1 + dist4;
             }
             if (destination.equals("Room 5")) {
-                routes.add("Intersection 2 → Room 5");
-                routeDistances.add(dist3);
-                routes.add("Intersection 2 → Room 2 → Room 3 → Intersection 1 → Room 5");
-                routeDistances.add(dist2 + dist5 + dist8 + dist6);
-                routes.add("Intersection 2 → Room 1 → Room 4 → Intersection 1 → Room 5");
-                routeDistances.add(dist1 + dist4 + dist7 + dist6);
+                routes[routeCount] = "Intersection 2 to (" + dist3 + "m) Room 5";
+                routeDistances[routeCount++] = dist3;
+                routes[routeCount] = "Intersection 2 to (" + dist2 + "m) Room 2 to (" + dist5 + "m) Room 3 to (" + dist8 + "m) Intersection 1 to (" + dist6 + "m) Room 5";
+                routeDistances[routeCount++] = dist2 + dist5 + dist8 + dist6;
+                routes[routeCount] = "Intersection 2 to (" + dist1 + "m) Room 1 to (" + dist4 + "m) Room 4 to (" + dist7 + "m) Intersection 1 to (" + dist6 + "m) Room 5";
+                routeDistances[routeCount++] = dist1 + dist4 + dist7 + dist6;
             }
         }
-
+    
+        
         int minIndex = 0;
-        for (int i = 1; i < routeDistances.size(); i++) {
-            if (routeDistances.get(i) < routeDistances.get(minIndex)) {
+        for (int i = 1; i < routeCount; i++) {
+            if (routeDistances[i] < routeDistances[minIndex]) {
                 minIndex = i;
             }
         }
         
         System.out.println("All possible routes:");
-        for (int i = 0; i < routes.size(); i++) {
-            System.out.println(routes.get(i) + " (Total distance: " + routeDistances.get(i) + "m)");
+        for (int i = 0; i < routeCount; i++) {
+            System.out.println(routes[i] + " (Total distance: " + routeDistances[i] + "m)");
         }
         
-        if (!routes.isEmpty()) {
-            println("\nShortest Path: " + routes.get(minIndex) + " (" + routeDistances.get(minIndex) + "m)");
-            println("Estimated Travel Time: " + routeDistances.get(minIndex) + " seconds");
+        if (routeCount > 0) {
+            System.out.println("\nShortest Path: " + routes[minIndex] + " (" + routeDistances[minIndex] + "m)");
+            System.out.println("Estimated Travel Time: " + routeDistances[minIndex] + " seconds");
         } else {
-            println("No available path found.");
+            System.out.println("No available path found.");
         }
-    }
-    static String[] mapLoc = {"Room 1", "Room 2", "Room 3", "Room 4", "Room 5", "Intersection 1", "Intersection 2"};
-    static String currentLocation = getRandomLocation(); // Start at a random location
-
-    static String getRandomLocation() {
-        Random rand = new Random();
-        return mapLoc[rand.nextInt(mapLoc.length)]; // Pick a random room/intersection
-    }
-    static void moveTo(String destination) {
-        System.out.println("\nMoving from " + currentLocation + " to " + destination + "...");
-    
-        if (isValidMove(currentLocation, destination)) {
-            currentLocation = destination; // Update the player's location
-            System.out.println("You have arrived at " + currentLocation);
-            System.out.println(showMap(currentLocation)); // Refresh the map with new position
-        } else {
-            System.out.println("Invalid move. Try again.");
-        }
-    }
-    
-    static boolean isValidMove(String currentLoc, String destination) {
-        HashMap<String, List<String>> validMoves = new HashMap<>();
-        validMoves.put("Room 1", Arrays.asList("Room 2", "Room 4", "Room 5"));
-        validMoves.put("Room 2", Arrays.asList("Room 1", "Room 3", "Room 5"));
-        validMoves.put("Room 3", Arrays.asList("Room 2", "Intersection 1"));
-        validMoves.put("Room 4", Arrays.asList("Room 1", "Intersection 1"));
-        validMoves.put("Room 5", Arrays.asList("Room 1", "Room 2", "Intersection 1", "Intersection 2"));
-        validMoves.put("Intersection 1", Arrays.asList("Room 3", "Room 4", "Room 5"));
-        validMoves.put("Intersection 2", Arrays.asList("Room 1", "Room 2", "Room 5"));
-
-        return validMoves.containsKey(currentLoc) && validMoves.get(currentLoc).contains(destination);
-    }
-    static void showMap() {
-        System.out.println("\nCurrent Map:");
-        for (String loc : mapLoc) {
-            if (loc.equals(currentLocation)) {
-                System.out.println("[" + loc + "] ← You are here");
-            } else {
-                System.out.println(loc);
-            }
-        }
-    }
-    static void gameLoop() {
-        Scanner scanner = new Scanner(System.in);
         
-        while (true) {
-            showMap();
-            System.out.println("\nEnter your destination (or type 'exit' to quit): ");
-            String destination = scanner.nextLine();
-    
-            if (destination.equalsIgnoreCase("exit")) {
-                System.out.println("Exiting the game.");
-                break;
-            }
-    
-            moveTo(destination);
+    /*static void showResults() {
+        int totalScore = 0;
+        for (int score : scores.values()) {
+            totalScore += score;
         }
-    
-        scanner.close();
-    }
-    public static void moveUser(String newLocation) {
-        if (isValidMove(currentLocation, newLocation)) { // Validate the move
-            currentLocation = newLocation; // Update the user's position
-            System.out.println("You moved to: " + currentLocation);
-            System.out.println(showMap(currentLocation)); // Display the updated map
+        System.out.println("Total score: " + totalScore + " out of 25");
+        if (totalScore >= 20) {
+            System.out.println("Congratulations! You passed the exams and qualified for the engineering course.");
+            System.out.println("You will now time-skip four years to take the board exam.");
         } else {
-            System.out.println("Invalid move. Try again.");
-        }
+            System.out.println("Unfortunately, you did not pass the exams.");
+        }*/
     }
-    
-        
-    
-    
+    static void showMovement(String currentLocation){
+        println(showMap(currentLocation));
+        println("1. Move right");
+        println("2. Move left");
+        println("3. Move forward");
+        println("4. Move backward");
 
+    }
+   
+   
     
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
         Random random = new Random();
+
+        /*String filePath = "C:\\Code Practice\\GameMap\\gamemap\\src\\main\\java\\com\\GameMap\\School_boy.ansi.txt";
+      
+        try {
+            String content = new String(Files.readAllBytes(Paths.get(filePath)));
+            
+            // Example: Wrapping content with ANSI color codes (green text)
+            String greenText = "\u001B[32m" + content + "\u001B[0m";
+
+            System.out.println(greenText);
+        } catch (IOException e) {
+            System.out.println("Error reading the file: " + e.getMessage());
+        }*/
+
         Title();
         String currentLocation = showMenu(scan);
         
         askQuestion(currentLocation, scan);
         String selectedDestination = MenuDestination(currentLocation, scan);
         showRoutesAndFindShortest(currentLocation, selectedDestination);
-        while (true) {
-            System.out.println("\nEnter your destination (Room 1-5 or Intersection 1-2), or 'exit' to quit:");
-            String destination = scan.nextLine();
-    
-            if (destination.equalsIgnoreCase("exit")) {
-                System.out.println("Game Over!");
-                break;
-            }
-    
-            moveUser(destination);
-        }
-        gameLoop(); 
-       
+        
+       showMovement(currentLocation);
     }
 }
-    
 
 
-   
+
+
