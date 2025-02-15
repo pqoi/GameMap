@@ -474,38 +474,89 @@ public class Map {
         
         if (routeCount > 0) {
             System.out.println("\nShortest Path: " + routes[minIndex] + " (" + routeDistances[minIndex] + "m)");
-            System.out.println("Estimated Travel Time: " + routeDistances[minIndex] + " seconds");
-        } else {
-            System.out.println("No available path found.");
+                System.out.println("Estimated Travel Time: " + routeDistances[minIndex] + " seconds");
+            } else {
+                System.out.println("No available path found.");
+            }
         }
         
-    /*static void showResults() {
-        int totalScore = 0;
-        for (int score : scores.values()) {
-            totalScore += score;
-        }
-        System.out.println("Total score: " + totalScore + " out of 25");
-        if (totalScore >= 20) {
-            System.out.println("Congratulations! You passed the exams and qualified for the engineering course.");
-            System.out.println("You will now time-skip four years to take the board exam.");
-        } else {
-            System.out.println("Unfortunately, you did not pass the exams.");
-        }*/
-    }
-    static void showMovement(String currentLocation){
-        println(showMap(currentLocation));
-        println("1. Move right");
-        println("2. Move left");
-        println("3. Move forward");
-        println("4. Move backward");
-
-    }
-   
-   
     
+
+    static void showMovement(String currentLocation, String destination, Scanner scan) {
+        while (!currentLocation.equals(destination)) {
+            println(showMap(currentLocation));
+            println("Choose Key to move to the next location: ");
+            println("1. Move right");
+            println("2. Move left");
+            println("3. Move forward");
+            println("4. Move backward");
+
+            int choice = scan.nextInt();
+            String newLocation = currentLocation;
+
+            switch (currentLocation) {
+                case "Room 1":
+                    if (choice == 1) newLocation = "Intersection 2";
+                    else if (choice == 3) newLocation = "Room 4";
+                    break;
+                case "Room 2":
+                    if (choice == 2) newLocation = "Intersection 2";
+                    else if (choice == 4) newLocation = "Room 3";
+                    break;
+                case "Room 3":
+                    if (choice == 2) newLocation = "Room 2";
+                    else if (choice == 4) newLocation = "Intersection 1";
+                    break;
+                case "Room 4":
+                    if (choice == 1) newLocation = "Room 1";
+                    else if (choice == 3) newLocation = "Intersection 1";
+                    break;
+                case "Room 5":
+                    if (choice == 2) newLocation = "Intersection 2";
+                    else if (choice == 4) newLocation = "Intersection 1";
+                    break;
+                case "Intersection 1":
+                    if (choice == 1) newLocation = "Room 4";
+                    else if (choice == 2) newLocation = "Room 3";
+                    else if (choice == 3) newLocation = "Room 5";
+                    break;
+                case "Intersection 2":
+                    if (choice == 1) newLocation = "Room 2";
+                    else if (choice == 2) newLocation = "Room 1";
+                    else if (choice == 3) newLocation = "Room 5";
+                    break;
+                default:
+                    println("Invalid move.");
+                    break;
+            }
+
+            if (!newLocation.equals(currentLocation)) {
+                println("Moving to " + newLocation);
+                currentLocation = newLocation;
+                if (!currentLocation.equals(destination)) {
+                    askQuestion(currentLocation, scan);
+                }
+            } else {
+                println("You can't move in that direction.");
+            }
+        }
+        println("You have reached your destination: " + destination);
+    }
+
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
         Random random = new Random();
+
+        Title();
+        String currentLocation = showMenu(scan);
+        
+        askQuestion(currentLocation, scan);
+        String selectedDestination = MenuDestination(currentLocation, scan);
+        showRoutesAndFindShortest(currentLocation, selectedDestination);
+        
+        showMovement(currentLocation, selectedDestination, scan);
+    }
+        
 
         /*String filePath = "C:\\Code Practice\\GameMap\\gamemap\\src\\main\\java\\com\\GameMap\\School_boy.ansi.txt";
       
@@ -520,15 +571,7 @@ public class Map {
             System.out.println("Error reading the file: " + e.getMessage());
         }*/
 
-        Title();
-        String currentLocation = showMenu(scan);
-        
-        askQuestion(currentLocation, scan);
-        String selectedDestination = MenuDestination(currentLocation, scan);
-        showRoutesAndFindShortest(currentLocation, selectedDestination);
-        
-       showMovement(currentLocation);
-    }
+      
 }
 
 
