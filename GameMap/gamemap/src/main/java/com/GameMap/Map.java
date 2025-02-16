@@ -11,7 +11,8 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Map {
-    static java.util.Map<String, Integer> scores = new HashMap<>();
+    static String[] locations = new String[7];
+    static int[] scores = new int[7];
     static void println(String print) {
         System.out.println(print);
     }
@@ -252,10 +253,44 @@ public class Map {
             }
         }
 
-        scores.put(currentLoc, score);
+        if (roomIndex != -1) {
+            scores[roomIndex] = score;
+        }
         System.out.println("You scored " + score + " out of 5 in " + currentLoc + ".");
-    }
-    static String MenuDestination(String currentLocation, Scanner scan) {
+        ScoreMenu();
+
+        boolean allExamsCompleted = true;
+        for (int i = 0; i < scores.length; i++) {
+            if (scores[i] == 0) {
+            allExamsCompleted = false;
+            break;
+            }
+        }
+
+        if (allExamsCompleted) {
+            int totalScore = 0;
+            for (int i = 0; i < scores.length; i++) {
+            totalScore += scores[i];
+            }
+            println("Your total score is: " + totalScore + " out of " + (scores.length * 5));
+            if (totalScore >= (scores.length * 3)) {
+            println("Congratulations! You passed the exams.");
+            } else {
+            println("Unfortunately, you did not pass the exams. Better luck next time.");
+            }
+            System.exit(0);
+        }
+        }
+        static void ScoreMenu() {
+        println("Exam Score in Every Room:");
+        println("Room 1: " + scores[0] + "/5");
+        println("Room 2: " + scores[1] + "/5");
+        println("Room 3: " + scores[2] + "/5");
+        println("Room 4: " + scores[3] + "/5");
+        println("Room 5: " + scores[4] + "/5");
+        }
+
+        static String MenuDestination(String currentLocation, Scanner scan) {
         println("You are in " + currentLocation);
         println("Where would you like to go?");
         
@@ -476,72 +511,75 @@ public class Map {
             System.out.println("\nShortest Path: " + routes[minIndex] + " (" + routeDistances[minIndex] + "m)");
                 System.out.println("Estimated Travel Time: " + routeDistances[minIndex] + " seconds");
             } else {
-                System.out.println("No available path found.");
-            }
-        }
-        
+                            System.out.println("No available path found.");
+                        }
+    }
     
-
+    
+            
     static void showMovement(String currentLocation, String destination, Scanner scan) {
-        while (!currentLocation.equals(destination)) {
-            println(showMap(currentLocation));
-            println("Choose Key to move to the next location: ");
-            println("1. Move right");
-            println("2. Move left");
-            println("3. Move forward");
-            println("4. Move backward");
+            while (!currentLocation.equals(destination)) {
+                println(showMap(currentLocation));
+                println("Choose Key to move to the next location: ");
+                println("1. Move right");
+                println("2. Move left");
+                println("3. Move forward");
+                println("4. Move backward");
 
-            int choice = scan.nextInt();
-            String newLocation = currentLocation;
+                int choice = scan.nextInt();
+                String newLocation = currentLocation;
 
-            switch (currentLocation) {
+                switch (currentLocation) {
                 case "Room 1":
                     if (choice == 1) newLocation = "Intersection 2";
-                    else if (choice == 3) newLocation = "Room 4";
+                    else if (choice == 4) newLocation = "Room 4";
                     break;
                 case "Room 2":
                     if (choice == 2) newLocation = "Intersection 2";
                     else if (choice == 4) newLocation = "Room 3";
                     break;
                 case "Room 3":
-                    if (choice == 2) newLocation = "Room 2";
-                    else if (choice == 4) newLocation = "Intersection 1";
+                    if (choice == 3) newLocation = "Room 2";
+                    else if (choice == 2) newLocation = "Intersection 1";
                     break;
                 case "Room 4":
-                    if (choice == 1) newLocation = "Room 1";
-                    else if (choice == 3) newLocation = "Intersection 1";
+                    if (choice == 3) newLocation = "Room 1";
+                    else if (choice == 1) newLocation = "Intersection 1";
                     break;
                 case "Room 5":
-                    if (choice == 2) newLocation = "Intersection 2";
+                    if (choice == 3) newLocation = "Intersection 2";
                     else if (choice == 4) newLocation = "Intersection 1";
                     break;
                 case "Intersection 1":
-                    if (choice == 1) newLocation = "Room 4";
-                    else if (choice == 2) newLocation = "Room 3";
+                    if (choice == 2) newLocation = "Room 4";
+                    else if (choice == 1) newLocation = "Room 3";
                     else if (choice == 3) newLocation = "Room 5";
                     break;
                 case "Intersection 2":
                     if (choice == 1) newLocation = "Room 2";
                     else if (choice == 2) newLocation = "Room 1";
-                    else if (choice == 3) newLocation = "Room 5";
+                    else if (choice == 4) newLocation = "Room 5";
                     break;
                 default:
                     println("Invalid move.");
                     break;
-            }
-
-            if (!newLocation.equals(currentLocation)) {
-                println("Moving to " + newLocation);
-                currentLocation = newLocation;
-                if (!currentLocation.equals(destination)) {
-                    askQuestion(currentLocation, scan);
                 }
-            } else {
-                println("You can't move in that direction.");
+
+                if (!newLocation.equals(currentLocation)) {
+                    println("Moving to " + newLocation);
+                    currentLocation = newLocation;
+                    if (!currentLocation.equals(destination) && !currentLocation.startsWith("Intersection")) {
+                        askQuestion(currentLocation, scan);
+                    }
+                } else {
+                    println("You can't move in that direction.");
+                }
             }
+            println("You have reached your destination: " + destination);
+            askQuestion(destination, scan);
+            ScoreMenu();
         }
-        println("You have reached your destination: " + destination);
-    }
+    
 
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
