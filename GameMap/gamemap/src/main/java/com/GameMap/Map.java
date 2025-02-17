@@ -407,47 +407,91 @@ public class Map {
                 routeDistances[routeCount++] = dist7 + dist6;
             }
         }
-
+        //Room 5 possible routes
         if (currentLoc.equals("Room 5")) {
             if (destination.equals("Room 1")) {
-                routes[routeCount] = "Room 5 to (" + dist3 + "m) Intersection 2 to (" + dist1 + "m) Room 1";
-                routeDistances[routeCount++] = dist3 + dist1;
+            routes[routeCount] = "Room 5 to (" + dist3 + "m) Intersection 2 to (" + dist1 + "m) Room 1";
+            routeDistances[routeCount++] = dist3 + dist1;
+            routes[routeCount] = "Room 5 to (" + dist6 + "m) Intersection 1 to (" + dist7 + "m) Room 4 to (" + dist4 + "m) Room 1";
+            routeDistances[routeCount++] = dist6 + dist7 + dist4;
+            routes[routeCount] = "Room 5 to (" + dist3 + "m) Intersection 2 to (" + dist2 + "m) Room 2 to (" + dist5 + "m) Room 3 to (" + dist8 + "m) Intersection 1 to (" + dist7 + "m) Room 4 to (" + dist4 + "m) Room 1";
+            routeDistances[routeCount++] = dist3 + dist2 + dist5 + dist8 + dist7 + dist4;
+            routes[routeCount] = "Room 5 to (" + dist6 + "m) Intersection 1 to (" + dist8 + "m) Room 3 to (" + dist5 + "m) Room 2 to (" + dist2 + "m) Intersection 2 to (" + dist1 + "m) Room 1";
+            routeDistances[routeCount++] = dist6 + dist8 + dist5 + dist2 + dist1;
             }
             if (destination.equals("Room 2")) {
-                routes[routeCount] = "Room 5 to (" + dist3 + "m) Intersection 2 to (" + dist2 + "m) Room 2";
-                routeDistances[routeCount++] = dist3 + dist2;
+            routes[routeCount] = "Room 5 to (" + dist3 + "m) Intersection 2 to (" + dist2 + "m) Room 2";
+            routeDistances[routeCount++] = dist3 + dist2;
+            routes[routeCount] = "Room 5 to (" + dist6 + "m) Intersection 1 to (" + dist8 + "m) Room 3 to (" + dist5 + "m) Room 2";
+            routeDistances[routeCount++] = dist6 + dist8 + dist5;
+            routes[routeCount] = "Room 5 to (" + dist6 + "m) Intersection 1 to (" + dist7 + "m) Room 4 to (" + dist4 + "m) Room 1 to (" + dist1 + "m) Intersection 2 to (" + dist2 + "m) Room 2";
+            routeDistances[routeCount++] = dist6 + dist7 + dist4 + dist1 + dist2;
+            routes[routeCount] = "Room 5 to (" + dist3 + "m) Intersection 2 to (" + dist1 + "m) Room 1 to (" + dist4 + "m) Room 4 to (" + dist7 + "m) Intersection 1 to (" + dist8 + "m) Room 3 to (" + dist5 + "m) Room 2";
+            routeDistances[routeCount++] = dist3 + dist1 + dist4 + dist7 + dist8 + dist5;
             }
             if (destination.equals("Room 3")) {
-                routes[routeCount] = "Room 5 to (" + dist6 + "m) Intersection 1 to (" + dist8 + "m) Room 3";
-                routeDistances[routeCount++] = dist6 + dist8;
+            routes[routeCount] = "Room 5 to (" + dist6 + "m) Intersection 1 to (" + dist8 + "m) Room 3";
+            routeDistances[routeCount++] = dist6 + dist8;
+            routes[routeCount] = "Room 5 to (" + dist3 + "m) Intersection 2 to (" + dist2 + "m) Room 2 to (" + dist5 + "m) Room 3";
+            routeDistances[routeCount++] = dist3 + dist2 + dist5;
+            routes[routeCount] = "Room 5 to (" + dist3 + "m) Intersection 2 to (" + dist1 + "m) Room 1 to (" + dist4 + "m) Room 4 to (" + dist7 + "m) Intersection 1 to (" + dist8 + "m) Room 3";
+            routeDistances[routeCount++] = dist3 + dist1 + dist4 + dist7 + dist8;
+            routes[routeCount] = "Room 5 to (" + dist6 + "m) Intersection 1 to (" + dist7 + "m) Room 4 to (" + dist4 + "m) Room 1 to (" + dist1 + "m) Intersection 2 to (" + dist2 + "m) Room 2 to (" + dist5 + "m) Room 3";
+            routeDistances[routeCount++] = dist6 + dist7 + dist4 + dist1 + dist2 + dist5;
             }
             if (destination.equals("Room 4")) {
-                routes[routeCount] = "Room 5 to (" + dist6 + "m) Intersection 1 to (" + dist7 + "m) Room 4";
-                routeDistances[routeCount++] = dist6 + dist7;
+            routes[routeCount] = "Room 5 to (" + dist6 + "m) Intersection 1 to (" + dist7 + "m) Room 4";
+            routeDistances[routeCount++] = dist6 + dist7;
+            routes[routeCount] = "Room 5 to (" + dist3 + "m) Intersection 2 to (" + dist1 + "m) Room 1 to (" + dist4 + "m) Room 4";
+            routeDistances[routeCount++] = dist3 + dist1 + dist4;
+            routes[routeCount] = "Room 5 to (" + dist3 + "m) Intersection 2 to (" + dist2 + "m) Room 2 to (" + dist5 + "m) Room 3 to (" + dist8 + "m) Intersection 1 to (" + dist7 + "m) Room 4";
+            routeDistances[routeCount++] = dist3 + dist2 + dist5 + dist8 + dist7;
+            routes[routeCount] = "Room 5 to (" + dist6 + "m) Intersection 1 to (" + dist8 + "m) Room 3 to (" + dist5 + "m) Room 2 to (" + dist2 + "m) Intersection 2 to (" + dist1 + "m) Room 1 to (" + dist4 + "m) Room 4";
+            routeDistances[routeCount++] = dist6 + dist8 + dist5 + dist2 + dist1 + dist4;
             }
         }
 
         // Intersection 1 possible routes
         if (currentLoc.equals("Intersection 1")) {
             if (destination.equals("Room 1")) {
-                routes[routeCount] = "Intersection 1 → Room 4 → Room 1";
-                routeDistances[routeCount++] = distances[6] + distances[3];
+            routes[routeCount] = "Intersection 1 → Room 4 → Room 1";
+            routeDistances[routeCount++] = distances[6] + distances[3];
+            routes[routeCount] = "Intersection 1 → Room 5 → Intersection 2 → Room 1";
+            routeDistances[routeCount++] = distances[5] + distances[2] + distances[0];
+            routes[routeCount] = "Intersection 1 → Room 3 → Room 2 → Intersection 2 → Room 1";
+            routeDistances[routeCount++] = distances[7] + distances[4] + distances[1] + distances[0];
             }
             if (destination.equals("Room 2")) {
-                routes[routeCount] = "Intersection 1 → Room 5 → Intersection 2 → Room 2";
-                routeDistances[routeCount++] = distances[5] + distances[2] + distances[1];
+            routes[routeCount] = "Intersection 1 → Room 3 → Room 2";
+            routeDistances[routeCount++] = distances[7] + distances[4];
+            routes[routeCount] = "Intersection 1 → Room 5 → Intersection 2 → Room 2";
+            routeDistances[routeCount++] = distances[5] + distances[2] + distances[1];
+            routes[routeCount] = "Intersection 1 → Room 4 → Room 1 → Intersection 2 → Room 2";
+            routeDistances[routeCount++] = distances[6] + distances[3] + distances[0] + distances[1];
             }
             if (destination.equals("Room 3")) {
-                routes[routeCount] = "Intersection 1 → Room 3";
-                routeDistances[routeCount++] = distances[7];
+            routes[routeCount] = "Intersection 1 → Room 3";
+            routeDistances[routeCount++] = distances[7];
+            routes[routeCount] = "Intersection 1 → Room 5 → Intersection 2 → Room 2 → Room 3";
+            routeDistances[routeCount++] = distances[5] + distances[2] + distances[1] + distances[4];
+            routes[routeCount] = "Intersection 1 → Room 4 → Room 1 → Intersection 2 → Room 2 → Room 3";
+            routeDistances[routeCount++] = distances[6] + distances[3] + distances[0] + distances[1] + distances[4];
             }
             if (destination.equals("Room 4")) {
-                routes[routeCount] = "Intersection 1 → Room 4";
-                routeDistances[routeCount++] = distances[6];
+            routes[routeCount] = "Intersection 1 → Room 4";
+            routeDistances[routeCount++] = distances[6];
+            routes[routeCount] = "Intersection 1 → Room 5 → Intersection 2 → Room 1 → Room 4";
+            routeDistances[routeCount++] = distances[5] + distances[2] + distances[0] + distances[3];
+            routes[routeCount] = "Intersection 1 → Room 3 → Room 2 → Intersection 2 → Room 1 → Room 4";
+            routeDistances[routeCount++] = distances[7] + distances[4] + distances[1] + distances[0] + distances[3];
             }
             if (destination.equals("Room 5")) {
-                routes[routeCount] = "Intersection 1 → Room 5";
-                routeDistances[routeCount++] = distances[5];
+            routes[routeCount] = "Intersection 1 → Room 5";
+            routeDistances[routeCount++] = distances[5];
+            routes[routeCount] = "Intersection 1 → Room 4 → Room 1 → Intersection 2 → Room 5";
+            routeDistances[routeCount++] = distances[6] + distances[3] + distances[0] + distances[2];
+            routes[routeCount] = "Intersection 1 → Room 3 → Room 2 → Intersection 2 → Room 5";
+            routeDistances[routeCount++] = distances[7] + distances[4] + distances[1] + distances[2];
             }
         }
         // Intersection 2 possible routes
