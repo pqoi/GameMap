@@ -243,6 +243,11 @@ public class Map {
                 return;
         }
 
+        if (scores[roomIndex] > 0) {
+            println("You have already completed the exam in " + currentLoc + ".");
+            return;
+        }
+
         int score = 0;
         for (int i = 0; i < 5; i++) {
             System.out.println(questions[roomIndex][i]);
@@ -253,61 +258,88 @@ public class Map {
             }
         }
 
-        if (roomIndex != -1) {
-            scores[roomIndex] = score;
-        }
+        scores[roomIndex] = score;
         System.out.println("You scored " + score + " out of 5 in " + currentLoc + ".");
         ScoreMenu();
 
         boolean allExamsCompleted = true;
         for (int i = 0; i < scores.length; i++) {
             if (scores[i] == 0) {
-            allExamsCompleted = false;
-            break;
+                allExamsCompleted = false;
+                break;
             }
         }
 
         if (allExamsCompleted) {
             int totalScore = 0;
             for (int i = 0; i < scores.length; i++) {
-            totalScore += scores[i];
+                totalScore += scores[i];
             }
             println("Your total score is: " + totalScore + " out of " + (scores.length * 5));
             if (totalScore >= (scores.length * 3)) {
-            println("Congratulations! You passed the exams.");
+                println("Congratulations! You passed the exams.");
             } else {
-            println("Unfortunately, you did not pass the exams. Better luck next time.");
+                println("Unfortunately, you did not pass the exams. Better luck next time.");
             }
             System.exit(0);
         }
-        }
-        static void ScoreMenu() {
+    }
+    static void ScoreMenu() {
         println("Exam Score in Every Room:");
         println("Room 1: " + scores[0] + "/5");
         println("Room 2: " + scores[1] + "/5");
         println("Room 3: " + scores[2] + "/5");
         println("Room 4: " + scores[3] + "/5");
         println("Room 5: " + scores[4] + "/5");
+    }
+
+    static String MenuDestination(String currentLocation, Scanner scan) {
+        boolean allExamsCompleted = true;
+        for (int score : scores) {
+            if (score == 0) {
+                allExamsCompleted = false;
+                break;
+            }
         }
 
-        static String MenuDestination(String currentLocation, Scanner scan) {
+        if (allExamsCompleted) {
+            ScoreMenu();
+            int totalScore = 0;
+            for (int score : scores) {
+                totalScore += score;
+            }
+            println("Your total score is: " + totalScore + " out of " + (scores.length * 5));
+            if (totalScore >= (scores.length * 5 * 0.75)) {
+                println("Congratulations! You passed the exams.");
+                println("You are now ready to take the Engineer Entrance Exam.");
+                EngineerExam();
+            } else {
+                println("Unfortunately, you did not pass the exams. Better luck next time.");
+            }
+            System.exit(0);
+        }
+
         println("You are in " + currentLocation);
         println("Where would you like to go?");
         
         String[] rooms = {"Room 1", "Room 2", "Room 3", "Room 4", "Room 5"};
-    
-        for (int i = 0; i < rooms.length; i++) {
-            if (rooms[i].equals(currentLocation)) {
-                continue; // Skip the current location
-            }
-            println((i + 1) + ". " + rooms[i]);
-        } 
-    
-        println("Enter the number of the room you want to go to: ");
+        List<String> availableRooms = new ArrayList<>();
         
+        for (int i = 0; i < rooms.length; i++) {
+            if (!rooms[i].equals(currentLocation) && scores[i] == 0) {
+                availableRooms.add(rooms[i]);
+            }
+        }
+        
+        for (int i = 0; i < availableRooms.size(); i++) {
+            println((i + 1) + ". " + availableRooms.get(i));
+        }
+        
+        println("Enter the number of the room you want to go to: ");
         int choice = scan.nextInt();
-        return "Room " + choice;
+        return availableRooms.get(choice - 1);
     }
+
     static void showRoutesAndFindShortest(String currentLoc, String destination) {
         String[] routeNames = {
             "Room 1-Intersection 2", "Intersection 2-Room 2", "Intersection 2-Room 5", 
@@ -388,7 +420,7 @@ public class Map {
                 routeDistances[routeCount++] = dist6 + dist3;
             }
         }   
-        
+        //Room 4 
         if (currentLoc.equals("Room 4")) {
             if (destination.equals("Room 1")) {
                 routes[routeCount] = "Room 4 to (" + dist4 + "m) Room 1";
@@ -542,7 +574,7 @@ public class Map {
         int minIndex = 0;
         for (int i = 1; i < routeCount; i++) {
             if (routeDistances[i] < routeDistances[minIndex]) {
-                minIndex = i;
+            minIndex = i;
             }
         }
         
@@ -553,15 +585,18 @@ public class Map {
         
         if (routeCount > 0) {
             System.out.println("\nShortest Path: " + routes[minIndex] + " (" + routeDistances[minIndex] + "m)");
-                System.out.println("Estimated Travel Time: " + routeDistances[minIndex] + " seconds");
-            } else {
-                            System.out.println("No available path found.");
-                        }
-    }
-    
-    
+            int travelTimeSeconds = routeDistances[minIndex] * 60; // Assuming 1 meter takes 1 second to travel
+            int travelTimeMinutes = travelTimeSeconds / 60;
+            int remainingSeconds = travelTimeSeconds % 60;
+            System.out.println("Estimated Travel Time: " + travelTimeMinutes + " minutes and " + remainingSeconds + " seconds");
+        } else {
+            System.out.println("No available path found.");
+        }
+        }
+        
+        
             
-    static void showMovement(String currentLocation, String destination, Scanner scan) {
+        static void showMovement(String currentLocation, String destination, Scanner scan) {
             while (!currentLocation.equals(destination)) {
                 println(showMap(currentLocation));
                 println("Choose Key to move to the next location: ");
@@ -571,8 +606,7 @@ public class Map {
                 println("4. Move backward");
 
                 int choice = scan.nextInt();
-                String newLocation = currentLocation;
-
+                String newLocation = currentLocation; 
                 switch (currentLocation) {
                 case "Room 1":
                     if (choice == 1) newLocation = "Intersection 2";
@@ -622,7 +656,77 @@ public class Map {
             println("You have reached your destination: " + destination);
             askQuestion(destination, scan);
             ScoreMenu();
-        }
+
+            
+            }
+            static void EngineerExam() {
+                Scanner scan = new Scanner(System.in);
+
+                String[][] questions = {
+                    {"What is the primary purpose of a retaining wall?\nA. To support vertical loads\nB. To resist lateral soil pressure\nC. To provide aesthetic value\nD. To support roof structures"},
+                    {"In structural engineering, what does the term 'buckling' refer to?\nA. Sudden failure of a structural member subjected to high compressive stress\nB. Gradual deformation of a material under load\nC. Fracture of a material due to tensile stress\nD. Corrosion of steel structures"},
+                    {"What is the main advantage of using pre-stressed concrete?\nA. Increased tensile strength\nB. Reduced weight\nC. Improved thermal insulation\nD. Enhanced aesthetic appeal"},
+                    {"Which of the following is a non-destructive test for concrete?\nA. Compression test\nB. Slump test\nC. Rebound hammer test\nD. Tensile test"},
+                    {"What is the purpose of a geotextile in civil engineering?\nA. To reinforce soil\nB. To provide drainage\nC. To separate different soil layers\nD. All of the above"},
+                    {"In fluid mechanics, what does Bernoulli's equation describe?\nA. The relationship between pressure, velocity, and elevation in a moving fluid\nB. The rate of flow of a fluid through a pipe\nC. The viscosity of a fluid\nD. The density of a fluid"},
+                    {"What is the main function of a culvert?\nA. To provide a passage for vehicles\nB. To allow water to flow under a road or railway\nC. To support a bridge\nD. To provide ventilation"},
+                    {"In surveying, what is the purpose of a theodolite?\nA. To measure distances\nB. To measure angles\nC. To measure elevations\nD. To measure areas"},
+                    {"What is the primary cause of soil liquefaction?\nA. Heavy rainfall\nB. Earthquake shaking\nC. High wind speeds\nD. Volcanic activity"},
+                    {"In transportation engineering, what is the main purpose of a roundabout?\nA. To reduce traffic speed\nB. To eliminate the need for traffic signals\nC. To improve traffic flow and reduce accidents\nD. To provide parking space"}
+                };
+
+                char[] answers = {'B', 'A', 'A', 'C', 'D', 'A', 'B', 'B', 'B', 'C'};
+
+                int score = takeExam(questions, answers, questions.length, scan);
+                boolean passed = checkIfPassed(score, questions.length, 0.75);
+
+                if (passed) {
+                    System.out.println("Congratulations! You passed the exam.");
+                } else {
+                    System.out.println("You failed.");
+                }
+
+                scan.close();
+            }
+
+            static int takeExam(String[][] questions, char[] answers, int totalQuestions, Scanner scan) {
+                int score = 0;
+                char[] userAnswers = new char[totalQuestions];
+
+                for (int i = 0; i < totalQuestions; i++) {
+                    System.out.print((i + 1) + ". ");
+                    System.out.println(questions[i][0]);
+                    System.out.print("Your answer: ");
+                    userAnswers[i] = Character.toUpperCase(scan.next().charAt(0));
+                }
+
+                for (int i = 0; i < totalQuestions; i++) {
+                    if (userAnswers[i] == answers[i]) {
+                        score++;
+                    }
+                }
+
+                displayResults(score, totalQuestions);
+                return score;
+            }
+
+            static boolean checkIfPassed(int score, int totalQuestions, double passing_score) {
+                return ((double) score / totalQuestions) >= passing_score;
+            }
+
+            static void displayResults(int score, int totalQuestions) {
+                double percentage = ((double) score / totalQuestions) * 100;
+                System.out.println("\nYour Score: " + score + "/" + totalQuestions);
+                System.out.println("Percentage: " + String.format("%.1f", percentage) + "%");
+                if (percentage >= 75) {
+                    System.out.println("Congratulations! You passed the exam.");
+                } else {
+                    System.out.println("You failed.");
+                }
+            }
+
+           
+    
     
 
     public static void main(String[] args) {
@@ -637,6 +741,8 @@ public class Map {
         showRoutesAndFindShortest(currentLocation, selectedDestination);
         
         showMovement(currentLocation, selectedDestination, scan);
+
+
     }
         
 
