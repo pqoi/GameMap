@@ -222,7 +222,7 @@ public class Map {
                 "Why is honesty important?\nA) It builds trust\nB) It makes people afraid\nC) It helps you lie better\nD) It has no effect"
             }
         };
-
+    
         char[][] answers = {
             {'B', 'C', 'C', 'C', 'B'}, // Room 1 answers
             {'B', 'C', 'C', 'D', 'C'}, // Room 2 answers
@@ -230,7 +230,7 @@ public class Map {
             {'B', 'B', 'D', 'B', 'D'}, // Room 4 answers
             {'C', 'B', 'B', 'C', 'A'}  // Room 5 answers
         };
-
+    
         int roomIndex = -1;
         switch (currentLoc) {
             case "Room 1": roomIndex = 0; break;
@@ -242,12 +242,12 @@ public class Map {
                 System.out.println("You are in an intersection. No question here.");
                 return;
         }
-
+    
         if (scores[roomIndex] > 0) {
             println("You have already completed the exam in " + currentLoc + ".");
             return;
         }
-
+    
         int score = 0;
         for (int i = 0; i < 5; i++) {
             System.out.println(questions[roomIndex][i]);
@@ -257,13 +257,13 @@ public class Map {
                 score++;
             }
         }
-
+    
         scores[roomIndex] = score;
         System.out.println("You scored " + score + " out of 5 in " + currentLoc + ".");
         ScoreMenu();
-
+    
         boolean allExamsCompleted = true;
-        for (int i = 0; i < scores.length; i++) {
+        for (int i = 0; i < 5; i++) { // Only check the first 5 rooms
             if (scores[i] == 0) {
                 allExamsCompleted = false;
                 break;
@@ -272,14 +272,16 @@ public class Map {
 
         if (allExamsCompleted) {
             int totalScore = 0;
-            for (int i = 0; i < scores.length; i++) {
-                totalScore += scores[i];
+            for (int i = 0; i < 5; i++) { // Only sum the scores of the first 5 rooms
+            totalScore += scores[i];
             }
-            println("Your total score is: " + totalScore + " out of " + (scores.length * 5));
-            if (totalScore >= (scores.length * 3)) {
-                println("Congratulations! You passed the exams.");
+            println("Your total score is: " + totalScore + " out of " + (5 * 5));
+            double percentage = ((double) totalScore / (5 * 5)) * 100;
+            println("Your percentage score is: " + String.format("%.2f", percentage) + "%");
+            if (totalScore >= (5 * 3.75)) { // 75% of 25 is 18.75
+            println("Congratulations! You passed the exams.");
             } else {
-                println("Unfortunately, you did not pass the exams. Better luck next time.");
+            println("Unfortunately, you did not pass the exams. Better luck next time.");
             }
             System.exit(0);
         }
@@ -294,31 +296,6 @@ public class Map {
     }
 
     static String MenuDestination(String currentLocation, Scanner scan) {
-        boolean allExamsCompleted = true;
-        for (int score : scores) {
-            if (score == 0) {
-                allExamsCompleted = false;
-                break;
-            }
-        }
-
-        if (allExamsCompleted) {
-            ScoreMenu();
-            int totalScore = 0;
-            for (int score : scores) {
-                totalScore += score;
-            }
-            println("Your total score is: " + totalScore + " out of " + (scores.length * 5));
-            if (totalScore >= (scores.length * 5 * 0.75)) {
-                println("Congratulations! You passed the exams.");
-                println("You are now ready to take the Engineer Entrance Exam.");
-                EngineerExam();
-            } else {
-                println("Unfortunately, you did not pass the exams. Better luck next time.");
-            }
-            System.exit(0);
-        }
-
         println("You are in " + currentLocation);
         println("Where would you like to go?");
         
@@ -330,6 +307,21 @@ public class Map {
                 availableRooms.add(rooms[i]);
             }
         }
+    
+        if (availableRooms.isEmpty()) {
+            println("All exams have been completed.");
+            int totalScore = 0;
+            for (int i = 0; i < 5; i++) { // Only sum the scores of the first 5 rooms
+                totalScore += scores[i];
+            }
+            println("Your total score is: " + totalScore + " out of " + (5 * 5));
+            if (totalScore >= (5 * 3.75)) { // 75% of 25 is 18.75
+                println("Congratulations! You passed the exams.");
+            } else {
+                println("Unfortunately, you did not pass the exams. Better luck next time.");
+            }
+            System.exit(0);
+        }
         
         for (int i = 0; i < availableRooms.size(); i++) {
             println((i + 1) + ". " + availableRooms.get(i));
@@ -339,6 +331,7 @@ public class Map {
         int choice = scan.nextInt();
         return availableRooms.get(choice - 1);
     }
+    
 
     static void showRoutesAndFindShortest(String currentLoc, String destination) {
         String[] routeNames = {
@@ -351,92 +344,146 @@ public class Map {
         String[] routes = new String[100];
         int[] routeDistances = new int[100];
         int routeCount = 0;
-        
+        //Room 1 
         if (currentLoc.equals("Room 1")) {
             if (destination.equals("Room 2")) {
-                routes[routeCount] = "Room 1 to (" + dist1 + "m) Intersection 2 to (" + dist2 + "m) Room 2";
-                routeDistances[routeCount++] = dist1 + dist2;
+            routes[routeCount] = "Room 1 to (" + dist1 + "m) Intersection 2 to (" + dist2 + "m) Room 2";
+            routeDistances[routeCount++] = dist1 + dist2;
+            routes[routeCount] = "Room 1 to (" + dist4 + "m) Room 4 to (" + dist7 + "m) Intersection 1 to (" + dist6 + "m) Room 5 to (" + dist3 + "m) Intersection 2 to (" + dist2 + "m) Room 2";
+            routeDistances[routeCount++] = dist4 + dist7 + dist6 + dist3 + dist2;
+            routes[routeCount] = "Room 1 to (" + dist4 + "m) Room 4 to (" + dist7 + "m) Intersection 1 to (" + dist8 + "m) Room 3 to (" + dist5 + "m) Room 2";
+            routeDistances[routeCount++] = dist4 + dist7 + dist8 + dist5;
             }
             if (destination.equals("Room 3")) {
-                routes[routeCount] = "Room 1 to (" + dist1 + "m) Intersection 2 to (" + dist2 + "m) Room 2 to (" + dist5 + "m) Room 3";
-                routeDistances[routeCount++] = dist1 + dist2 + dist5;
+            routes[routeCount] = "Room 1 to (" + dist1 + "m) Intersection 2 to (" + dist2 + "m) Room 2 to (" + dist5 + "m) Room 3";
+            routeDistances[routeCount++] = dist1 + dist2 + dist5;
+            routes[routeCount] = "Room 1 to (" + dist4 + "m) Room 4 to (" + dist7 + "m) Intersection 1 to (" + dist8 + "m) Room 3";
+            routeDistances[routeCount++] = dist4 + dist7 + dist8;
+            routes[routeCount] = "Room 1 to (" + dist1 + "m) Intersection 2 to (" + dist3 + "m) Room 5 to (" + dist6 + "m) Intersection 1 to (" + dist8 + "m) Room 3";
+            routeDistances[routeCount++] = dist1 + dist3 + dist6 + dist8;
             }
             if (destination.equals("Room 4")) {
-                routes[routeCount] = "Room 1 to (" + dist4 + "m) Room 4";
-                routeDistances[routeCount++] = dist4;
+            routes[routeCount] = "Room 1 to (" + dist4 + "m) Room 4";
+            routeDistances[routeCount++] = dist4;
+            routes[routeCount] = "Room 1 to (" + dist1 + "m) Intersection 2 to (" + dist3 + "m) Room 5 to (" + dist6 + "m) Intersection 1 to (" + dist7 + "m) Room 4";
+            routeDistances[routeCount++] = dist1 + dist3 + dist6 + dist7;
+            routes[routeCount] = "Room 1 to (" + dist1 + "m) Intersection 2 to (" + dist2 + "m) Room 2 to (" + dist5 + "m) Room 3 to (" + dist8 + "m) Intersection 1 to (" + dist7 + "m) Room 4";
+            routeDistances[routeCount++] = dist1 + dist2 + dist5 + dist8 + dist7;
             }
             if (destination.equals("Room 5")) {
-                routes[routeCount] = "Room 1 to (" + dist1 + "m) Intersection 2 to (" + dist3 + "m) Room 5";
-                routeDistances[routeCount++] = dist1 + dist3;
-                routes[routeCount] = "Room 1 to (" + dist4 + "m) Room 4 to (" + dist7 + "m) Intersection 1 to (" + dist6 + "m) Room 5";
-                routeDistances[routeCount++] = dist4 + dist7 + dist6;
+            routes[routeCount] = "Room 1 to (" + dist1 + "m) Intersection 2 to (" + dist3 + "m) Room 5";
+            routeDistances[routeCount++] = dist1 + dist3;
+            routes[routeCount] = "Room 1 to (" + dist1 + "m) Intersection 2 to (" + dist2 + "m) Room 2 to (" + dist5 + "m) Room 3 to (" + dist8 + "m) Intersection 1 to (" + dist6 + "m) Room 5";
+            routeDistances[routeCount++] = dist1 + dist2 + dist5 + dist8 + dist6;
+            routes[routeCount] = "Room 1 to (" + dist4 + "m) Room 4 to (" + dist7 + "m) Intersection 1 to (" + dist6 + "m) Room 5";
+            routeDistances[routeCount++] = dist4 + dist7 + dist6;
             }
         }
         //possible route room 2
         if (currentLoc.equals("Room 2")) {
             if (destination.equals("Room 1")) {
-                routes[routeCount] = "Room 2 to (" + dist2 + "m) Intersection 2 to (" + dist1 + "m) Room 1";
-                routeDistances[routeCount++] = dist2 + dist1;
+            routes[routeCount] = "Room 2 to (" + dist2 + "m) Intersection 2 to (" + dist1 + "m) Room 1";
+            routeDistances[routeCount++] = dist2 + dist1;
+            routes[routeCount] = "Room 2 to (" + dist5 + "m) Room 3 to (" + dist8 + "m) Intersection 1 to (" + dist7 + "m) Room 4 to (" + dist4 + "m) Room 1";
+            routeDistances[routeCount++] = dist5 + dist8 + dist7 + dist4;
+            routes[routeCount] = "Room 2 to (" + dist5 + "m) Room 3 to (" + dist8 + "m) Intersection 1 to (" + dist6 + "m) Room 5 to (" + dist3 + "m) Intersection 2 to (" + dist1 + "m) Room 1";
+            routeDistances[routeCount++] = dist5 + dist8 + dist6 + dist3 + dist1;
             }
             if (destination.equals("Room 3")) {
-                routes[routeCount] = "Room 2 to (" + dist5 + "m) Room 3";
-                routeDistances[routeCount++] = dist5;
+            routes[routeCount] = "Room 2 to (" + dist5 + "m) Room 3";
+            routeDistances[routeCount++] = dist5;
+            routes[routeCount] = "Room 2 to (" + dist2 + "m) Intersection 2 to (" + dist3 + "m) Room 5 to (" + dist6 + "m) Intersection 1 to (" + dist8 + "m) Room 3";
+            routeDistances[routeCount++] = dist2 + dist3 + dist6 + dist8;
+            routes[routeCount] = "Room 2 to (" + dist2 + "m) Intersection 2 to (" + dist1 + "m) Room 1 to (" + dist4 + "m) Room 4 to (" + dist7 + "m) Intersection 1 to (" + dist8 + "m) Room 3";
+            routeDistances[routeCount++] = dist2 + dist1 + dist4 + dist7 + dist8;
             }
             if (destination.equals("Room 4")) {
-                routes[routeCount] = "Room 2 to (" + dist2 + "m) Intersection 2 to (" + dist1 + "m) Room 1 to (" + dist4 + "m) Room 4";
-                routeDistances[routeCount++] = dist2 + dist1 + dist4;
+            routes[routeCount] = "Room 2 to (" + dist5 + "m) Room 3 to (" + dist8 + "m) Intersection 1 to (" + dist7 + "m) Room 4";
+            routeDistances[routeCount++] = dist5 + dist8 + dist7;
+            routes[routeCount] = "Room 2 to (" + dist2 + "m) Intersection 2 to (" + dist3 + "m) Room 5 to (" + dist6 + "m) Intersection 1 to (" + dist7 + "m) Room 4";
+            routeDistances[routeCount++] = dist2 + dist3 + dist6 + dist7;
+            routes[routeCount] = "Room 2 to (" + dist2 + "m) Intersection 2 to (" + dist1 + "m) Room 1 to (" + dist4 + "m) Room 4";
+            routeDistances[routeCount++] = dist2 + dist1 + dist4;
             }
             if (destination.equals("Room 5")) {
-                routes[routeCount] = "Room 2 to (" + dist2 + "m) Intersection 2 to (" + dist3 + "m) Room 5";
-                routeDistances[routeCount++] = dist2 + dist3;
+            routes[routeCount] = "Room 2 to (" + dist2 + "m) Intersection 2 to (" + dist3 + "m) Room 5";
+            routeDistances[routeCount++] = dist2 + dist3;
+            routes[routeCount] = "Room 2 to (" + dist5 + "m) Room 3 to (" + dist8 + "m) Intersection 1 to (" + dist6 + "m) Room 5";
+            routeDistances[routeCount++] = dist5 + dist8 + dist6;
+            routes[routeCount] = "Room 2 to (" + dist2 + "m) Intersection 2 to (" + dist1 + "m) Room 1 to (" + dist4 + "m) Room 4 to (" + dist7 + "m) Intersection 1 to (" + dist6 + "m) Room 5";
+            routeDistances[routeCount++] = dist2 + dist1 + dist4 + dist7 + dist6;
             }
         }
         // Room 3 possible routes
         if (currentLoc.equals("Room 3")) {
-            if (destination.equals("Room 1")) {
-                routes[routeCount] = "Room 3 to (" + dist5 + "m) Room 2 to (" + dist2 + "m) Room 1";
-                routeDistances[routeCount++] = dist5 + dist2;
-                routes[routeCount] = "Room 3 to (" + dist8 + "m) Intersection 1 to (" + dist7 + "m) Room 1";
-                routeDistances[routeCount++] = dist8 + dist7;
-                routes[routeCount] = "Room 3 to (" + dist8 + "m) Intersection 1 to (" + dist3 + "m) Intersection 2 to (" + dist1 + "m) Room 1";
-                routeDistances[routeCount++] = dist8 + dist3 + dist1;
-            }
             if (destination.equals("Room 2")) {
-                routes[routeCount] = "Room 3 to (" + dist5 + "m) Room 2";
-                routeDistances[routeCount++] = dist5;
-                routes[routeCount] = "Room 3 to (" + dist8 + "m) Intersection 1 to (" + dist2 + "m) Room 2";
-                routeDistances[routeCount++] = dist8 + dist2;
+            routes[routeCount] = "Room 3 to (" + dist5 + "m) Room 2";
+            routeDistances[routeCount++] = dist5;
+            routes[routeCount] = "Room 3 to (" + dist8 + "m) Intersection 1 to (" + dist6 + "m) Room 5 to (" + dist3 + "m) Intersection 2 to (" + dist2 + "m) Room 2";
+            routeDistances[routeCount++] = dist8 + dist6 + dist3 + dist2;
+            routes[routeCount] = "Room 3 to (" + dist8 + "m) Intersection 1 to (" + dist7 + "m) Room 4 to (" + dist4 + "m) Room 1 to (" + dist1 + "m) Intersection 2 to (" + dist2 + "m) Room 2";
+            routeDistances[routeCount++] = dist8 + dist7 + dist4 + dist1 + dist2;
             }
             if (destination.equals("Room 4")) {
-                routes[routeCount] = "Room 3 to (" + dist6 + "m) Room 5 to (" + dist7 + "m) Room 4";
-                routeDistances[routeCount++] = dist6 + dist7;
-                routes[routeCount] = "Room 3 to (" + dist8 + "m) Intersection 1 to (" + dist7 + "m) Room 4";
-                routeDistances[routeCount++] = dist8 + dist7;
+            routes[routeCount] = "Room 3 to (" + dist8 + "m) Intersection 1 to (" + dist7 + "m) Room 4";
+            routeDistances[routeCount++] = dist8 + dist7;
+            routes[routeCount] = "Room 3 to (" + dist5 + "m) Room 2 to (" + dist2 + "m) Intersection 2 to (" + dist1 + "m) Room 1 to (" + dist4 + "m) Room 4";
+            routeDistances[routeCount++] = dist5 + dist2 + dist1 + dist4;
+            routes[routeCount] = "Room 3 to (" + dist5 + "m) Room 2 to (" + dist2 + "m) Intersection 2 to (" + dist3 + "m) Room 5 to (" + dist6 + "m) Intersection 1 to (" + dist7 + "m) Room 4";
+            routeDistances[routeCount++] = dist5 + dist2 + dist3 + dist6 + dist7;
+            }
+            if (destination.equals("Room 1")) {
+            routes[routeCount] = "Room 3 to (" + dist8 + "m) Intersection 1 to (" + dist7 + "m) Room 4 to (" + dist4 + "m) Room 1";
+            routeDistances[routeCount++] = dist8 + dist7 + dist4;
+            routes[routeCount] = "Room 3 to (" + dist8 + "m) Intersection 1 to (" + dist6 + "m) Room 5 to (" + dist3 + "m) Intersection 2 to (" + dist1 + "m) Room 1";
+            routeDistances[routeCount++] = dist8 + dist6 + dist3 + dist1;
+            routes[routeCount] = "Room 3 to (" + dist5 + "m) Room 2 to (" + dist2 + "m) Intersection 2 to (" + dist1 + "m) Room 1";
+            routeDistances[routeCount++] = dist5 + dist2 + dist1;
             }
             if (destination.equals("Room 5")) {
-                routes[routeCount] = "Room 3 to (" + dist8 + "m) Intersection 1 to (" + dist6 + "m) Room 5";
-                routeDistances[routeCount++] = dist8 + dist6;
-                routes[routeCount] = "Room 3 to (" + dist6 + "m) Room 4 to (" + dist3 + "m) Room 5";
-                routeDistances[routeCount++] = dist6 + dist3;
+            routes[routeCount] = "Room 3 to (" + dist5 + "m) Room 2 to (" + dist2 + "m) Intersection 2 to (" + dist3 + "m) Room 5";
+            routeDistances[routeCount++] = dist5 + dist2 + dist3;
+            routes[routeCount] = "Room 3 to (" + dist8 + "m) Intersection 1 to (" + dist6 + "m) Room 5";
+            routeDistances[routeCount++] = dist8 + dist6;
+            routes[routeCount] = "Room 3 to (" + dist8 + "m) Intersection 1 to (" + dist7 + "m) Room 4 to (" + dist4 + "m) Room 1 to (" + dist1 + "m) Intersection 2 to (" + dist3 + "m) Room 5";
+            routeDistances[routeCount++] = dist8 + dist7 + dist4 + dist1 + dist3;
             }
-        }   
+        }
         //Room 4 
         if (currentLoc.equals("Room 4")) {
             if (destination.equals("Room 1")) {
-                routes[routeCount] = "Room 4 to (" + dist4 + "m) Room 1";
-                routeDistances[routeCount++] = dist4;
+            routes[routeCount] = "Room 4 to (" + dist4 + "m) Room 1";
+            routeDistances[routeCount++] = dist4;
+            routes[routeCount] = "Room 4 to (" + dist7 + "m) Intersection 1 to (" + dist8 + "m) Room 3 to (" + dist5 + "m) Room 2 to (" + dist2 + "m) Intersection 2 to (" + dist1 + "m) Room 1";
+            routeDistances[routeCount++] = dist7 + dist8 + dist5 + dist2 + dist1;
+            routes[routeCount] = "Room 4 to (" + dist7 + "m) Intersection 1 to (" + dist6 + "m) Room 5 to (" + dist3 + "m) Intersection 2 to (" + dist1 + "m) Room 1";
+            routeDistances[routeCount++] = dist7 + dist6 + dist3 + dist1;
             }
             if (destination.equals("Room 2")) {
-                routes[routeCount] = "Room 4 to (" + dist7 + "m) Intersection 1 to (" + dist6 + "m) Room 5 to (" + dist3 + "m) Intersection 2 to (" + dist2 + "m) Room 2";
-                routeDistances[routeCount++] = dist7 + dist6 + dist3 + dist2;
+            routes[routeCount] = "Room 4 to (" + dist4 + "m) Room 1 to (" + dist1 + "m) Intersection 2 to (" + dist2 + "m) Room 2";
+            routeDistances[routeCount++] = dist4 + dist1 + dist2;
+            routes[routeCount] = "Room 4 to (" + dist7 + "m) Intersection 1 to (" + dist8 + "m) Room 3 to (" + dist5 + "m) Room 2";
+            routeDistances[routeCount++] = dist7 + dist8 + dist5;
+            routes[routeCount] = "Room 4 to (" + dist7 + "m) Intersection 1 to (" + dist6 + "m) Room 5 to (" + dist3 + "m) Intersection 2 to (" + dist2 + "m) Room 2";
+            routeDistances[routeCount++] = dist7 + dist6 + dist3 + dist2;
             }
             if (destination.equals("Room 3")) {
-                routes[routeCount] = "Room 4 to (" + dist7 + "m) Intersection 1 to (" + dist8 + "m) Room 3";
-                routeDistances[routeCount++] = dist7 + dist8;
+            routes[routeCount] = "Room 4 to (" + dist4 + "m) Room 1 to (" + dist1 + "m) Intersection 2 to (" + dist2 + "m) Room 2 to (" + dist5 + "m) Room 3";
+            routeDistances[routeCount++] = dist4 + dist1 + dist2 + dist5;
+            routes[routeCount] = "Room 4 to (" + dist7 + "m) Intersection 1 to (" + dist8 + "m) Room 3";
+            routeDistances[routeCount++] = dist7 + dist8;
+            routes[routeCount] = "Room 4 to (" + dist7 + "m) Intersection 1 to (" + dist6 + "m) Room 5 to (" + dist3 + "m) Intersection 2 to (" + dist2 + "m) Room 2 to (" + dist5 + "m) Room 3";
+            routeDistances[routeCount++] = dist7 + dist6 + dist3 + dist2 + dist5;
             }
             if (destination.equals("Room 5")) {
-                routes[routeCount] = "Room 4 to (" + dist7 + "m) Intersection 1 to (" + dist6 + "m) Room 5";
-                routeDistances[routeCount++] = dist7 + dist6;
+            routes[routeCount] = "Room 4 to (" + dist7 + "m) Intersection 1 to (" + dist6 + "m) Room 5";
+            routeDistances[routeCount++] = dist7 + dist6;
+            routes[routeCount] = "Room 4 to (" + dist4 + "m) Room 1 to (" + dist1 + "m) Intersection 2 to (" + dist3 + "m) Room 5";
+            routeDistances[routeCount++] = dist4 + dist1 + dist3;
+            routes[routeCount] = "Room 4 to (" + dist7 + "m) Intersection 1 to (" + dist8 + "m) Room 3 to (" + dist5 + "m) Room 2 to (" + dist2 + "m) Intersection 2 to (" + dist3 + "m) Room 5";
+            routeDistances[routeCount++] = dist7 + dist8 + dist5 + dist2 + dist3;
+            routes[routeCount] = "Room 4 to (" + dist4 + "m) Room 1 to (" + dist1 + "m) Intersection 2 to (" + dist2 + "m) Room 2 to (" + dist5 + "m) Room 3 to (" + dist8 + "m) Intersection 1 to (" + dist6 + "m) Room 5";
+            routeDistances[routeCount++] = dist4 + dist1 + dist2 + dist5 + dist8 + dist6;
             }
         }
         //Room 5 possible routes
@@ -655,10 +702,9 @@ public class Map {
             }
             println("You have reached your destination: " + destination);
             askQuestion(destination, scan);
-            ScoreMenu();
-
-            
+           
             }
+
             static void EngineerExam() {
                 Scanner scan = new Scanner(System.in);
 
@@ -737,11 +783,12 @@ public class Map {
         String currentLocation = showMenu(scan);
         
         askQuestion(currentLocation, scan);
-        String selectedDestination = MenuDestination(currentLocation, scan);
-        showRoutesAndFindShortest(currentLocation, selectedDestination);
-        
-        showMovement(currentLocation, selectedDestination, scan);
-
+        while (true) {
+            String selectedDestination = MenuDestination(currentLocation, scan);
+            showRoutesAndFindShortest(currentLocation, selectedDestination);
+            showMovement(currentLocation, selectedDestination, scan);
+            currentLocation = selectedDestination;
+        }
 
     }
         
