@@ -3,16 +3,13 @@ package com.GameMap;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
 public class Map {
     static String[] locations = new String[7];
     static int[] scores = new int[7];
+
     static void println(String print) {
         System.out.println(print);
     }
@@ -300,40 +297,41 @@ public class Map {
         println("Where would you like to go?");
         
         String[] rooms = {"Room 1", "Room 2", "Room 3", "Room 4", "Room 5"};
-        List<String> availableRooms = new ArrayList<>();
+        String[] availableRooms = new String[rooms.length];
+        int availableRoomCount = 0;
         
         for (int i = 0; i < rooms.length; i++) {
             if (!rooms[i].equals(currentLocation) && scores[i] == 0) {
-                availableRooms.add(rooms[i]);
+            availableRooms[availableRoomCount++] = rooms[i];
             }
         }
-    
-        if (availableRooms.isEmpty()) {
+        
+        if (availableRoomCount == 0) {
             println("All exams have been completed.");
             int totalScore = 0;
             for (int i = 0; i < 5; i++) { // Only sum the scores of the first 5 rooms
-                totalScore += scores[i];
+            totalScore += scores[i];
             }
             println("Your total score is: " + totalScore + " out of " + (5 * 5));
             if (totalScore >= (5 * 3.75)) { // 75% of 25 is 18.75
-                println("Congratulations! You passed the exams.");
+            println("Congratulations! You passed the entrance exams.");
+            println("You will now proceed to the entrance exam for the engineering course.");
+            EngineerExam();
             } else {
-                println("Unfortunately, you did not pass the exams. Better luck next time.");
+            println("Unfortunately, you did not pass the entrance exams. Better luck next time.");
             }
             System.exit(0);
         }
         
-        for (int i = 0; i < availableRooms.size(); i++) {
-            println((i + 1) + ". " + availableRooms.get(i));
+        for (int i = 0; i < availableRoomCount; i++) {
+            println((i + 1) + ". " + availableRooms[i]);
         }
         
         println("Enter the number of the room you want to go to: ");
         int choice = scan.nextInt();
-        return availableRooms.get(choice - 1);
+        return availableRooms[choice - 1];
     }
-    
-
-    static void showRoutesAndFindShortest(String currentLoc, String destination) {
+        static void  showRoutesAndFindShortest(String currentLoc, String destination) {
         String[] routeNames = {
             "Room 1-Intersection 2", "Intersection 2-Room 2", "Intersection 2-Room 5", 
             "Room 1-Room 4", "Room 2-Room 3", "Intersection 1-Room 5", 
@@ -632,14 +630,14 @@ public class Map {
         
         if (routeCount > 0) {
             System.out.println("\nShortest Path: " + routes[minIndex] + " (" + routeDistances[minIndex] + "m)");
-            int travelTimeSeconds = routeDistances[minIndex] * 60; // Assuming 1 meter takes 1 second to travel
+            int travelTimeSeconds = routeDistances[minIndex] * 2; // 1 meter takes 2 seconds to travel
             int travelTimeMinutes = travelTimeSeconds / 60;
             int remainingSeconds = travelTimeSeconds % 60;
             System.out.println("Estimated Travel Time: " + travelTimeMinutes + " minutes and " + remainingSeconds + " seconds");
         } else {
             System.out.println("No available path found.");
         }
-        }
+    }
         
         
             
@@ -735,7 +733,7 @@ public class Map {
                 scan.close();
             }
 
-            static int takeExam(String[][] questions, char[] answers, int totalQuestions, Scanner scan) {
+            static int takeBoardExam(String[][] questions, char[] answers, int totalQuestions, Scanner scan) {
                 int score = 0;
                 char[] userAnswers = new char[totalQuestions];
 
@@ -756,11 +754,11 @@ public class Map {
                 return score;
             }
 
-            static boolean checkIfPassed(int score, int totalQuestions, double passing_score) {
+            static boolean checkIfExamPassed(int score, int totalQuestions, double passing_score) {
                 return ((double) score / totalQuestions) >= passing_score;
             }
 
-            static void displayResults(int score, int totalQuestions) {
+            static void displayExamResults(int score, int totalQuestions) {
                 double percentage = ((double) score / totalQuestions) * 100;
                 System.out.println("\nYour Score: " + score + "/" + totalQuestions);
                 System.out.println("Percentage: " + String.format("%.1f", percentage) + "%");
@@ -770,10 +768,220 @@ public class Map {
                     System.out.println("You failed.");
                 }
             }
-
+        
+            private static final int PAGE_WIDTH = 175;
+            private static final String HORIZONTAL_LINE = "+" + "=".repeat(PAGE_WIDTH - 2) + "+";
+            private static final String EMPTY_LINE = "|" + " ".repeat(PAGE_WIDTH - 2) + "|";
+        
+            static void boardexam() {
+                Scanner scan = new Scanner(System.in);
+        
+        
+                String[][] questionsSet1 = {
+                    {"A bridge engineer is deciding between two designs: high-strength steel (complex welding) vs. standard steel (simpler welding). \nConsidering long-term maintenance and local labor, which is most logical? \nA. High-strength steel, as it's inherently stronger. \nB. Standard steel, as it's always cheaper. \nC. The choice depends on a balance of factors, including maintenance costs, labor availability, and material costs. \nD. The design with the lowest initial cost."},
+                    {"In highway design, what is the primary purpose of superelevation? \nA. Reduce noise \nB. Counteract centrifugal force \nC. Improve drainage \nD. Reduce tire wear"},
+                    {"What is the purpose of a slump test in concrete? \nA. To measure the compressive strength \nB. To measure the workability \nC. To measure the tensile strength \nD. To measure the density"},
+                    {"What is the liquid limit of a soil? \nA. The moisture content at which the soil transitions from a liquid to a plastic state \nB. The moisture content at which the soil transitions from a plastic to a solid state \nC. The moisture content at which the soil has zero volume \nD. The moisture content at which the soil reaches its maximum density"},
+                    {"Which sequence correctly represents the stages of concrete strength development? \nA. Setting → Hardening → Curing → Final strength \nB. Hardening - Setting - Curing - Final strength \nC. Setting - Curing - Hardening - Final strength \nD. Curing - Setting - Hardening - Final strength"},
+                    {"In a critical path analysis, which statement is TRUE? \nA. All activities have float time \nB. Critical activities have zero float time \nC. Critical path is always the longest path \nD. Both b and c"},
+                    {"If a concrete mix has a water-cement ratio of 0.45 and requires 180 kg of water per cubic meter, how much cement is needed? \nA. 400 kg \nB. 450 kg \nC. 350 kg \nD. 300 kg"},
+                    {"What is the most likely cause of diagonal cracks in a reinforced concrete beam? \nA. Pure bending \nB. Shear stress \nC. Axial compression \nD. Torsion"},
+                    {"A project manager needs to reduce project duration. Which resource adjustment would be most effective? \nA. Adding more workers to non-critical activities \nB. Adding more workers to critical activities \nC. Reducing quality control checks \nD. Extending working hours for all activities"},
+                    {"A concrete cylinder test shows 28-day strength of 25 MPa. What is the likely 7-day strength?  \nA. 12.5 MPa \nB. 15 MPa \nC. 17.5 MPa \nD. 20 MPa"}
+                };
+                
+                String[][] questionsSet2 = {
+                    {"Heavy traffic is predicted at a new interchange. Which factor should be least prioritized when choosing between a roundabout, flyover, or signalized intersection? \nA. Cost of construction \nB. Land availability \nC. Aesthetic appeal \nD. Environmental impact"},
+                    {"The capacity of a highway is typically expressed in: \nA. Vehicles per hour \nB. Passengers per hour \nC. Miles per hour \nD. Kilometers per hour"},
+                    {"The angle of internal friction of a soil is a measure of: \nA. Its compressibility \nB. Its shear strength \nC. Its permeability \nD. Its plasticity"},
+                    {"From the given table, find the plasticity index of soil Y if its liquid limit is 70 and its plastic limit is 38. \nA. 25 \nB. 32 \nC. 28 \nD. 33"},
+                    {"In construction planning, which resource is typically most critical? \nA. Labor \nB. Equipment \nC. Materials \nD. Time"},
+                    {"If a steel beam fails exactly at its yield strength, what type of failure occurred? \nA. Brittle failure \nB. Ductile failure \nC. Fatigue failure \nD. Cannot be determined from given information"},
+                    {"A construction project is delayed due to unexpected soil conditions. Which of the following should have been done to prevent this? \nA. Increase labor force \nB. Use faster equipment \nC. Conduct thorough geotechnical investigation \nD. Work overtime"},
+                    {"If a retaining wall shows signs of overturning, which correction would be most effective? \nA. Increase wall thickness \nB. Extend base width \nC. Add surface drainage \nD. Increase wall height"},
+                    {"What is the critical factor in determining the spacing of expansion joints in concrete pavements? \nA. Traffic load \nB. Temperature variation \nC. Subgrade condition \nD. Concrete strength"},
+                    {"A surveyor measures a horizontal distance of 100m at sea level. What would be the grid distance if the scale factor is 0.9996? \nA. 99.96m \nB. 100.04m \nC. 99.94m \nD. 100.06m"}
+                };
+        
+                String[][] questionsSet3 = {
+                    {"Two subcontractors are in dispute, delaying a project. What's the most logical approach for the project manager? \nA. Take sides with one of the subcontractors. \nB. Mediate the dispute fairly and focus on the project's overall timeline. \nC. Ignore the dispute and hope it resolves itself. \nD. Impose penalties on both subcontractors equally."},
+                    {"What is the critical path in a project schedule? \nA. The shortest path through the project network. \nB. The longest path through the project network. \nC. The path with the most resources. \nD. The path with the least risk."},
+                    {"Consolidation of soil refers to: \nA. The decrease in volume due to the expulsion of water. \nB. The increase in volume due to the absorption of water. \nC. The shear deformation of the soil. \nD. The compaction of the soil."},
+                    {"A concrete beam with a rectangular cross-section has dimensions of 300mm width and 600mm depth. If the allowable bending stress is 12 MPa, what is the maximum bending moment that can be safely applied? \nA. 432 kN⋅m \nB. 216 kN⋅m \nC. 648 kN⋅m \nD. 324 kN⋅m"},
+                    {"In project scheduling, if Activity B cannot start until Activity A is 50% complete, this is an example of: \nA. Finish-to-Start relationship. \nB. Start-to-Start relationship. \nC. Lag relationship. \nD. Lead relationship."},
+                    {"Which foundation type would be most suitable for a building on expansive soil? \nA. Spread footing. \nB. Pile foundation. \nC. Raft foundation. \nD. Strip footing."},
+                    {"What is the most effective way to reduce concrete shrinkage? \nA. Increase cement content. \nB. Reduce water content. \nC. Add more fine aggregate. \nD. Increase mixing time."},
+                    {"Which factor most affects the capacity of a driven pile? \nA. Pile length. \nB. Soil properties. \nC. Driving method. \nD. All of the above."},
+                    {"In water treatment, what is the primary purpose of coagulation? \nA. Remove dissolved solids. \nB. Kill bacteria. \nC. Remove suspended particles. \nD. Adjust pH."},
+                    {"What causes creep in concrete structures? \nA. Sustained loading. \nB. Temperature variation. \nC. Chemical attack. \nD. Reinforcement corrosion."}
+                };
+                char[] answerset1 = {'C','B','B','A','A','D','A','B','B','C'};
+                char[] answerset2 = {'C','A','B','B','D','B','C','B','B','A'};
+                char[] answerset3 = {'B','B','A','A','B','B','B','D','C','A'};
+        
+                int attempts = 2;
+                boolean passed = false;
+                double passing_score = 0.75;
+                int totalQuestions = answerset1.length;
+        
+                // Print welcome message
+                System.out.println( HORIZONTAL_LINE);
            
-    
-    
+                System.out.println(EMPTY_LINE);
+                System.out.print("\u001B[33m");   
+                printCentered("  ██████ ██ ██    ██ ██ ██          ███████ ███    ██  ██████  ██ ███    ██ ███████ ███████ ██████  ██ ███    ██  ██████          ");   
+                printCentered(" ██      ██ ██    ██ ██ ██          ██      ████   ██ ██       ██ ████   ██ ██      ██      ██   ██ ██ ████   ██ ██               ");   
+                printCentered(" ██      ██ ██    ██ ██ ██          █████   ██ ██  ██ ██   ███ ██ ██ ██  ██ █████   █████   ██████  ██ ██ ██  ██ ██   ███         ");   
+                printCentered(" ██      ██  ██  ██  ██ ██          ██      ██  ██ ██ ██    ██ ██ ██  ██ ██ ██      ██      ██   ██ ██ ██  ██ ██ ██    ██         ");
+                printCentered("  ██████ ██   ████   ██ ███████     ███████ ██   ████  ██████  ██ ██   ████ ███████ ███████ ██   ██ ██ ██   ████  ██████          ");
+                System.out.print("\u001B[0m");                                                                                                                        
+                System.out.println(EMPTY_LINE);     
+                System.out.print("\u001B[33m");                                                                                                                           
+                printCentered("██████   ██████   █████  ██████  ██████      ███████ ██   ██  █████  ███    ███ ██ ███    ██  █████  ████████ ██  ██████  ███    ██ ");
+                printCentered("██   ██ ██    ██ ██   ██ ██   ██ ██   ██     ██       ██ ██  ██   ██ ████  ████ ██ ████   ██ ██   ██    ██    ██ ██    ██ ████   ██ ");
+                printCentered("██████  ██    ██ ███████ ██████  ██   ██     █████     ███   ███████ ██ ████ ██ ██ ██ ██  ██ ███████    ██    ██ ██    ██ ██ ██  ██ ");
+                printCentered("██   ██ ██    ██ ██   ██ ██   ██ ██   ██     ██       ██ ██  ██   ██ ██  ██  ██ ██ ██  ██ ██ ██   ██    ██    ██ ██    ██ ██  ██ ██ ");
+                printCentered("██████   ██████  ██   ██ ██   ██ ██████      ███████ ██   ██ ██   ██ ██      ██ ██ ██   ████ ██   ██    ██    ██  ██████  ██   ████ ");
+                System.out.print("\u001B[0m"); 
+                System.out.println( EMPTY_LINE);                                                                                                                                   
+                                                                                                                                                                                                                                                   
+         
+                System.out.println( HORIZONTAL_LINE);
+                System.out.println("|" + "  Read the question Carefully. And choose the correct answer."  +                "                                                                                                                |" );
+            
+        
+                // First attempt with Set 1
+                int score = takeExam(questionsSet1, answerset1, totalQuestions, scan);
+                passed = checkIfPassed(score, totalQuestions, passing_score);
+        
+                // If failed, offer additional attempts
+                while (!passed && attempts > 0) {
+                    System.out.print("\nWould you like to try again? (yes/no): ");
+                    String chance = scan.nextLine().trim().toLowerCase();
+                    if (chance.isEmpty()) {
+                        chance = scan.nextLine().trim().toLowerCase();
+                    }
+        
+                    if (chance.equals("yes")) {
+                        System.out.println("\nYou have " + attempts + " chance(s) left.");
+        
+                        if (attempts == 2) {
+                            printCentered("\n=== Second Attempt - Exam Set 2 ===");
+                            score = takeExam(questionsSet2, answerset2, totalQuestions, scan);
+                        } else {
+                            printCentered("\n=== Final Attempt - Exam Set 3 ===");
+                            score = takeExam(questionsSet3, answerset3, totalQuestions, scan);
+                        }
+        
+                        passed = checkIfPassed(score, totalQuestions, passing_score);
+                        attempts--;
+                    } else if (chance.equals("no")) {
+                        System.out.println("Thank you for participating.");
+                        break;
+                    } else {
+                        System.out.println("Invalid input. Please enter 'yes' or 'no'.");
+                    }
+                }
+        
+                if (!passed && attempts == 0) {
+                    System.out.println("\nYou have used all your attempts. Thank you for participating.");
+                }
+        
+                scan.close();
+            }
+        
+            static int takeExam(String[][] questions, char[] answers, int totalQuestions, Scanner scan) {
+                int score = 0;
+                char[] userAnswers = new char[totalQuestions];
+        
+                // Print exam header
+                
+        
+                for (int i = 0; i < totalQuestions; i++) {
+                    // Print question header
+                    System.out.println(HORIZONTAL_LINE);
+                    
+                    // Print question and options
+                    String questionText = questions[i][0];
+                    String[] parts = questionText.split("\n");
+                    
+                    System.out.printf("| %2d: %-" + (PAGE_WIDTH - 16) + "s         |\n", (i + 1), parts[0]);
+                    
+                    for (int j = 1; j < parts.length; j++) {
+                        String line = "| " + " ".repeat(12) + parts[j];
+                        System.out.printf("%-" + (PAGE_WIDTH - 1) + "s|\n", line);
+                    }
+                    
+                    System.out.println(EMPTY_LINE);
+                    
+                    // Get user answer
+                    boolean validInput = false;
+                    while (!validInput) {
+                        System.out.print("|" + "  Enter your answer (A/B/C/D): " );
+                        String input = scan.nextLine().trim().toUpperCase();
+                        if (input.isEmpty()) {
+                            input = scan.nextLine().trim().toUpperCase();
+                        }
+                        
+                        if (input.length() == 1 && "ABCD".contains(input)) {
+                            userAnswers[i] = input.charAt(0);
+                            validInput = true;
+                        } else {
+                            System.out.println("Invalid input. Please enter A, B, C, or D.");
+                        }
+                    }
+                }
+        
+                // Calculate score
+                for (int i = 0; i < totalQuestions; i++) {
+                    if (userAnswers[i] == answers[i]) {
+                        score++;
+                    }
+                }
+        
+                displayResults(score, totalQuestions);
+                return score;
+            }
+        
+            static boolean checkIfPassed(int score, int totalQuestions, double passing_score) {
+                return ((double) score / totalQuestions) >= passing_score;
+            }
+        
+            static void displayResults(int score, int totalQuestions) {
+                System.out.println(HORIZONTAL_LINE);
+                double percentage = ((double) score / totalQuestions) * 100;
+                System.out.println("\nYour Score: " + score + "/" + totalQuestions);
+                System.out.println("Percentage: " + String.format("%.1f", percentage) + "%");
+                if (percentage >= 75) {
+                                        System.out.println(HORIZONTAL_LINE);
+                                        System.out.print("\u001B[33m");   
+                                        printCentered("                                                                                                                                                      ");
+                                        printCentered("         ██████  ██████  ███    ██  ██████  ██████   █████  ████████ ██    ██ ██       █████  ████████ ██  ██████  ███    ██ ███████ ██               ");
+                                        printCentered("        ██      ██    ██ ████   ██ ██       ██   ██ ██   ██    ██    ██    ██ ██      ██   ██    ██    ██ ██    ██ ████   ██ ██      ██               ");
+                                        printCentered("        ██      ██    ██ ██ ██  ██ ██   ███ ██████  ███████    ██    ██    ██ ██      ███████    ██    ██ ██    ██ ██ ██  ██ ███████ ██               ");
+                                        printCentered("        ██      ██    ██ ██  ██ ██ ██    ██ ██   ██ ██   ██    ██    ██    ██ ██      ██   ██    ██    ██ ██    ██ ██  ██ ██      ██                  ");
+                                        printCentered("         ██████  ██████  ██   ████  ██████  ██   ██ ██   ██    ██     ██████  ███████ ██   ██    ██    ██  ██████  ██   ████ ███████ ██               ");
+                                        printCentered("                                                                                                                                                      ");
+                                        printCentered("                                                                                                                                                      ");
+                                        printCentered("██    ██  ██████  ██    ██     ██████   █████  ███████ ███████ ███████ ██████      ████████ ██   ██ ███████     ███████ ██   ██  █████  ███    ███ ██ ");
+                                        printCentered(" ██  ██  ██    ██ ██    ██     ██   ██ ██   ██ ██      ██      ██      ██   ██        ██    ██   ██ ██          ██       ██ ██  ██   ██ ████  ████ ██ ");
+                                        printCentered("  ████   ██    ██ ██    ██     ██████  ███████ ███████ ███████ █████   ██   ██        ██    ███████ █████       █████     ███   ███████ ██ ████ ██ ██ ");
+                                        printCentered("   ██    ██    ██ ██    ██     ██      ██   ██      ██      ██ ██      ██   ██        ██    ██   ██ ██          ██       ██ ██  ██   ██ ██  ██  ██    ");
+                                        printCentered("   ██     ██████   ██████      ██      ██   ██ ███████ ███████ ███████ ██████         ██    ██   ██ ███████     ███████ ██   ██ ██   ██ ██      ██ ██ ");
+                                        printCentered("                                                                                                                                                      ");
+                                        System.out.print("\u001B[0m"); 
+                } else {
+                    System.out.println("Sorry, you did not pass the exam.");
+                }
+                System.out.println(HORIZONTAL_LINE);
+            }
+        
+            static void printCentered(String text) {
+                int padding = (PAGE_WIDTH - text.length() - 2) / 2;
+                String paddedText = "|" + " ".repeat(padding) + text;
+                paddedText += " ".repeat(PAGE_WIDTH - paddedText.length() - 1) + "|";
+                System.out.println(paddedText);
+            }
 
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
