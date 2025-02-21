@@ -1,4 +1,4 @@
-package com.GameMap;
+
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -64,7 +64,7 @@ public class Map {
                 "  "  + dist4 +  "m   |  |                      |      "  + mapLoc[4] +  "       |                       |  |  " + dist5 +  "m     \n" +
                 "        |  |                      |        ("  + currentAd[4] +  ")         |                       |  |           \n" +
                 "        |  |                      |                   |                       |  |   \n" +
-                "        |  |                      |___________________|                       |  |   \n" +
+                "        |  |                      |_______    ________|                       |  |   \n" +
                 "        |  |                              |  |                                |  |   \n" +
                 "        |  |                              |  | " + dist6 + "m                            |  |   \n" +
                 " _______|  |_________                     |  |                        ________|  |_______  \n" +
@@ -105,80 +105,173 @@ public class Map {
         println("                                                   ██      ██  ██ ██ ██    ██ ██ ██  ██ ██ ██      ██      ██   ██ ");
         println("                                                   ███████ ██   ████  ██████  ██ ██   ████ ███████ ███████ ██   ██ ");
         println("\u001B[0m"); // Reset color
-    }
+        }
+
+        static String showMenu(Scanner scan) {
+            while (true) {
+                println("╔════════════════════╗");
+                println("║       MENU         ║");
+                println("╠════════════════════╣");
+                println("║  1. Start          ║");
+                println("║  2. How to Play    ║");
+                println("║  3. About          ║");
+                println("╚════════════════════╝");
+                println("Choose key to proceed:");    int choice = scan.nextInt();
     
-    static String showMenu(Scanner scan) {
-        while (true) {
-            println("1. Start");
-            println("2. How to Play");
-            println("3. About");
-            println("Choose key to proceed: ");
-            int choice = scan.nextInt();
+                switch (choice) {
+                    case 1:
+                        println("=====================================");
+                        println("|          WELCOME TO THE GAME      |");
+                        println("=====================================");
+                        println("|  Enter Username:                  |");
+                        println("=====================================");
+                        print("> "); // Input prompt
+                        scan.nextLine(); // Consume the newline character
+                        String username = scan.nextLine();
 
-            switch (choice) {
-                case 1:
-                    println("Enter Username:");
-                    String username = scan.next(); // Get user input for username
-                    
-                    println(username + ", welcome to the game!");
-                    println("Starting the game...");
-                    introduction(); // Call introduction method
-                    
-                    println("Your first choice is Engineering.");
-                    println("Please enter your second and third choice of courses:");
-                    
-                    String choice2 = scan.next(); // Get second choice
-                    String choice3 = scan.next(); // Get third choice
-                    
-                    println("Your chosen courses:");
-                    println("1. Engineering");
-                    println("2. " + choice2);
-                    println("3. " + choice3);
-                    
-                    // Generate a random starting room
-                    String[] mapLoc = {"Room 1", "Room 2", "Room 3", "Room 4", "Room 5", "Intersection 1", "Intersection 2"};
-                    Random rand = new Random();
-                    String randomRoom = mapLoc[rand.nextInt(mapLoc.length)]; // Pick a random room
+                        println("=====================================");
+                        println("|  " + username + ", welcome to the game!  |");
+                        println("=====================================");   
 
-                    System.out.println(showMap(randomRoom)); // Display the map with the random room
-                    return randomRoom; // Return the current location
-
-
-                case 2:
-                    println("How to Play");
-                    println(
-                        "You will start in a randomly assigned room and answer the questions in that room. " +
-                        "After that, you will navigate through different rooms, each representing a different subject, and take the exams in each one. " +
-                        "Once all exams are completed, your results will determine whether you pass or fail.\n\n" +
+                        String start = "Starting the game...";
                         
-                        "If you pass, you will proceed to the entrance exam for the engineering course. " +
-                        "The result will then determine if you qualify for the engineering course. " +
-                        "If you pass, the game will time-skip four years, leading to the board exam to officially become an engineer.\n\n" +
+                        println("╔════════════════════════╗");
+                        println("║                        ║");
+                        println("║ "+start+"   ║");
+                        println("║                        ║");
+                        println("╚════════════════════════╝");
                         
-                        "You have two chances to retake the board exam if you fail."
-                    );
-                    break;
-                case 3:
-                    println("About");
-                    println(
-                        "\"I Want to Be an Engineer\" is a story-based console game in Java that follows a young boy on his journey to achieving his dream of becoming an engineer. " +
-                        "The player will take the entrance exam at a public university and must navigate different exam rooms, answer subject-related questions, and achieve the required scores to qualify for an engineering course. " +
-                        "After four years in university, the player will take the board exam and, if successful, become a licensed engineer."
-                    );
-                    break;
-                default:
-                    println("Invalid choice, please try again.");
-                    break;
+
+                        introduction(); // Call introduction method
+                        
+                        println("==============================================");
+                        println("|          COURSE SELECTION MENU            |");
+                        println("==============================================");
+                        println("|  Your first choice is: ENGINEERING        |");
+                        println("|--------------------------------------------|");
+                        println("|  Please enter your second and third choice |");
+                        println("|  of courses from the options below:       |");
+                        println("|--------------------------------------------|");
+                        println("|  2. Education                             |");
+                        println("|  3. Entrepreneurship                      |");
+                        println("|  4. Tourism Management                    |");
+                        println("|  5. Sociology                             |");
+                        println("|  6. Agriculture                           |");
+                        println("|  7. Fisheries                             |");
+                        println("==============================================");
+                        print("> Enter your second choice: ");
+                        int secondChoice = scan.nextInt();
+                        String secondCourse = "";
+                        switch (secondChoice) {
+                            case 2:
+                                secondCourse = "Education";
+                                break;
+                            case 3:
+                                secondCourse = "Entrepreneurship";
+                                break;
+                            case 4:
+                                secondCourse = "Tourism Management";
+                                break;
+                            case 5:
+                                secondCourse = "Sociology";
+                                break;
+                            case 6:
+                                secondCourse = "Agriculture";
+                                break;
+                            case 7:
+                                secondCourse = "Fisheries";
+                                break;
+                            default:
+                                break;
+                        }
+                        print("> Enter your third choice: ");
+                        int thirdChoice = scan.nextInt();
+                        String thirdCourse = "";
+                        switch (thirdChoice) {
+                            case 2:
+                                thirdCourse = "Education";
+                                break;
+                            case 3:
+                                thirdCourse = "Entrepreneurship";
+                                break;
+                            case 4:
+                                thirdCourse = "Tourism Management";
+                                break;
+                            case 5:
+                                thirdCourse = "Sociology";
+                                break;
+                            case 6:
+                                thirdCourse = "Agriculture";
+                                break;
+                            case 7:
+                                thirdCourse = "Fisheries";
+                                break;
+                            default:
+                                break;
+                        }
+
+                        println("==============================================");
+                        println("|  You selected:                             |");
+                        println("|  1st Choice: Engineering                   |");
+                        println("|  2nd Choice: " + secondCourse + "          |");
+                        println("|  3rd Choice: " + thirdCourse + "           |");
+                        println("==============================================");
+
+                        // Generate a random starting room
+                        String[] mapLoc = {"Room 1", "Room 2", "Room 3", "Room 4", "Room 5", "Intersection 1", "Intersection 2"};
+                        Random rand = new Random();
+                        String randomRoom = mapLoc[rand.nextInt(mapLoc.length)]; // Pick a random room
+    
+                        System.out.println(showMap(randomRoom)); // Display the map with the random room
+                        return randomRoom; // Return the current location
+    
+    
+                    case 2:
+                        println("How to Play");
+                        println(
+                            "You will start in a randomly assigned room and answer the questions in that room. " +
+                            "After that, you will navigate through different rooms, each representing a different subject, and take the exams in each one. " +
+                            "Once all exams are completed, your results will determine whether you pass or fail.\n\n" +
+                            
+                            "If you pass, you will proceed to the entrance exam for the engineering course. " +
+                            "The result will then determine if you qualify for the engineering course. " +
+                            "If you pass, the game will time-skip four years, leading to the board exam to officially become an engineer.\n\n" +
+                            
+                            "You have two chances to retake the board exam if you fail."
+                        );
+                        break;
+                    case 3:
+                        println("About");
+                        println(
+                            "\"I Want to Be an Engineer\" is a story-based console game in Java that follows a young boy on his journey to achieving his dream of becoming an engineer. " +
+                            "The player will take the entrance exam at a public university and must navigate different exam rooms, answer subject-related questions, and achieve the required scores to qualify for an engineering course. " +
+                            "After four years in university, the player will take the board exam and, if successful, become a licensed engineer."
+                        );
+                        break;
+                    default:
+                        println("Invalid choice, please try again.");
+                        break;
+                }
             }
         }
-    }
-    static void introduction() {
-        println(
-            "Coming from a poor family, I have always dreamed of becoming an engineer to provide a better life for my loved ones.\n"+
-            "Today marks a crucial step toward that dream—the entrance exam for a prestigious public university.\n "+
-            "To achieve my goal, I must pass a series of challenging exams that will test my knowledge and skills.\n"+
-            "The road ahead won’t be easy, but I am determined to succeed."
-        );
+
+        static void introduction() {
+        println("==============================================================");
+        println("|  ENGINEERING ASPIRATION: THE JOURNEY BEGINS                |");
+        println("==============================================================");
+        println("|  Coming from a poor family, I have always dreamed of       |");
+        println("|  becoming an engineer to provide a better life for my      |");
+        println("|  loved ones.                                               |");
+        println("|                                                            |");
+        println("|  Today marks a crucial step toward that dream—the          |");
+        println("|  entrance exam for a prestigious public university.        |");
+        println("|                                                            |");
+        println("|  To achieve my goal, I must pass a series of challenging   |");
+        println("|  exams that will test my knowledge and skills.             |");
+        println("|                                                            |");
+        println("|  The road ahead won’t be easy, but I am determined to      |");
+        println("|  succeed.                                                  |");
+        println("==============================================================");
     }
    
     static void askQuestion(String currentLoc, Scanner scan) {
