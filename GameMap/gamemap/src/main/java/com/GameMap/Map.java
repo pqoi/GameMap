@@ -213,8 +213,8 @@ public class Map {
                         println("==============================================");
                         println("|  You selected:                             |");
                         println("|  1st Choice: Engineering                   |");
-                        println("|  2nd Choice: " + secondCourse + "          |");
-                        println("|  3rd Choice: " + thirdCourse + "           |");
+                        println("|  2nd Choice: " + secondCourse + "            |");
+                        println("|  3rd Choice: " + thirdCourse + "             |");
                         println("==============================================");
 
                         // Generate a random starting room
@@ -323,13 +323,34 @@ public class Map {
     
         int roomIndex = -1;
         switch (currentLoc) {
-            case "Room 1": roomIndex = 0; break;
-            case "Room 2": roomIndex = 1; break;
-            case "Room 3": roomIndex = 2; break;
-            case "Room 4": roomIndex = 3; break;
-            case "Room 5": roomIndex = 4; break;
-            default:
+            case "Room 1":
+                roomIndex = 0;
+                println("You are in Room 1 - English");
+                break;
+            case "Room 2":
+                roomIndex = 1;
+                println("You are in Room 2 - Math");
+                break;
+            case "Room 3":
+                roomIndex = 2;
+                println("You are in Room 3 - Filipino");
+                break;
+            case "Room 4":
+                roomIndex = 3;
+                println("You are in Room 4 - Logical Thinking");
+                break;
+            case "Room 5":
+                roomIndex = 4;
+                println("You are in Room 5 - Ethics % Decision-Making");
+                break;
+            case "Intersection 1":
                 System.out.println("You are in an intersection. No question here.");
+                return;
+            case "Intersection 2":
+                System.out.println("You are in an intersection. No question here.");
+                return;
+            default:
+                System.out.println("Invalid location.");
                 return;
         }
     
@@ -378,6 +399,7 @@ public class Map {
             System.exit(0);
         }
     }
+   
     static void ScoreMenu() {
         println("Exam Score in Every Room:");
         println("Room 1: " + scores[0] + "/5");
@@ -391,7 +413,7 @@ public class Map {
         println("You are in " + currentLocation);
         println("Where would you like to go?");
         
-        String[] rooms = {"Room 1", "Room 2", "Room 3", "Room 4", "Room 5"};
+        String[] rooms = {"Room 1", "Room 2", "Room 3 ", "Room 4", "Room 5"};
         String[] availableRooms = new String[rooms.length];
         int availableRoomCount = 0;
         
@@ -426,7 +448,7 @@ public class Map {
         int choice = scan.nextInt();
         return availableRooms[choice - 1];
     }
-        static void  showRoutesAndFindShortest(String currentLoc, String destination) {
+    static void  showRoutesAndFindShortest(String currentLoc, String destination) {
         String[] routeNames = {
             "Room 1-Intersection 2", "Intersection 2-Room 2", "Intersection 2-Room 5", 
             "Room 1-Room 4", "Room 2-Room 3", "Intersection 1-Room 5", 
@@ -786,6 +808,7 @@ public class Map {
                 if (!newLocation.equals(currentLocation)) {
                     println("Moving to " + newLocation);
                     currentLocation = newLocation;
+                    
                     if (!currentLocation.equals(destination) && !currentLocation.startsWith("Intersection")) {
                         askQuestion(currentLocation, scan);
                     }
@@ -793,14 +816,12 @@ public class Map {
                     println("You can't move in that direction.");
                 }
             }
+            println(showMap(currentLocation));
             println("You have reached your destination: " + destination);
             askQuestion(destination, scan);
            
             }
 
-            private static final int PAGE_Width = 175;
-            private static final String HORIZONTAL_Line = "+" + "=".repeat(PAGE_Width - 2) + "+";
-            private static final String EMPTY_Line = "|" + " ".repeat(PAGE_Width - 2) + "|";
             
             static void EngineerExam() {
                 Scanner scan = new Scanner(System.in);
@@ -905,7 +926,7 @@ public class Map {
                 }
                 System.out.println(HORIZONTAL_LINE); 
             }
-            static void printCenter(String text) {
+            static void printCentered(String text) {
                 int padding = (PAGE_WIDTH - text.length() - 2) / 2;
                 String paddedText = "|" + " ".repeat(padding) + text;
                 paddedText += " ".repeat(PAGE_WIDTH - paddedText.length() - 1) + "|";
@@ -1118,13 +1139,6 @@ public class Map {
                     System.out.println("Sorry, you did not pass the exam.");
                 }
                 System.out.println(HORIZONTAL_LINE);
-            }
-        
-            static void printCentered(String text) {
-                int padding = (PAGE_WIDTH - text.length() - 2) / 2;
-                String paddedText = "|" + " ".repeat(padding) + text;
-                paddedText += " ".repeat(PAGE_WIDTH - paddedText.length() - 1) + "|";
-                System.out.println(paddedText);
             }
 
     public static void main(String[] args) {
