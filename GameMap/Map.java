@@ -116,6 +116,7 @@ public class Map {
             switch (choice) {
                 case 1:
                     println("Enter Username:");
+                    print("> ");
                     String username = scan.next(); // Get user input for username
                     
                     println(username + ", welcome to the game!");
@@ -124,8 +125,10 @@ public class Map {
                     
                     println("Your first choice is Engineering.");
                     println("Please enter your second and third choice of courses:");
-                    
+
+                    print("2nd choice: ");
                     String choice2 = scan.next(); // Get second choice
+                    print("3rd choice: ");
                     String choice3 = scan.next(); // Get third choice
                     
                     println("Your chosen courses:");
@@ -238,6 +241,14 @@ public class Map {
                 return;
         }
 
+        switch (roomIndex) {
+            case 0 -> System.out.println("The words you know reflect the world you see. Every correct answer sharpens your tongue and mind.\n");
+            case 1 -> System.out.println("Numbers dance in your head. Equations and formulas guide your logic and structure.\n");
+            case 2 -> System.out.println("Your roots whisper their strength. Language is more than words — it’s identity and culture.\n");
+            case 3 -> System.out.println("Puzzles unfold before you. Every solved riddle adds another brick to the foundation of your reasoning.\n");
+            case 4 -> System.out.println("Integrity shapes your path. With every just decision, you carve a road of honor.\n");
+        }
+
         int score = 0;
         for (int i = 0; i < 5; i++) {
             System.out.println(questions[roomIndex][i]);
@@ -250,6 +261,15 @@ public class Map {
 
         scores.put(currentLoc, score);
         System.out.println("You scored " + score + " out of 5 in " + currentLoc + ".");
+
+        if (score == 5) {
+            System.out.println("Incredible! You feel a surge of confidence, as if the path ahead is clear and bright.");
+        } else if (score >= 3) {
+            System.out.println("Not bad! You push forward, knowing there's still more to learn.");
+        } else {
+            System.out.println("You struggle, but remind yourself that every great engineer starts somewhere.");
+        }
+        
     }
     static String MenuDestination(String currentLocation, Scanner scan) {
         println("You are in " + currentLocation);
@@ -327,7 +347,6 @@ public class Map {
         }
     }
 
-    
 
     
     public static void main(String[] args) {
