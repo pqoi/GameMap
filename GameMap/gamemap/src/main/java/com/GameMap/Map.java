@@ -288,7 +288,7 @@ public class Map {
                 "What is 15% of 200?\nA) 20\nB) 25\nC) 30\nD) 35",
                 "What is the square root of 81?\nA) 7\nB) 8\nC) 9\nD) 10",
                 "Which number is prime?\nA) 4\nB) 6\nC) 9\nD) 13",
-                "Solve: 5 × (3 + 2)\nA) 15\nB) 20\nC) 25\nD) 30"
+                "Solve: 5 x (3 + 2)\nA) 15\nB) 20\nC) 25\nD) 30"
             },
             { // Room 3 - Filipino
                 "Ano ang kahulugan ng 'Maligaya'?\nA) Malungkot\nB) Masaya\nC) Galit\nD) Takot",
@@ -369,7 +369,9 @@ public class Map {
             double percentage = ((double) totalScore / (5 * 5)) * 100;
             println("Your percentage score is: " + String.format("%.2f", percentage) + "%");
             if (totalScore >= (5 * 3.75)) { // 75% of 25 is 18.75
-            println("Congratulations! You passed the exams.");
+            println("Congratulations! You passed the entrance exams.");
+            println("Proceeding to the entrance exam for the engineering course...");
+            EngineerExam();
             } else {
             println("Unfortunately, you did not pass the exams. Better luck next time.");
             }
@@ -796,46 +798,75 @@ public class Map {
            
             }
 
+            private static final int PAGE_Width = 175;
+            private static final String HORIZONTAL_Line = "+" + "=".repeat(PAGE_Width - 2) + "+";
+            private static final String EMPTY_Line = "|" + " ".repeat(PAGE_Width - 2) + "|";
+            
             static void EngineerExam() {
                 Scanner scan = new Scanner(System.in);
 
+                System.out.println( HORIZONTAL_LINE);
+                System.out.printf("| %-30s |\n", " ENGINEERING ENTRANCE EXAM "); 
+                System.out.println( HORIZONTAL_LINE); 
+                System.out.println(EMPTY_LINE);  
+
+
                 String[][] questions = {
-                    {"What is the primary purpose of a retaining wall?\nA. To support vertical loads\nB. To resist lateral soil pressure\nC. To provide aesthetic value\nD. To support roof structures"},
-                    {"In structural engineering, what does the term 'buckling' refer to?\nA. Sudden failure of a structural member subjected to high compressive stress\nB. Gradual deformation of a material under load\nC. Fracture of a material due to tensile stress\nD. Corrosion of steel structures"},
-                    {"What is the main advantage of using pre-stressed concrete?\nA. Increased tensile strength\nB. Reduced weight\nC. Improved thermal insulation\nD. Enhanced aesthetic appeal"},
-                    {"Which of the following is a non-destructive test for concrete?\nA. Compression test\nB. Slump test\nC. Rebound hammer test\nD. Tensile test"},
-                    {"What is the purpose of a geotextile in civil engineering?\nA. To reinforce soil\nB. To provide drainage\nC. To separate different soil layers\nD. All of the above"},
-                    {"In fluid mechanics, what does Bernoulli's equation describe?\nA. The relationship between pressure, velocity, and elevation in a moving fluid\nB. The rate of flow of a fluid through a pipe\nC. The viscosity of a fluid\nD. The density of a fluid"},
-                    {"What is the main function of a culvert?\nA. To provide a passage for vehicles\nB. To allow water to flow under a road or railway\nC. To support a bridge\nD. To provide ventilation"},
-                    {"In surveying, what is the purpose of a theodolite?\nA. To measure distances\nB. To measure angles\nC. To measure elevations\nD. To measure areas"},
-                    {"What is the primary cause of soil liquefaction?\nA. Heavy rainfall\nB. Earthquake shaking\nC. High wind speeds\nD. Volcanic activity"},
-                    {"In transportation engineering, what is the main purpose of a roundabout?\nA. To reduce traffic speed\nB. To eliminate the need for traffic signals\nC. To improve traffic flow and reduce accidents\nD. To provide parking space"}
+                    {"In how many ways can you arrange a group of 5 girls and 3 boys in 7 vacant chairs?\na. 40320\nb. 5040\nc. 720\nd. 8"},
+                    {"How many 3-digit numbers can you make out of the numbers 1 to 5 without repetition?\na. 720\nb. 10\nc. 60\nd. 120"},
+                    {"There are 2 white, 3 red, and 4 blue balls inside a basket. If three balls are drawn randomly in succession without replacement,what is the probability\n that the first ball is white, and the next two balls are blue?\na. 32/729\nb. 4/63\nc. 8/243\nd. 1/21"},
+                    {"What is the mode of the following numbers: 54, 45, 75, 60, 65, 65, 60, and 57?\na. 65\nb. 60\nc. 62.5\nd. 60 and 65"},
+                    {"From the given numbers of question number 4, what is the median?\na. 62.5\nb. 60\nc. 65\nd. 60 and 65"},
+                    {"From the given numbers of question number 4, what is the variance?\na. 77.84\nb. 60.125\nc. 68.11\nd. 8.82"},
+                    {"Seven boys are to be seated around a circular table. How many arrangements can be made?\na. 7\nb. 2520\nc. 5040\nd. 720"},
+                    {"In how many ways can you arrange 3 boys and 4 girls in a 7-seater bench supposing that the four girls want to be seated together?\na. 24\nb. 5040\nc. 576\nd. 48"},
+                    {"The probability that you will arrive late is 35% and the probability that you will be scolded by your boss is 15%. What is the probability that you will be both late and scolded by your boss?\na. 5.25%\nb. 50%\nc. 44.75%\nd. 2.33%"},
+                    {"From question number 9, what is the probability that you will either be late or scolded by your boss?\na. 5.25%\nb. 50%\nc. 44.75%\nd. 2.33%"}
                 };
 
-                char[] answers = {'B', 'A', 'A', 'C', 'D', 'A', 'B', 'B', 'B', 'C'};
+                char[] answers = {'B', 'C', 'B', 'D', 'B', 'C', 'D', 'C', 'A', 'C'};
 
-                int score = takeExam(questions, answers, questions.length, scan);
-                boolean passed = checkIfPassed(score, questions.length, 0.75);
-
-                if (passed) {
-                    System.out.println("Congratulations! You passed the exam.");
-                } else {
-                    System.out.println("You failed.");
-                }
+                int score = takeEngExam(questions, answers, questions.length, scan);
+                boolean passed = checkIfExamPassed(score, questions.length, 0.75);
 
                 scan.close();
             }
 
-            static int takeBoardExam(String[][] questions, char[] answers, int totalQuestions, Scanner scan) {
+            static int takeEngExam(String[][] questions, char[] answers, int totalQuestions, Scanner scan) {
                 int score = 0;
                 char[] userAnswers = new char[totalQuestions];
 
                 for (int i = 0; i < totalQuestions; i++) {
-                    System.out.print((i + 1) + ". ");
-                    System.out.println(questions[i][0]);
-                    System.out.print("Your answer: ");
-                    userAnswers[i] = Character.toUpperCase(scan.next().charAt(0));
+                    System.out.println(HORIZONTAL_LINE);
+
+                    String questionText = questions[i][0];
+                    String[] parts = questionText.split("\n");
+
+                    System.out.printf("| %2d: %-" + (PAGE_WIDTH - 16) + "s         |\n", (i + 1), parts[0]);
+            
+
+                    for (int j = 1; j < parts.length; j++) {
+                        String line = "| " + " ".repeat(12) + parts[j];
+                        System.out.printf("%-" + (PAGE_WIDTH - 1) + "s|\n", line);
+                    
                 }
+                System.out.println(EMPTY_LINE);
+                boolean validInput = false;
+                while (!validInput) {
+                    System.out.print("|" + "  Enter your answer (A/B/C/D): " );
+                    String input = scan.nextLine().trim().toUpperCase();
+                    if (input.isEmpty()) {
+                        input = scan.nextLine().trim().toUpperCase();
+                    }
+                    
+                    if (input.length() == 1 && "ABCD".contains(input)) {
+                        userAnswers[i] = input.charAt(0);
+                        validInput = true;
+                    } else {
+                        System.out.println("Invalid input. Please enter A, B, C, or D.");
+                    }
+                }
+            }
 
                 for (int i = 0; i < totalQuestions; i++) {
                     if (userAnswers[i] == answers[i]) {
@@ -843,7 +874,7 @@ public class Map {
                     }
                 }
 
-                displayResults(score, totalQuestions);
+                displayExamResults(score, totalQuestions, null, null);
                 return score;
             }
 
@@ -851,22 +882,42 @@ public class Map {
                 return ((double) score / totalQuestions) >= passing_score;
             }
 
-            static void displayExamResults(int score, int totalQuestions) {
+            static void displayExamResults(int score, int totalQuestions, String thirdCourse, String secondCourse) {
                 double percentage = ((double) score / totalQuestions) * 100;
                 System.out.println("\nYour Score: " + score + "/" + totalQuestions);
                 System.out.println("Percentage: " + String.format("%.1f", percentage) + "%");
-                if (percentage >= 75) {
+                if (percentage >= 85) {
                     System.out.println("Congratulations! You passed the exam.");
-                } else {
-                    System.out.println("You failed.");
+                    println("You continue to pursuit your course");
+                    println("4 years Later");
+                    println("Your are now graduate the university and will now take the baord exam");
+                    BoardExam();
+
+                }else {
+                    System.out.println("Sorry, you did not pass the  Engineer entrance exam. Better luck next time.");
+                    System.out.println("Yuu may choose to your 2nd and 3rd choice of course");
+                    println("==============================================");
+                    println("|  You selected:                             |");
+                    println("|  1st Choice: Engineering                   |");
+                    println("|  2nd Choice: " + secondCourse + "          |");
+                    println("|  3rd Choice: " + thirdCourse + "           |");
+                    println("==============================================");
                 }
+                System.out.println(HORIZONTAL_LINE); 
             }
+            static void printCenter(String text) {
+                int padding = (PAGE_WIDTH - text.length() - 2) / 2;
+                String paddedText = "|" + " ".repeat(padding) + text;
+                paddedText += " ".repeat(PAGE_WIDTH - paddedText.length() - 1) + "|";
+                System.out.println(paddedText);
+            }
+   
         
             private static final int PAGE_WIDTH = 175;
             private static final String HORIZONTAL_LINE = "+" + "=".repeat(PAGE_WIDTH - 2) + "+";
             private static final String EMPTY_LINE = "|" + " ".repeat(PAGE_WIDTH - 2) + "|";
         
-            static void boardexam() {
+            static void BoardExam() {
                 Scanner scan = new Scanner(System.in);
         
         
