@@ -326,22 +326,27 @@ public class Map {
             case "Room 1":
                 roomIndex = 0;
                 println("You are in Room 1 - English");
+                System.out.println("The words you know reflect the world you see. Every correct answer sharpens your tongue and mind.\n");
                 break;
             case "Room 2":
                 roomIndex = 1;
                 println("You are in Room 2 - Math");
+                println("Numbers dance in your head. Equations and formulas guide your logic and structure.\n");
                 break;
             case "Room 3":
                 roomIndex = 2;
                 println("You are in Room 3 - Filipino");
+                println("Your roots whisper their strength. Language is more than words — it’s identity and culture.\n");
                 break;
             case "Room 4":
                 roomIndex = 3;
                 println("You are in Room 4 - Logical Thinking");
+                println("Puzzles unfold before you. Every solved riddle adds another brick to the foundation of your reasoning.\n");
                 break;
             case "Room 5":
                 roomIndex = 4;
                 println("You are in Room 5 - Ethics % Decision-Making");
+                println("Integrity shapes your path. With every just decision, you carve a road of honor.\n");
                 break;
             case "Intersection 1":
                 System.out.println("You are in an intersection. No question here.");
@@ -371,6 +376,21 @@ public class Map {
     
         scores[roomIndex] = score;
         System.out.println("You scored " + score + " out of 5 in " + currentLoc + ".");
+        if (score == 5) {
+            println("╔══════════════════════════════════════════════════════════════════════════╗");
+            println("║ Incredible! You feel a surge of confidence, as if the path ahead is clear║");
+            println("║ and bright.                                                              ║");
+            println("╚══════════════════════════════════════════════════════════════════════════╝");
+        } else if (score >= 3) {
+            println("╔══════════════════════════════════════════════════════════════════════════╗");
+            println("║ Not bad! You push forward, knowing there's still more to learn.          ║");
+            println("╚══════════════════════════════════════════════════════════════════════════╝");
+        } else {
+            println("╔══════════════════════════════════════════════════════════════════════════╗");
+            println("║ You struggle, but remind yourself that every great engineer starts       ║");
+            println("║ somewhere.                                                               ║");
+            println("╚══════════════════════════════════════════════════════════════════════════╝");
+        }
         ScoreMenu();
     
         boolean allExamsCompleted = true;
@@ -808,6 +828,7 @@ public class Map {
                 if (!newLocation.equals(currentLocation)) {
                     println("Moving to " + newLocation);
                     currentLocation = newLocation;
+                    println(showMap(currentLocation));
                     
                     if (!currentLocation.equals(destination) && !currentLocation.startsWith("Intersection")) {
                         askQuestion(currentLocation, scan);
