@@ -143,79 +143,9 @@ public class Map {
                         
 
                         introduction(); // Call introduction method
+                        Course(scan);
                         
-                        println("==============================================");
-                        println("|          COURSE SELECTION MENU            |");
-                        println("==============================================");
-                        println("|  Your first choice is: ENGINEERING        |");
-                        println("|--------------------------------------------|");
-                        println("|  Please enter your second and third choice |");
-                        println("|  of courses from the options below:       |");
-                        println("|--------------------------------------------|");
-                        println("|  2. Education                             |");
-                        println("|  3. Entrepreneurship                      |");
-                        println("|  4. Tourism Management                    |");
-                        println("|  5. Sociology                             |");
-                        println("|  6. Agriculture                           |");
-                        println("|  7. Fisheries                             |");
-                        println("==============================================");
-                        print("> Enter your second choice: ");
-                        int secondChoice = scan.nextInt();
-                        String secondCourse = "";
-                        switch (secondChoice) {
-                            case 2:
-                                secondCourse = "Education";
-                                break;
-                            case 3:
-                                secondCourse = "Entrepreneurship";
-                                break;
-                            case 4:
-                                secondCourse = "Tourism Management";
-                                break;
-                            case 5:
-                                secondCourse = "Sociology";
-                                break;
-                            case 6:
-                                secondCourse = "Agriculture";
-                                break;
-                            case 7:
-                                secondCourse = "Fisheries";
-                                break;
-                            default:
-                                break;
-                        }
-                        print("> Enter your third choice: ");
-                        int thirdChoice = scan.nextInt();
-                        String thirdCourse = "";
-                        switch (thirdChoice) {
-                            case 2:
-                                thirdCourse = "Education";
-                                break;
-                            case 3:
-                                thirdCourse = "Entrepreneurship";
-                                break;
-                            case 4:
-                                thirdCourse = "Tourism Management";
-                                break;
-                            case 5:
-                                thirdCourse = "Sociology";
-                                break;
-                            case 6:
-                                thirdCourse = "Agriculture";
-                                break;
-                            case 7:
-                                thirdCourse = "Fisheries";
-                                break;
-                            default:
-                                break;
-                        }
-
-                        println("==============================================");
-                        println("|  You selected:                             |");
-                        println("|  1st Choice: Engineering                   |");
-                        println("|  2nd Choice: " + secondCourse + "            |");
-                        println("|  3rd Choice: " + thirdCourse + "             |");
-                        println("==============================================");
+                        
 
                         // Generate a random starting room
                         String[] mapLoc = {"Room 1", "Room 2", "Room 3", "Room 4", "Room 5", "Intersection 1", "Intersection 2"};
@@ -254,6 +184,54 @@ public class Map {
                 }
             }
         }
+        static String[] Course(Scanner scan) { 
+            println("==============================================");
+            println("|          COURSE SELECTION MENU            |");
+            println("==============================================");
+            println("|  Your first choice is: ENGINEERING        |");
+            println("|--------------------------------------------|");
+            println("|  Please enter your second and third choice |");
+            println("|  of courses from the options below:       |");
+            println("|--------------------------------------------|");
+            println("|  2. Education                             |");
+            println("|  3. Entrepreneurship                      |");
+            println("|  4. Tourism Management                    |");
+            println("|  5. Sociology                             |");
+            println("|  6. Agriculture                           |");
+            println("|  7. Fisheries                             |");
+            println("==============================================");
+        
+            print("> Enter your second choice: ");
+            int secondChoice = scan.nextInt();
+            String secondCourse = getCourseName(secondChoice);
+        
+            print("> Enter your third choice: ");
+            int thirdChoice = scan.nextInt();
+            String thirdCourse = getCourseName(thirdChoice);
+        
+            println("==============================================");
+            println("|  You selected:                             |");
+            println("|  1st Choice: Engineering                   |");
+            println("|  2nd Choice: " + secondCourse + "            |");
+            println("|  3rd Choice: " + thirdCourse + "             |");
+            println("==============================================");
+        
+            return new String[] {"Engineering", secondCourse, thirdCourse}; 
+        }
+        
+        // Helper method to get course name from choice
+        static String getCourseName(int choice) {
+            switch (choice) {
+                case 2: return "Education";
+                case 3: return "Entrepreneurship";
+                case 4: return "Tourism Management";
+                case 5: return "Sociology";
+                case 6: return "Agriculture";
+                case 7: return "Fisheries";
+                default: return "Invalid Choice";
+            }
+        }
+        
 
         static void introduction() {
         println("==============================================================");
@@ -326,27 +304,22 @@ public class Map {
             case "Room 1":
                 roomIndex = 0;
                 println("You are in Room 1 - English");
-                System.out.println("The words you know reflect the world you see. Every correct answer sharpens your tongue and mind.\n");
                 break;
             case "Room 2":
                 roomIndex = 1;
                 println("You are in Room 2 - Math");
-                println("Numbers dance in your head. Equations and formulas guide your logic and structure.\n");
                 break;
             case "Room 3":
                 roomIndex = 2;
                 println("You are in Room 3 - Filipino");
-                println("Your roots whisper their strength. Language is more than words — it’s identity and culture.\n");
                 break;
             case "Room 4":
                 roomIndex = 3;
                 println("You are in Room 4 - Logical Thinking");
-                println("Puzzles unfold before you. Every solved riddle adds another brick to the foundation of your reasoning.\n");
                 break;
             case "Room 5":
                 roomIndex = 4;
                 println("You are in Room 5 - Ethics % Decision-Making");
-                println("Integrity shapes your path. With every just decision, you carve a road of honor.\n");
                 break;
             case "Intersection 1":
                 System.out.println("You are in an intersection. No question here.");
@@ -376,21 +349,6 @@ public class Map {
     
         scores[roomIndex] = score;
         System.out.println("You scored " + score + " out of 5 in " + currentLoc + ".");
-        if (score == 5) {
-            println("╔══════════════════════════════════════════════════════════════════════════╗");
-            println("║ Incredible! You feel a surge of confidence, as if the path ahead is clear║");
-            println("║ and bright.                                                              ║");
-            println("╚══════════════════════════════════════════════════════════════════════════╝");
-        } else if (score >= 3) {
-            println("╔══════════════════════════════════════════════════════════════════════════╗");
-            println("║ Not bad! You push forward, knowing there's still more to learn.          ║");
-            println("╚══════════════════════════════════════════════════════════════════════════╝");
-        } else {
-            println("╔══════════════════════════════════════════════════════════════════════════╗");
-            println("║ You struggle, but remind yourself that every great engineer starts       ║");
-            println("║ somewhere.                                                               ║");
-            println("╚══════════════════════════════════════════════════════════════════════════╝");
-        }
         ScoreMenu();
     
         boolean allExamsCompleted = true;
@@ -433,13 +391,19 @@ public class Map {
         println("You are in " + currentLocation);
         println("Where would you like to go?");
         
-        String[] rooms = {"Room 1", "Room 2", "Room 3 ", "Room 4", "Room 5"};
-        String[] availableRooms = new String[rooms.length];
-        int availableRoomCount = 0;
+        String[] rooms = {"Room 1", "Room 2", "Room 3", "Room 4", "Room 5"};
+        boolean[] completedRooms = new boolean[rooms.length];
         
         for (int i = 0; i < rooms.length; i++) {
-            if (!rooms[i].equals(currentLocation) && scores[i] == 0) {
-            availableRooms[availableRoomCount++] = rooms[i];
+            if (scores[i] > 0) {
+                completedRooms[i] = true;
+            }
+        }
+        
+        int availableRoomCount = 0;
+        for (int i = 0; i < rooms.length; i++) {
+            if (!rooms[i].equals(currentLocation) && !completedRooms[i]) {
+                availableRoomCount++;
             }
         }
         
@@ -447,26 +411,32 @@ public class Map {
             println("All exams have been completed.");
             int totalScore = 0;
             for (int i = 0; i < 5; i++) { // Only sum the scores of the first 5 rooms
-            totalScore += scores[i];
+                totalScore += scores[i];
             }
             println("Your total score is: " + totalScore + " out of " + (5 * 5));
             if (totalScore >= (5 * 3.75)) { // 75% of 25 is 18.75
-            println("Congratulations! You passed the entrance exams.");
-            println("You will now proceed to the entrance exam for the engineering course.");
-            EngineerExam();
+                println("Congratulations! You passed the entrance exams.");
+                println("You will now proceed to the entrance exam for the engineering course.");
+                EngineerExam();
             } else {
-            println("Unfortunately, you did not pass the entrance exams. Better luck next time.");
+                println("Unfortunately, you did not pass the entrance exams. Better luck next time.");
             }
             System.exit(0);
         }
         
-        for (int i = 0; i < availableRoomCount; i++) {
-            println((i + 1) + ". " + availableRooms[i]);
+        for (int i = 0; i < rooms.length; i++) {
+            if (!rooms[i].equals(currentLocation) && !completedRooms[i]) {
+                println((i + 1) + ". " + rooms[i]);
+            }
         }
         
         println("Enter the number of the room you want to go to: ");
         int choice = scan.nextInt();
-        return availableRooms[choice - 1];
+        while (choice < 1 || choice > rooms.length || rooms[choice - 1].equals(currentLocation) || completedRooms[choice - 1]) {
+            println("Invalid choice, please try again.");
+            choice = scan.nextInt();
+        }
+        return rooms[choice - 1];
     }
     static void  showRoutesAndFindShortest(String currentLoc, String destination) {
         String[] routeNames = {
@@ -828,7 +798,6 @@ public class Map {
                 if (!newLocation.equals(currentLocation)) {
                     println("Moving to " + newLocation);
                     currentLocation = newLocation;
-                    println(showMap(currentLocation));
                     
                     if (!currentLocation.equals(destination) && !currentLocation.startsWith("Intersection")) {
                         askQuestion(currentLocation, scan);
@@ -875,60 +844,59 @@ public class Map {
             }
 
             static int takeEngExam(String[][] questions, char[] answers, int totalQuestions, Scanner scan) {
-                int score = 0;
-                char[] userAnswers = new char[totalQuestions];
-
-                for (int i = 0; i < totalQuestions; i++) {
-                    System.out.println(HORIZONTAL_LINE);
-
-                    String questionText = questions[i][0];
-                    String[] parts = questionText.split("\n");
-
-                    System.out.printf("| %2d: %-" + (PAGE_WIDTH - 16) + "s         |\n", (i + 1), parts[0]);
-            
-
-                    for (int j = 1; j < parts.length; j++) {
-                        String line = "| " + " ".repeat(12) + parts[j];
-                        System.out.printf("%-" + (PAGE_WIDTH - 1) + "s|\n", line);
-                    
-                }
-                System.out.println(EMPTY_LINE);
-                boolean validInput = false;
-                while (!validInput) {
-                    System.out.print("|" + "  Enter your answer (A/B/C/D): " );
-                    String input = scan.nextLine().trim().toUpperCase();
-                    if (input.isEmpty()) {
-                        input = scan.nextLine().trim().toUpperCase();
+                    int score = 0;
+                    char[] userAnswers = new char[totalQuestions];
+    
+                    for (int i = 0; i < totalQuestions; i++) {
+                        System.out.println(HORIZONTAL_LINE);
+    
+                        String questionText = questions[i][0];
+                        String[] parts = questionText.split("\n");
+    
+                        System.out.printf("| %2d: %-" + (PAGE_WIDTH - 16) + "s         |\n", (i + 1), parts[0]);
+                
+    
+                        for (int j = 1; j < parts.length; j++) {
+                            String line = "| " + " ".repeat(12) + parts[j];
+                            System.out.printf("%-" + (PAGE_WIDTH - 1) + "s|\n", line);
+                        
                     }
-                    
-                    if (input.length() == 1 && "ABCD".contains(input)) {
-                        userAnswers[i] = input.charAt(0);
-                        validInput = true;
-                    } else {
-                        System.out.println("Invalid input. Please enter A, B, C, or D.");
-                    }
-                }
-            }
-
-                for (int i = 0; i < totalQuestions; i++) {
-                    if (userAnswers[i] == answers[i]) {
-                        score++;
+                    System.out.println(EMPTY_LINE);
+                    boolean validInput = false;
+                    while (!validInput) {
+                        System.out.print("|" + "  Enter your answer (A/B/C/D): " );
+                        String input = scan.nextLine().trim().toUpperCase();
+                        if (input.isEmpty()) {
+                            input = scan.nextLine().trim().toUpperCase();
+                        }
+                        
+                        if (input.length() == 1 && "ABCD".contains(input)) {
+                            userAnswers[i] = input.charAt(0);
+                            validInput = true;
+                        } else {
+                            System.out.println("Invalid input. Please enter A, B, C, or D.");
+                        }
                     }
                 }
-
-                displayExamResults(score, totalQuestions, null, null);
-                return score;
+    
+                    for (int i = 0; i < totalQuestions; i++) {
+                        if (userAnswers[i] == answers[i]) {
+                            score++;
+                        }
+                    }
+    
+                    displayExamResults(score, totalQuestions, scan);    return score;
             }
 
             static boolean checkIfExamPassed(int score, int totalQuestions, double passing_score) {
                 return ((double) score / totalQuestions) >= passing_score;
             }
 
-            static void displayExamResults(int score, int totalQuestions, String thirdCourse, String secondCourse) {
+            static void displayExamResults(int score, int totalQuestions, Scanner scan) {
                 double percentage = ((double) score / totalQuestions) * 100;
                 System.out.println("\nYour Score: " + score + "/" + totalQuestions);
                 System.out.println("Percentage: " + String.format("%.1f", percentage) + "%");
-                if (percentage >= 85) {
+                if (percentage >= 80) { 
                     System.out.println("Congratulations! You passed the exam.");
                     println("You continue to pursuit your course");
                     println("4 years Later");
@@ -938,11 +906,12 @@ public class Map {
                 }else {
                     System.out.println("Sorry, you did not pass the  Engineer entrance exam. Better luck next time.");
                     System.out.println("Yuu may choose to your 2nd and 3rd choice of course");
+                    String[] selectedCourses = Course(scan);
                     println("==============================================");
                     println("|  You selected:                             |");
                     println("|  1st Choice: Engineering                   |");
-                    println("|  2nd Choice: " + secondCourse + "          |");
-                    println("|  3rd Choice: " + thirdCourse + "           |");
+                    println("|  2nd Choice: " + selectedCourses[1]+ "          |");
+                    println("|  3rd Choice: " + selectedCourses[2] + "           |");
                     println("==============================================");
                 }
                 System.out.println(HORIZONTAL_LINE); 
@@ -1195,7 +1164,3 @@ public class Map {
 
       
 }
-
-
-
-
