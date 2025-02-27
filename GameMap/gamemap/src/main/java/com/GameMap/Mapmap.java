@@ -1,14 +1,37 @@
 
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+
+import java.util.HashSet;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.Set;
 
-public class Map {
+public class Mapmap {
     static String[] locations = new String[7];
     static int[] scores = new int[7];
+    static boolean[] visitedRooms = new boolean[7]; // Track rooms with answered exams
+
+    private static final int PAGE_WIDTH = 175;
+    private static final String HORIZONTAL_LINE = "+" + "=".repeat(PAGE_WIDTH - 2) + "+";
+    private static final String EMPTY_LINE = "|" + " ".repeat(PAGE_WIDTH - 2) + "|";
+    private static final int PAGE_WIDTH2 = 120;
+    private static final String HORIZONTAL_LINE1 = "═" + "═".repeat(PAGE_WIDTH2 - 1);
+    private static final String HORIZONTAL_LINE2 = "+" + "=".repeat(PAGE_WIDTH2 - 1) + "+";
+    private static final String EMPTY_LINE2 = "|" + " ".repeat(PAGE_WIDTH2 - 2) + "|";
+
+    static int getRoomIndex(String room) {
+        switch (room) {
+            case "Room 1": return 0;
+            case "Room 2": return 1;
+            case "Room 3": return 2;
+            case "Room 4": return 3;
+            case "Room 5": return 4;
+            case "Intersection 1": return 5;
+            case "Intersection 2": return 6;
+            default: return -1;
+        }
+    }
+
 
     static void println(String print) {
         System.out.println(print);
@@ -80,33 +103,7 @@ public class Map {
         return map;
     }
 
-    static void Title(){
-
-        println("\u001B[33m"); // Yellow color
-        println("                                           ██     ██     ██  █████  ███    ██ ████████    ████████  ██████      ██████  ███████ ");
-        println("                                           ██     ██     ██ ██   ██ ████   ██    ██          ██    ██    ██     ██   ██ ██      ");
-        println("                                           ██     ██  █  ██ ███████ ██ ██  ██    ██          ██    ██    ██     ██████  █████   ");
-        println("                                           ██     ██ ███ ██ ██   ██ ██  ██ ██    ██          ██    ██    ██     ██   ██ ██      ");
-        println("                                           ██      ███ ███  ██   ██ ██   ████    ██          ██     ██████      ██████  ███████ ");
-        println("\u001B[0m"); // Reset color
-        System.out.println();
-        println("\u001B[33m"); // Yellow color
-        println("                                                                            █████  ███    ██ ");
-        println("                                                                           ██   ██ ████   ██ ");
-        println("                                                                           ███████ ██ ██  ██ ");
-        println("                                                                           ██   ██ ██  ██ ██ ");
-        println("                                                                           ██   ██ ██   ████ ");
-        println("\u001B[0m"); //
-        System.out.println();
-        println("\u001B[33m"); // Yellow color
-        println("                                                   ███████ ███    ██  ██████  ██ ███    ██ ███████ ███████ ██████  ");
-        println("                                                   ██      ████   ██ ██       ██ ████   ██ ██      ██      ██   ██ ");
-        println("                                                   █████   ██ ██  ██ ██   ███ ██ ██ ██  ██ █████   █████   ██████  ");
-        println("                                                   ██      ██  ██ ██ ██    ██ ██ ██  ██ ██ ██      ██      ██   ██ ");
-        println("                                                   ███████ ██   ████  ██████  ██ ██   ████ ███████ ███████ ██   ██ ");
-        println("\u001B[0m"); // Reset color
-        }
-
+   
         static String showMenu(Scanner scan) {
             while (true) {
                 println("╔════════════════════╗");
@@ -271,184 +268,275 @@ public class Map {
             println("==============================================");
             println("|  You selected:                             |");
             println("|  1st Choice: Engineering                   |");
-            println("|  2nd Choice: " + secondCourse + "            |");
-            println("|  3rd Choice: " + thirdCourse + "             |");
+            println("|  2nd Choice: " + secondCourse +"              |");
+            println("|  3rd Choice: " + thirdCourse +"               |");
             println("==============================================");
 
             return new String[]{secondCourse, thirdCourse};
         }
-           
-            static void askQuestion(String currentLoc, Scanner scan) {    String[][] questions = {
-            { // Room 1 - English
-                "What is the synonym of 'Happy'?\nA) Sad\nB) Joyful\nC) Angry\nD) Confused",
-                "Which is a correct sentence?\nA) He go to school.\nB) She going school.\nC) They are playing.\nD) Me is hungry.",
-                "What is the past tense of 'Run'?\nA) Running\nB) Runs\nC) Ran\nD) Runned",
-                "Which is a noun?\nA) Run\nB) Quickly\nC) Elephant\nD) Jumping",
-                "Choose the correct spelling:\nA) Becouse\nB) Because\nC) Beccause\nD) Becauze"
-            },
-            { // Room 2 - Math
-                "What is 12 ÷ 4?\nA) 2\nB) 3\nC) 4\nD) 6",
-                "What is 15% of 200?\nA) 20\nB) 25\nC) 30\nD) 35",
-                "What is the square root of 81?\nA) 7\nB) 8\nC) 9\nD) 10",
-                "Which number is prime?\nA) 4\nB) 6\nC) 9\nD) 13",
-                "Solve: 5 x (3 + 2)\nA) 15\nB) 20\nC) 25\nD) 30"
-            },
-            { // Room 3 - Filipino
-                "Ano ang kahulugan ng 'Maligaya'?\nA) Malungkot\nB) Masaya\nC) Galit\nD) Takot",
-                "Ano ang pambansang bayani ng Pilipinas?\nA) Emilio Aguinaldo\nB) Andres Bonifacio\nC) Jose Rizal\nD) Lapu-Lapu",
-                "Ano ang kabisera ng Pilipinas?\nA) Cebu\nB) Davao\nC) Manila\nD) Baguio",
-                "Ano ang salitang balbal para sa 'Pera'?\nA) Kuwarta\nB) Datung\nC) Kaban\nD) Lupa",
-                "Ano ang salitang ugat ng 'Kumakain'?\nA) Kain\nB) Kumain\nC) Kakain\nD) Kinain"
-            },
-            { // Room 4 - Logical Thinking
-                "Which shape has three sides?\nA) Square\nB) Triangle\nC) Circle\nD) Pentagon",
-                "Which number is missing? 2, 4, 6, ?, 10\nA) 7\nB) 8\nC) 9\nD) 10",
-                "If a dog has 4 legs, how many legs do 3 dogs have?\nA) 6\nB) 8\nC) 10\nD) 12",
-                "If today is Monday, what day is 3 days later?\nA) Wednesday\nB) Thursday\nC) Friday\nD) Saturday",
-                "Which word does NOT belong?\nA) Apple\nB) Banana\nC) Orange\nD) Chair"
-            },
-            { // Room 5 - Ethics & Decision-Making
-                "What is considered ethical behavior?\nA) Lying for personal gain\nB) Stealing if no one notices\nC) Being honest and fair\nD) Cheating to win",
-                "Which is an ethical choice?\nA) Taking credit for someone else's work\nB) Helping a lost child find their parents\nC) Ignoring someone in need\nD) Spreading false rumors",
-                "If you see a wallet on the ground, what should you do?\nA) Keep the money\nB) Report it to authorities\nC) Ignore it\nD) Hide it",
-                "Which action is unfair?\nA) Treating everyone equally\nB) Making decisions based on facts\nC) Discriminating against people\nD) Helping others",
-                "Why is honesty important?\nA) It builds trust\nB) It makes people afraid\nC) It helps you lie better\nD) It has no effect"
+        static void printCenter(String text) {
+            int Page_width = 120;
+            int padding = (Page_width - text.length() - 2) / 2;
+            String paddedText = "║" + " ".repeat(padding) + text;
+            paddedText += " ".repeat(Page_width - paddedText.length() - 1) + "║";
+            System.out.println(paddedText);
+        }
+
+        static void askQuestion(String currentLoc, Scanner scan) {
+            String[][] questions = {
+                { // Room 1 - English
+                    "What is the synonym of 'Happy'?\nA) Sad\nB) Joyful\nC) Angry\nD) Confused",
+                    "Which is a correct sentence?\nA) He go to school.\nB) She going school.\nC) They are playing.\nD) Me is hungry.",
+                    "What is the past tense of 'Run'?\nA) Running\nB) Runs\nC) Ran\nD) Runned",
+                    "Which is a noun?\nA) Run\nB) Quickly\nC) Elephant\nD) Jumping",
+                    "Choose the correct spelling:\nA) Becouse\nB) Because\nC) Beccause\nD) Becauze"
+                },
+                { // Room 2 - Math
+                    "What is 12 ÷ 4?\nA) 2\nB) 3\nC) 4\nD) 6",
+                    "What is 15% of 200?\nA) 20\nB) 25\nC) 30\nD) 35",
+                    "What is the square root of 81?\nA) 7\nB) 8\nC) 9\nD) 10",
+                    "Which number is prime?\nA) 4\nB) 6\nC) 9\nD) 13",
+                    "Solve: 5 x (3 + 2)\nA) 15\nB) 20\nC) 25\nD) 30"
+                },
+                { // Room 3 - Filipino
+                    "Ano ang kahulugan ng 'Maligaya'?\nA) Malungkot\nB) Masaya\nC) Galit\nD) Takot",
+                    "Ano ang pambansang bayani ng Pilipinas?\nA) Emilio Aguinaldo\nB) Andres Bonifacio\nC) Jose Rizal\nD) Lapu-Lapu",
+                    "Ano ang kabisera ng Pilipinas?\nA) Cebu\nB) Davao\nC) Manila\nD) Baguio",
+                    "Ano ang salitang balbal para sa 'Pera'?\nA) Kuwarta\nB) Datung\nC) Kaban\nD) Lupa",
+                    "Ano ang salitang ugat ng 'Kumakain'?\nA) Kain\nB) Kumain\nC) Kakain\nD) Kinain"
+                },
+                { // Room 4 - Logical Thinking
+                    "Which shape has three sides?\nA) Square\nB) Triangle\nC) Circle\nD) Pentagon",
+                    "Which number is missing? 2, 4, 6, ?, 10\nA) 7\nB) 8\nC) 9\nD) 10",
+                    "If a dog has 4 legs, how many legs do 3 dogs have?\nA) 6\nB) 8\nC) 10\nD) 12",
+                    "If today is Monday, what day is 3 days later?\nA) Wednesday\nB) Thursday\nC) Friday\nD) Saturday",
+                    "Which word does NOT belong?\nA) Apple\nB) Banana\nC) Orange\nD) Chair"
+                },
+                { // Room 5 - Ethics & Decision-Making
+                    "What is considered ethical behavior?\nA) Lying for personal gain\nB) Stealing if no one notices\nC) Being honest and fair\nD) Cheating to win",
+                    "Which is an ethical choice?\nA) Taking credit for someone else's work\nB) Helping a lost child find their parents\nC) Ignoring someone in need\nD) Spreading false rumors",
+                    "If you see a wallet on the ground, what should you do?\nA) Keep the money\nB) Report it to authorities\nC) Ignore it\nD) Hide it",
+                    "Which action is unfair?\nA) Treating everyone equally\nB) Making decisions based on facts\nC) Discriminating against people\nD) Helping others",
+                    "Why is honesty important?\nA) It builds trust\nB) It makes people afraid\nC) It helps you lie better\nD) It has no effect"
+                }
+            };
+        
+            char[][] answers = {
+                {'B', 'C', 'C', 'C', 'B'}, // Room 1 answers
+                {'B', 'C', 'C', 'D', 'C'}, // Room 2 answers
+                {'B', 'C', 'C', 'B', 'A'}, // Room 3 answers
+                {'B', 'B', 'D', 'B', 'D'}, // Room 4 answers
+                {'C', 'B', 'B', 'C', 'A'}  // Room 5 answers
+            };
+        
+            int roomIndex = -1;
+            switch (currentLoc) {
+                case "Room 1":
+                    roomIndex = 0;
+                    System.out.println(HORIZONTAL_LINE1);
+                    printCenter("You are in Room 1 - English");
+                    System.out.println(HORIZONTAL_LINE1);
+                    printCenter("The words you know reflect the world you see. Every correct answer sharpens your tongue and mind.");
+                    System.out.println(HORIZONTAL_LINE1 + ("\n"));
+                    break;
+                case "Room 2":
+                    roomIndex = 1;
+                    System.out.println(HORIZONTAL_LINE1);
+                    printCenter("You are in Room 2 - Math");
+                    System.out.println(HORIZONTAL_LINE1);
+                    printCenter("Numbers dance in your head. Equations and formulas guide your logic and structure.");
+                    System.out.println(HORIZONTAL_LINE1 + ("\n"));
+                    break;
+                case "Room 3":
+                    roomIndex = 2;
+                    System.out.println(HORIZONTAL_LINE1);
+                    printCenter("You are in Room 3 - Filipino");
+                    System.out.println(HORIZONTAL_LINE1);
+                    printCenter("Your roots whisper their strength. Language is more than words — it’s identity and culture.");
+                    System.out.println(HORIZONTAL_LINE1 + ("\n"));
+                    break;
+                case "Room 4":
+                    roomIndex = 3;
+                    System.out.println(HORIZONTAL_LINE1);
+                    printCenter("You are in Room 4 - Logical Thinking");
+                    System.out.println(HORIZONTAL_LINE1);
+                    printCenter("Puzzles unfold before you. Every solved riddle adds another brick to the foundation of your reasoning.");
+                    System.out.println(HORIZONTAL_LINE1 + ("\n"));
+                    break;
+                case "Room 5":
+                    roomIndex = 4;
+                    System.out.println(HORIZONTAL_LINE1);
+                    printCenter("You are in Room 5 - Ethics % Decision-Making");
+                    System.out.println(HORIZONTAL_LINE1);
+                    printCenter("Integrity shapes your path. With every just decision, you carve a road of honor.");
+                    System.out.println(HORIZONTAL_LINE1 + ("\n"));
+                    break;
+                case "Intersection 1":
+                    System.out.println(HORIZONTAL_LINE1);
+                    printCenter("You are in an intersection. No question here.");
+                    System.out.println(HORIZONTAL_LINE1);
+                    return;
+                case "Intersection 2":
+                    System.out.println(HORIZONTAL_LINE1);
+                    printCenter("You are in an intersection. No question here.");
+                    System.out.println(HORIZONTAL_LINE1);
+                    return;
+                default:
+                    System.out.println("Invalid location.");
+                    return;
             }
-        };
-    
-        char[][] answers = {
-            {'B', 'C', 'C', 'C', 'B'}, // Room 1 answers
-            {'B', 'C', 'C', 'D', 'C'}, // Room 2 answers
-            {'B', 'C', 'C', 'B', 'A'}, // Room 3 answers
-            {'B', 'B', 'D', 'B', 'D'}, // Room 4 answers
-            {'C', 'B', 'B', 'C', 'A'}  // Room 5 answers
-        };
-    
-        int roomIndex = -1;
-        switch (currentLoc) {
-            case "Room 1":
-                roomIndex = 0;
-                println("You are in Room 1 - English");
-                System.out.println("The words you know reflect the world you see. Every correct answer sharpens your tongue and mind.\n");
-                break;
-            case "Room 2":
-                roomIndex = 1;
-                println("You are in Room 2 - Math");
-                println("Numbers dance in your head. Equations and formulas guide your logic and structure.\n");
-                break;
-            case "Room 3":
-                roomIndex = 2;
-                println("You are in Room 3 - Filipino");
-                println("Your roots whisper their strength. Language is more than words — it’s identity and culture.\n");
-                break;
-            case "Room 4":
-                roomIndex = 3;
-                println("You are in Room 4 - Logical Thinking");
-                println("Puzzles unfold before you. Every solved riddle adds another brick to the foundation of your reasoning.\n");
-                break;
-            case "Room 5":
-                roomIndex = 4;
-                println("You are in Room 5 - Ethics % Decision-Making");
-                println("Integrity shapes your path. With every just decision, you carve a road of honor.\n");
-                break;
-            case "Intersection 1":
-                System.out.println("You are in an intersection. No question here.");
+        
+            if (scores[roomIndex] > 0) {
+                println("You have already completed the exam in " + currentLoc + ".");
                 return;
-            case "Intersection 2":
-                System.out.println("You are in an intersection. No question here.");
-                return;
-            default:
-                System.out.println("Invalid location.");
-                return;
-        }
+            }
+            System.out.println();
+            System.out.println();
+            System.out.println(HORIZONTAL_LINE2);
+            printCenter("███████ ███    ██ ████████ ██████   █████  ███    ██  ██████ ███████     ███████ ██   ██  █████  ███    ███");
+            printCenter("██      ████   ██    ██    ██   ██ ██   ██ ████   ██ ██      ██          ██       ██ ██  ██   ██ ████  ████");
+            printCenter("█████   ██ ██  ██    ██    ██████  ███████ ██ ██  ██ ██      █████       █████     ███   ███████ ██ ████ ██");
+            printCenter("██      ██  ██ ██    ██    ██   ██ ██   ██ ██  ██ ██ ██      ██          ██       ██ ██  ██   ██ ██  ██  ██");
+            printCenter("███████ ██   ████    ██    ██   ██ ██   ██ ██   ████  ██████ ███████     ███████ ██   ██ ██   ██ ██      ██");
+            System.out.println(HORIZONTAL_LINE2);
+            printCenter("Read the question Carefully. And choose the correct answer." );
     
-        if (scores[roomIndex] > 0) {
-            println("You have already completed the exam in " + currentLoc + ".");
-            return;
-        }
     
-        int score = 0;
-        for (int i = 0; i < 5; i++) {
-            System.out.println(questions[roomIndex][i]);
-            System.out.print("Your answer: ");
+        
+          int score = 0;
+            System.out.println(HORIZONTAL_LINE2);
+    
+            for (int i = 0; i < 5; i++) {
+            String roomquestions = questions[roomIndex][i];
+            String[] parts = roomquestions.split("\n");
+            // For the question line
+            // Print the question line centered
+            String question = String.format("%d: %s", (i + 1), parts[0]);
+            int questionPadding = (PAGE_WIDTH2 - question.length() - 0) / 2;
+            System.out.printf("|%" + questionPadding + "s%s%" + (PAGE_WIDTH2  - question.length() - questionPadding - 2) + "s|\n", "", question, "");
+    
+            // Print the choices centered
+            for (int j = 1; j < parts.length; j++) {
+            String choice = parts[j]; // Example: "A) Square"
+            int choicePadding = (PAGE_WIDTH2 - choice.length() - 0) / 2;
+            System.out.printf("|%" + choicePadding + "s%s%" + (PAGE_WIDTH2 - choice.length() - choicePadding - 2) + "s|\n", "", choice, "");
+            }  
+            String prompt = "Your answer: ";
+            int padding = (PAGE_WIDTH2 - prompt.length()) / 2; // Calculate center padding
+            System.out.print("|" + " ".repeat(padding) + prompt);
             char answer = scan.next().toUpperCase().charAt(0);
-            if (answer == answers[roomIndex][i]) {
-                score++;
+    
+            System.out.println(EMPTY_LINE2);
+                if (answer == answers[roomIndex][i]) {
+                    score++;
+                }
+            }
+        
+            scores[roomIndex] = score;
+
+            printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+            printCenter("         You scored " + score + " out of 5 in " + currentLoc + ".");
+            printCenter("╚══════════════════════════════════════════════════════════════════════════╝");      
+            if (score == 5) {
+                printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+                printCenter("Incredible! You feel a surge of confidence, as if the path ahead is clear");
+                printCenter("and bright.");
+                printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
+            } else if (score >= 3) {
+                printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+                printCenter("Not bad! You push forward, knowing there's still more to learn.");
+                printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
+            } else {
+                printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+                printCenter("You struggle, but remind yourself that every great engineer starts");
+                printCenter("somewhere.");
+                printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
+            }      ScoreMenu();
+        
+            boolean allExamsCompleted = true;
+            for (int i = 0; i < 5; i++) { // Only check the first 5 rooms
+                if (scores[i] == 0) {
+                    allExamsCompleted = false;
+                    break;
+                }
+            }
+    
+            if (allExamsCompleted) {
+                int totalScore = 0;
+                for (int i = 0; i < 5; i++) { // Only sum the scores of the first 5 rooms
+                totalScore += scores[i];
+                }
+                println("Your total score is: " + totalScore + " out of " + (5 * 5));
+                double percentage = ((double) totalScore / (5 * 5)) * 100;
+                println("Your percentage score is: " + String.format("%.2f", percentage) + "%");
+                if (totalScore >= (5 * 3.75)) { // 75% of 25 is 18.75
+                println("Congratulations! You passed the entrance exams.");
+                println("Proceeding to the entrance exam for the engineering course...");
+                EngineerExam();
+                } else {
+                println("Unfortunately, you did not pass the exams. Better luck next time.");
+                }
+                System.exit(0);
             }
         }
-    
-        scores[roomIndex] = score;
-        System.out.println("You scored " + score + " out of 5 in " + currentLoc + ".");
-        if (score == 5) {
-            println("╔══════════════════════════════════════════════════════════════════════════╗");
-            println("║ Incredible! You feel a surge of confidence, as if the path ahead is clear║");
-            println("║ and bright.                                                              ║");
-            println("╚══════════════════════════════════════════════════════════════════════════╝");
-        } else if (score >= 3) {
-            println("╔══════════════════════════════════════════════════════════════════════════╗");
-            println("║ Not bad! You push forward, knowing there's still more to learn.          ║");
-            println("╚══════════════════════════════════════════════════════════════════════════╝");
-        } else {
-            println("╔══════════════════════════════════════════════════════════════════════════╗");
-            println("║ You struggle, but remind yourself that every great engineer starts       ║");
-            println("║ somewhere.                                                               ║");
-            println("╚══════════════════════════════════════════════════════════════════════════╝");
-        }
-        ScoreMenu();
-        // tinggak ko redundunt na code sa menu here 
-    }
    
     static void ScoreMenu() {
-        println("Exam Score in Every Room:");
-        println("Room 1: " + scores[0] + "/5");
-        println("Room 2: " + scores[1] + "/5");
-        println("Room 3: " + scores[2] + "/5");
-        println("Room 4: " + scores[3] + "/5");
-        println("Room 5: " + scores[4] + "/5");
+        printCenter("╔════════════════════════════════════════════════╗");
+        printCenter("║                 Exam Score Board               ║");
+        printCenter("╠════════════════════════════════════════════════╣");
+        printCenter("║ Room 1: " + scores[0] + "/5                                  ║");
+        printCenter("║ Room 2: " + scores[1] + "/5                                  ║");
+        printCenter("║ Room 3: " + scores[2] + "/5                                  ║");
+        printCenter("║ Room 4: " + scores[3] + "/5                                  ║");
+        printCenter("║ Room 5: " + scores[4] + "/5                                  ║");
+        printCenter("╚════════════════════════════════════════════════╝");
     }
 
-    static String MenuDestination(String currentLocation, Scanner scan) {
-        println("You are in " + currentLocation);
-        println("Where would you like to go?");
-        
-        String[] rooms = {"Room 1", "Room 2", "Room 3", "Room 4", "Room 5"};
-        
+    static String MenuDestination(String currentLocation, Scanner scan, int[] visitedRooms) {
+        println(HORIZONTAL_LINE2);
+        printCenter("You are in " + currentLocation);
+        println(HORIZONTAL_LINE2);
+        printCenter("Where would you like to go?");
+        println(HORIZONTAL_LINE2);
+
+        String[] rooms = {"Room 1", "Room 2", "Room 3", "Room 4", "Room 5"};      
         int availableRoomCount = 0;
         for (int i = 0; i < rooms.length; i++) {
-            if (!rooms[i].equals(currentLocation) && scores[i] == 0) {
+            if (!rooms[i].equals(currentLocation) && scores[i] == 0 && visitedRooms[i] == 0) {
                 availableRoomCount++;
             }
         }
-        
+
         if (availableRoomCount == 0) {
-            println("All exams have been completed.");
+            System.out.println("All exams have been completed.");
             int totalScore = 0;
-            for (int i = 0; i < 5; i++) { // Only sum the scores of the first 5 rooms
+            for (int i = 0; i < 5; i++) {
                 totalScore += scores[i];
             }
-            println("Your total score is: " + totalScore + " out of " + (5 * 5));
-            if (totalScore >= (5 * 3.75)) { // 75% of 25 is 18.75
-                println("Congratulations! You passed the entrance exams.");
-                println("You will now proceed to the entrance exam for the engineering course.");
+            System.out.println("Your total score is: " + totalScore + " out of " + (5 * 5));
+            if (totalScore >= (5 * 3.75)) {
+                System.out.println("Congratulations! You passed the entrance exams.");
+                System.out.println("You will now proceed to the entrance exam for the engineering course.");
                 EngineerExam();
             } else {
-                println("Unfortunately, you did not pass the entrance exams. Better luck next time.");
+                System.out.println("Unfortunately, you did not pass the entrance exams. Better luck next time.");
             }
             System.exit(0);
         }
-        
+
         for (int i = 0; i < rooms.length; i++) {
-            if (!rooms[i].equals(currentLocation) && scores[i] == 0) {
-                println((i + 1) + ". " + rooms[i]);
+            if (!rooms[i].equals(currentLocation) && scores[i] == 0 && visitedRooms[i] == 0) {
+                System.out.println((i + 1) + ". " + rooms[i]);
             }
         }
-        
-        println("Enter the number of the room you want to go to: ");
+
+        System.out.println("Enter the number of the room you want to go to: ");
         int choice = scan.nextInt();
-        while (choice < 1 || choice > rooms.length || rooms[choice - 1].equals(currentLocation) || scores[choice - 1] > 0) {
-            println("Invalid choice, please try again.");
+        while (choice < 1 || choice > rooms.length || rooms[choice - 1].equals(currentLocation) || scores[choice - 1] > 0 || visitedRooms[choice - 1] > 0) {
+            System.out.println("Invalid choice, please try again.");
             choice = scan.nextInt();
         }
+        visitedRooms[choice - 1] = 1; // Mark the room as visited
         return rooms[choice - 1];
     }
     static void  showRoutesAndFindShortest(String currentLoc, String destination) {
@@ -761,18 +849,19 @@ public class Map {
         
         
             
-        static void showMovement(String currentLocation, String destination, Scanner scan) {
-            while (!currentLocation.equals(destination)) {
-                println(showMap(currentLocation));
-                println("Choose Key to move to the next location: ");
-                println("1. Move right");
-                println("2. Move left");
-                println("3. Move forward");
-                println("4. Move backward");
+    static void showMovement(String currentLocation, String destination, Scanner scan) {
+        while (!currentLocation.equals(destination)) {
+            println(showMap(currentLocation));
+            println("Choose Key to move to the next location: ");
+            println("1. Move right");
+            println("2. Move left");
+            println("3. Move forward");
+            println("4. Move backward");
 
-                int choice = scan.nextInt();
-                String newLocation = currentLocation; 
-                switch (currentLocation) {
+            int choice = scan.nextInt();
+            String newLocation = currentLocation;
+
+            switch (currentLocation) {
                 case "Room 1":
                     if (choice == 1) newLocation = "Intersection 2";
                     else if (choice == 4) newLocation = "Room 4";
@@ -802,47 +891,38 @@ public class Map {
                     if (choice == 1) newLocation = "Room 2";
                     else if (choice == 2) newLocation = "Room 1";
                     else if (choice == 4) newLocation = "Room 5";
-                    break;
                 default:
                     println("Invalid move.");
                     break;
-                }
+            }
 
-                if (!newLocation.equals(currentLocation)) {
+            if (!newLocation.equals(currentLocation)) {
                     println("Moving to " + newLocation);
                     currentLocation = newLocation;
                     println(showMap(currentLocation));
-                    
-                    if (!currentLocation.equals(destination) && !currentLocation.startsWith("Intersection") && scores[getRoomIndex(currentLocation)] == 0) {
+
+                    // Only ask question if it's not an intersection and has not been answered before
+                    if (!currentLocation.startsWith("Intersection") && !visitedRooms[getRoomIndex(currentLocation)]) {
+                        println("You are in " + currentLocation);
                         askQuestion(currentLocation, scan);
+                        visitedRooms[getRoomIndex(currentLocation)] = true; // Mark room as answered
                     }
                 } else {
                     println("You can't move in that direction.");
                 }
             }
+
             println(showMap(currentLocation));
             println("You have reached your destination: " + destination);
-            if (scores[getRoomIndex(destination)] < 5) {
-                    askQuestion(destination, scan);
-            }   
+
+            // Only ask question if the destination is not already answered
+            int destIndex = getRoomIndex(destination);
+            if (!visitedRooms[destIndex]) {
+                askQuestion(destination, scan);
+                visitedRooms[destIndex] = true; // Mark destination as answered
+            }
     }
 
-        static int getRoomIndex(String room) {
-            switch (room) {
-                case "Room 1":
-                    return 0;
-                case "Room 2":
-                    return 1;
-                case "Room 3":
-                    return 2;
-                case "Room 4":
-                    return 3;
-                case "Room 5":
-                    return 4;
-                default:
-                    return -1;
-            }
-        }
 
             
             static void EngineerExam() {
@@ -953,11 +1033,6 @@ public class Map {
                 System.out.println(paddedText);
             }
    
-        
-            private static final int PAGE_WIDTH = 175;
-            private static final String HORIZONTAL_LINE = "+" + "=".repeat(PAGE_WIDTH - 2) + "+";
-            private static final String EMPTY_LINE = "|" + " ".repeat(PAGE_WIDTH - 2) + "|";
-        
             static void BoardExam() {
                 Scanner scan = new Scanner(System.in);
         
@@ -1165,12 +1240,15 @@ public class Map {
         Scanner scan = new Scanner(System.in);
         Random random = new Random();
 
-        Title();
+        //Title();
         String currentLocation = showMenu(scan);
+        int[] visitedRooms = new int[5]; // Initialize visitedRooms array
+        
+
         
         askQuestion(currentLocation, scan);
         while (true) {
-            String selectedDestination = MenuDestination(currentLocation, scan);
+            String selectedDestination = MenuDestination(currentLocation, scan,visitedRooms);
             showRoutesAndFindShortest(currentLocation, selectedDestination);
             showMovement(currentLocation, selectedDestination, scan);
             currentLocation = selectedDestination;
