@@ -102,7 +102,21 @@ public class Mapmap {
 
         return map;
     }
+    static String UserName(Scanner scan){
+        println("=====================================");
+        println("|          WELCOME TO THE GAME      |");
+        println("=====================================");
+        println("|  Enter Username:                  |");
+        println("=====================================");
+        print("> "); // Input prompt
+        scan.nextLine(); // Consume the newline character
+        String username = scan.nextLine();
 
+        println("=====================================");
+        println("|  " + username + ", welcome to the game!  |");
+        println("=====================================");   
+        return username;
+    }
    
         static String showMenu(Scanner scan) {
             while (true) {
@@ -117,19 +131,8 @@ public class Mapmap {
     
                 switch (choice) {
                     case 1:
-                        println("=====================================");
-                        println("|          WELCOME TO THE GAME      |");
-                        println("=====================================");
-                        println("|  Enter Username:                  |");
-                        println("=====================================");
-                        print("> "); // Input prompt
-                        scan.nextLine(); // Consume the newline character
-                        String username = scan.nextLine();
-
-                        println("=====================================");
-                        println("|  " + username + ", welcome to the game!  |");
-                        println("=====================================");   
-
+                        
+                        UserName(scan);
                         String start = "Starting the game...";
                         
                         println("╔════════════════════════╗");
@@ -892,7 +895,7 @@ public class Mapmap {
                     else if (choice == 2) newLocation = "Room 1";
                     else if (choice == 4) newLocation = "Room 5";
                 default:
-                    println("Invalid move.");
+                    //println("Invalid move.");
                     break;
             }
 
@@ -927,11 +930,20 @@ public class Mapmap {
             
             static void EngineerExam() {
                 Scanner scan = new Scanner(System.in);
-
+                
                 System.out.println( HORIZONTAL_LINE);
-                System.out.printf("| %-30s |\n", " ENGINEERING ENTRANCE EXAM "); 
+                printCentered(" ███████ ███    ██  ██████  ██ ███    ██ ███████ ███████ ██████  ██ ███    ██  ██████ ");
+                printCentered(" ██      ████   ██ ██       ██ ████   ██ ██      ██      ██   ██ ██ ████   ██ ██      ");
+                printCentered(" █████   ██ ██  ██ ██   ███ ██ ██ ██  ██ █████   █████   ██████  ██ ██ ██  ██ ██   ███");
+                printCentered(" ██      ██  ██ ██ ██    ██ ██ ██  ██ ██ ██      ██      ██   ██ ██ ██  ██ ██ ██    ██");
+                printCentered(" ███████ ██   ████  ██████  ██ ██   ████ ███████ ███████ ██   ██ ██ ██   ████  ██████ ");                                                                                              
+                System.out.println(EMPTY_LINE);                                                                                                       
+                printCentered("███████ ███    ██ ████████ ██████   █████  ███    ██  ██████ ███████     ███████ ██   ██  █████  ███    ███");
+                printCentered("██      ████   ██    ██    ██   ██ ██   ██ ████   ██ ██      ██          ██       ██ ██  ██   ██ ████  ████");
+                printCentered("█████   ██ ██  ██    ██    ██████  ███████ ██ ██  ██ ██      █████       █████     ███   ███████ ██ ████ ██");
+                printCentered("██      ██  ██ ██    ██    ██   ██ ██   ██ ██  ██ ██ ██      ██          ██       ██ ██  ██   ██ ██  ██  ██"); 
+                printCentered("███████ ██   ████    ██    ██   ██ ██   ██ ██   ████  ██████ ███████     ███████ ██   ██ ██   ██ ██      ██");
                 System.out.println( HORIZONTAL_LINE); 
-                System.out.println(EMPTY_LINE);  
 
 
                 String[][] questions = {
@@ -1011,9 +1023,9 @@ public class Mapmap {
                 System.out.println("Percentage: " + String.format("%.1f", percentage) + "%");
                 if (percentage >= 85) {
                     System.out.println("Congratulations! You passed the exam.");
-                    println("You continue to pursue your course");
-                    println("4 years later...");
-                    println("You have now graduated from the university and will now take the board exam.");
+                    println("You continue to pursue your course.");
+                    println("Four years later...");
+                    println("You have now graduated from the university and will take the board exam.");      
                     BoardExam();
                 } else {
                     System.out.println("Sorry, you did not pass the Engineer entrance exam. Better luck next time.");
