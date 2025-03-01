@@ -1,12 +1,12 @@
 
 
 
-import java.util.HashSet;
+
 import java.util.Random;
 import java.util.Scanner;
-import java.util.Set;
 
-public class Mapmap {
+
+public class Map {
     static String[] locations = new String[7];
     static int[] scores = new int[7];
     static boolean[] visitedRooms = new boolean[7]; // Track rooms with answered exams
@@ -18,6 +18,8 @@ public class Mapmap {
     private static final String HORIZONTAL_LINE1 = "═" + "═".repeat(PAGE_WIDTH2 - 1);
     private static final String HORIZONTAL_LINE2 = "+" + "=".repeat(PAGE_WIDTH2 - 1) + "+";
     private static final String EMPTY_LINE2 = "|" + " ".repeat(PAGE_WIDTH2 - 2) + "|";
+
+    private static String[] selectedCourses = new String[2]; // Store user choices
 
     static int getRoomIndex(String room) {
         switch (room) {
@@ -117,6 +119,11 @@ public class Mapmap {
         println("=====================================");   
         return username;
     }
+    static void displayUsername(String username){
+        println("=====================================");
+        println("|  Username: " + username + "          |");
+        println("=====================================");
+    }
    
         static String showMenu(Scanner scan) {
             while (true) {
@@ -143,8 +150,8 @@ public class Mapmap {
                         
 
                         introduction(); // Call introduction method
-                        Course(scan); // Call Course method
-
+                        takeCourseInput(scan); // Call Course method
+                       
                         // Generate a random starting room
                         String[] mapLoc = {"Room 1", "Room 2", "Room 3", "Room 4", "Room 5", "Intersection 1", "Intersection 2"};
                         Random rand = new Random();
@@ -201,81 +208,57 @@ public class Mapmap {
             println("|  succeed.                                                  |");
             println("==============================================================");
         }
-        static String[] Course(Scanner scan){
-            println("==============================================");
-            println("|          COURSE SELECTION MENU            |");
-            println("==============================================");
-            println("|  Your first choice is: ENGINEERING        |");
-            println("|--------------------------------------------|");
-            println("|  Please enter your second and third choice |");
-            println("|  of courses from the options below:       |");
-            println("|--------------------------------------------|");
-            println("|  2. Education                             |");
-            println("|  3. Entrepreneurship                      |");
-            println("|  4. Tourism Management                    |");
-            println("|  5. Sociology                             |");
-            println("|  6. Agriculture                           |");
-            println("|  7. Fisheries                             |");
-            println("==============================================");
-            print("> Enter your second choice: ");
-            int secondChoice = scan.nextInt();
-            String secondCourse = "";
-            switch (secondChoice) {
-                case 2:
-                    secondCourse = "Education";
-                    break;
-                case 3:
-                    secondCourse = "Entrepreneurship";
-                    break;
-                case 4:
-                    secondCourse = "Tourism Management";
-                    break;
-                case 5:
-                    secondCourse = "Sociology";
-                    break;
-                case 6:
-                    secondCourse = "Agriculture";
-                    break;
-                case 7:
-                    secondCourse = "Fisheries";
-                    break;
-                default:
-                    break;
+        public static void takeCourseInput(Scanner scan) {
+            System.out.println("==============================================");
+            System.out.println("|          COURSE SELECTION MENU            |");
+            System.out.println("==============================================");
+            System.out.println("|  Your first choice is: ENGINEERING        |");
+            System.out.println("|--------------------------------------------|");
+            System.out.println("|  Please enter your second and third choice |");
+            System.out.println("|  of courses from the options below:       |");
+            System.out.println("|--------------------------------------------|");
+            System.out.println("|  2. Education                             |");
+            System.out.println("|  3. Entrepreneurship                      |");
+            System.out.println("|  4. Tourism Management                    |");
+            System.out.println("|  5. Sociology                             |");
+            System.out.println("|  6. Agriculture                           |");
+            System.out.println("|  7. Fisheries                             |");
+            System.out.println("==============================================");
+    
+            selectedCourses[0] = getCourseSelection(scan, "> Enter your second choice: ");
+            selectedCourses[1] = getCourseSelection(scan, "> Enter your third choice: ");
+    
+            System.out.println("==============================================");
+            System.out.println("|  You selected:                             |");
+            System.out.println("|  1st Choice: Engineering                   |");
+            System.out.println("|  2nd Choice: " + selectedCourses[0] + "              |");
+            System.out.println("|  3rd Choice: " + selectedCourses[1] + "              |");
+            System.out.println("==============================================");
+        }
+    
+        private static String getCourseSelection(Scanner scan, String prompt) {
+            System.out.print(prompt);
+            int choice = scan.nextInt();
+            scan.nextLine(); // Consume newline
+    
+            switch (choice) {
+                case 2: return "Education";
+                case 3: return "Entrepreneurship";
+                case 4: return "Tourism Management";
+                case 5: return "Sociology";
+                case 6: return "Agriculture";
+                case 7: return "Fisheries";
+                default: return "Invalid Choice";
             }
-            print("> Enter your third choice: ");
-            int thirdChoice = scan.nextInt();
-            String thirdCourse = "";
-            switch (thirdChoice) {
-                case 2:
-                    thirdCourse = "Education";
-                    break;
-                case 3:
-                    thirdCourse = "Entrepreneurship";
-                    break;
-                case 4:
-                    thirdCourse = "Tourism Management";
-                    break;
-                case 5:
-                    thirdCourse = "Sociology";
-                    break;
-                case 6:
-                    thirdCourse = "Agriculture";
-                    break;
-                case 7:
-                    thirdCourse = "Fisheries";
-                    break;
-                default:
-                    break;
-            }
-
-            println("==============================================");
-            println("|  You selected:                             |");
-            println("|  1st Choice: Engineering                   |");
-            println("|  2nd Choice: " + secondCourse +"              |");
-            println("|  3rd Choice: " + thirdCourse +"               |");
-            println("==============================================");
-
-            return new String[]{secondCourse, thirdCourse};
+        }
+    
+        public static void displaySelectedCourses() {
+            System.out.println("==============================================");
+            System.out.println("|          Your selected courses:            |");
+            System.out.println("==============================================");
+            System.out.println("|  2nd Choice: " + selectedCourses[0] + "            |");
+            System.out.println("|  3rd Choice: " + selectedCourses[1] + "            |");
+            System.out.println("==============================================");      
         }
         static void printCenter(String text) {
             int Page_width = 120;
@@ -1009,7 +992,7 @@ public class Mapmap {
                     }
                 }
 
-                displayExamResults(score, totalQuestions, Course(scan));
+                displayExamResults(score, totalQuestions,scan);
                 return score;
             }
 
@@ -1017,7 +1000,7 @@ public class Mapmap {
                 return ((double) score / totalQuestions) >= passing_score;
             }
 
-            static void displayExamResults(int score, int totalQuestions, String[] courses) {
+            static void displayExamResults(int score, int totalQuestions,Scanner scan) {
                 double percentage = ((double) score / totalQuestions) * 100;
                 System.out.println("\nYour Score: " + score + "/" + totalQuestions);
                 System.out.println("Percentage: " + String.format("%.1f", percentage) + "%");
@@ -1028,14 +1011,25 @@ public class Mapmap {
                     println("You have now graduated from the university and will take the board exam.");      
                     BoardExam();
                 } else {
-                    System.out.println("Sorry, you did not pass the Engineer entrance exam. Better luck next time.");
-                    System.out.println("You may choose your 2nd and 3rd choice of course.");
-                    println("==============================================");
-                    println("|  You selected:                             |");
-                    println("|  1st Choice: Engineering                   |");
-                    println("|  2nd Choice: " + courses[0] + "            |");
-                    println("|  3rd Choice: " + courses[1] + "            |");
-                    println("==============================================");
+                    System.out.println("Sorry, you did not pass the Engineer entrance exam.");
+                    println("You may choose between your 2nd and 3rd choice of courses to enroll and continue your studies at the university.");        displaySelectedCourses();
+                    println("Enter 1 to choose your 2nd choice or 2 to choose your 3rd choice:");
+                    int choice = scan.nextInt();
+                    scan.nextLine(); // Consume newline
+
+                    while (true) {
+                        if (choice == 1) {
+                            println("You have chosen: " + selectedCourses[0]);
+                            break;
+                        } else if (choice == 2) {
+                            println("You have chosen: " + selectedCourses[1]);
+                            break;
+                        } else {
+                            println("Invalid choice. Please enter 1 or 2:");
+                            choice = scan.nextInt();
+                            scan.nextLine(); // Consume newline
+                        }
+                    }      
                 }
                 System.out.println(HORIZONTAL_LINE); 
             }
