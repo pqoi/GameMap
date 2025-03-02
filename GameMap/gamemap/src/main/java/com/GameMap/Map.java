@@ -67,10 +67,28 @@ public class Map {
     }
     static void print(String print) {
         System.out.print(print);
+        }
+    public static void Title() {
+        printCenter("  █████████████████████████████████████████████████████████████████████████████");
+        printCenter("");
+        printCenter("        ███████╗███╗   ██╗ ██████╗ ██╗███╗   ██╗███████╗███████╗██████╗ ");
+        printCenter("        ██╔════╝████╗  ██║██╔════╝ ██║████╗  ██║██╔════╝██╔════╝██╔══██╗");
+        printCenter("        █████╗  ██╔██╗ ██║██║  ███╗██║██╔██╗ ██║█████╗  █████╗  ██████╔╝");
+        printCenter("        ██╔══╝  ██║╚██╗██║██║   ██║██║██║╚██╗██║██╔══╝  ██╔══╝  ██╔══██╗");
+        printCenter("        ███████╗██║ ╚████║╚██████╔╝██║██║ ╚████║███████╗███████╗██║  ██║");
+        printCenter("        ╚══════╝╚═╝  ╚═══╝ ╚═════╝ ╚═╝╚═╝  ╚═══╝╚══════╝╚══════╝╚═╝  ╚═╝");
+        printCenter("");
+        printCenter("                 ██████╗ ██╗   ██╗███████╗███████╗████████╗             ");
+        printCenter("                 ██╔═══██╗██║   ██║██╔════╝██╔════╝╚══██╔══╝             ");
+        printCenter("                 ██║   ██║██║   ██║█████╗  ███████╗   ██║                ");
+        printCenter("                 ██║▄▄ ██║██║   ██║██╔══╝  ╚════██║   ██║                ");
+        printCenter("                 ╚██████╔╝╚██████╔╝███████╗███████║   ██║                ");
+        printCenter("                 ╚══▀▀═╝  ╚═════╝ ╚══════╝╚══════╝   ╚═╝                ");
+        printCenter("");
+        printCenter("  █████████████████████████████████████████████████████████████████████████████");
     }
-
-    
-    static String showMap(String currentLoc) {
+        
+        static String showMap(String currentLoc) {
         Random rand = new Random();
     
         if (dist1 == null) {
@@ -93,7 +111,7 @@ public class Map {
         int currentIndex = 0;
         for (int i = 0; i < mapLoc.length; i++) {
             if (currentLoc.equals(mapLoc[i])) {
-                currentIndex = i;a
+                currentIndex = i;
 
                 
                 break;
@@ -134,49 +152,50 @@ public class Map {
         return map;
     }
     static String UserName(Scanner scan){
-        println("=====================================");
-        println("|          WELCOME TO THE GAME      |");
-        println("=====================================");
-        println("|  Enter Username:                  |");
-        println("=====================================");
-        print("> "); // Input prompt
+        printCenter("╔══════════════════════════════════╗");
+        printCenter("║         WELCOME TO THE GAME      ║");
+        printCenter("╠══════════════════════════════════╣");
+        printCenter("║  Enter Username:                 ║");
+        printCenter("╚══════════════════════════════════╝");
+        printCenter("> "); // Input prompt
         scan.nextLine(); // Consume the newline character
         String username = scan.nextLine();
+       
 
-        println("=====================================");
-        println("|  " + username + ", welcome to the game!  |");
-        println("=====================================");   
+        printCenter("╔══════════════════════════════════╗");
+        printCenter("║  " + username + ", Welcome to the game!  ║");
+        printCenter("╚══════════════════════════════════╝");   
         return username;
     }
     static void displayUsername(String username){
-        println("=====================================");
-        println("|  Username: " + username + "          |");
-        println("=====================================");
+        printCenter("╔══════════════════════════════════╗");
+        printCenter("║          Username: " + username + "          ║");
+        printCenter("╚══════════════════════════════════╝");
     }
    
         static String showMenu(Scanner scan) {
             while (true) {
-                println("╔════════════════════╗");
-                println("║       MENU         ║");
-                println("╠════════════════════╣");
-                println("║  1. Start          ║");
-                println("║  2. How to Play    ║");
-                println("║  3. About          ║");
-                println("╚════════════════════╝");
-                println("Choose key to proceed:");    int choice = scan.nextInt();
+                printCenter("╔════════════════════╗");
+                printCenter("║       MENU         ║");
+                printCenter("╠════════════════════╣");
+                printCenter("║  1. Start          ║");
+                printCenter("║  2. How to Play    ║");
+                printCenter("║  3. About          ║");
+                printCenter("╚════════════════════╝");
+                printCenter("Choose key to proceed:");
+                int choice = scan.nextInt();
     
                 switch (choice) {
                     case 1:
                         
                         UserName(scan);
-                        String start = "Starting the game...";
+                       
                         
-                        println("╔════════════════════════╗");
-                        println("║                        ║");
-                        println("║ "+start+"   ║");
-                        println("║                        ║");
-                        println("╚════════════════════════╝");
-                        
+                        printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+                        printCenter("║                                                                          ║");
+                        printCenter("║                           Starting the game...                           ║");
+                        printCenter("║                                                                          ║");
+                        printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
 
                         introduction(); // Call introduction method
                         takeCourseInput(scan); // Call Course method
@@ -191,26 +210,37 @@ public class Map {
     
     
                     case 2:
-                        println("How to Play");
-                        println(
-                            "You will start in a randomly assigned room and answer the questions in that room. " +
-                            "After that, you will navigate through different rooms, each representing a different subject, and take the exams in each one. " +
-                            "Once all exams are completed, your results will determine whether you pass or fail.\n\n" +
-                            
-                            "If you pass, you will proceed to the entrance exam for the engineering course. " +
-                            "The result will then determine if you qualify for the engineering course. " +
-                            "If you pass, the game will time-skip four years, leading to the board exam to officially become an engineer.\n\n" +
-                            
-                            "You have two chances to retake the board exam if you fail."
-                        );
+                        printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+                        printCenter("║                                How to Play                               ║");
+                        printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
+                        printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+                        printCenter("║ You will start in a randomly assigned room and answer the questions in   ║");
+                        printCenter("║ that room. After that, you will navigate through different rooms, each   ║");
+                        printCenter("║ representing a different subject, and take the exams in each one. Once   ║");
+                        printCenter("║ all exams are completed, your results will determine whether you pass    ║");
+                        printCenter("║ or fail.                                                                 ║");
+                        printCenter("║                                                                          ║");
+                        printCenter("║ If you pass, you will proceed to the entrance exam for the engineering   ║");
+                        printCenter("║ course. The result will then determine if you qualify for the engineering║");
+                        printCenter("║ course. If you pass, the game will time-skip four years, leading to the  ║");
+                        printCenter("║ board exam to officially become an engineer.                             ║");
+                        printCenter("║                                                                          ║");
+                        printCenter("║ You have two chances to retake the board exam if you fail.               ║");
+                        printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
                         break;
                     case 3:
-                        println("About");
-                        println(
-                            "\"I Want to Be an Engineer\" is a story-based console game in Java that follows a young boy on his journey to achieving his dream of becoming an engineer. " +
-                            "The player will take the entrance exam at a public university and must navigate different exam rooms, answer subject-related questions, and achieve the required scores to qualify for an engineering course. " +
-                            "After four years in university, the player will take the board exam and, if successful, become a licensed engineer."
-                        );
+                        printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+                        printCenter("║                                About                                     ║");
+                        printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
+                        printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+                        printCenter("║ \"I Want to Be an Engineer\" is a story-based console game in Java that    ║");
+                        printCenter("║ follows a young boy on his journey to achieving his dream of becoming an  ║");
+                        printCenter("║ engineer. The player will take the entrance exam at a public university   ║");
+                        printCenter("║ and must navigate different exam rooms, answer subject-related questions, ║");
+                        printCenter("║ and achieve the required scores to qualify for an engineering course.     ║");
+                        printCenter("║ After four years in university, the player will take the board exam and,  ║");
+                        printCenter("║ if successful, become a licensed engineer.                                ║");
+                        printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
                         break;
                     default:
                         println("Invalid choice, please try again.");
@@ -220,49 +250,48 @@ public class Map {
         }
 
         static void introduction() {
-            println("==============================================================");
-            println("|  ENGINEERING ASPIRATION: THE JOURNEY BEGINS                |");
-            println("==============================================================");
-            println("|  Coming from a poor family, I have always dreamed of       |");
-            println("|  becoming an engineer to provide a better life for my      |");
-            println("|  loved ones.                                               |");
-            println("|                                                            |");
-            println("|  Today marks a crucial step toward that dream—the          |");
-            println("|  entrance exam for a prestigious public university.        |");
-            println("|                                                            |");
-            println("|  To achieve my goal, I must pass a series of challenging   |");
-            println("|  exams that will test my knowledge and skills.             |");
-            println("|                                                            |");
-            println("|  The road ahead won’t be easy, but I am determined to      |");
-            println("|  succeed.                                                  |");
-            println("==============================================================");
+            printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+            printCenter("║                ENGINEERING ASPIRATION: THE JOURNEY BEGINS                ║");
+            printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
+            printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+            printCenter("║ Coming from a poor family, I have always dreamed of becoming an          ║");
+            printCenter("║ engineer to provide a better life for my loved ones.                     ║");
+            printCenter("║                                                                          ║");
+            printCenter("║ Today marks a crucial step toward that dream—the entrance exam for a     ║");
+            printCenter("║ prestigious public university.                                           ║");
+            printCenter("║                                                                          ║");
+            printCenter("║ To achieve my goal, I must pass a series of challenging exams that will  ║");
+            printCenter("║ test my knowledge and skills.                                            ║");
+            printCenter("║                                                                          ║");
+            printCenter("║ The road ahead won’t be easy, but I am determined to succeed.            ║");
+            printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
         }
         public static void takeCourseInput(Scanner scan) {
-            System.out.println("==============================================");
-            System.out.println("|          COURSE SELECTION MENU            |");
-            System.out.println("==============================================");
-            System.out.println("|  Your first choice is: ENGINEERING        |");
-            System.out.println("|--------------------------------------------|");
-            System.out.println("|  Please enter your second and third choice |");
-            System.out.println("|  of courses from the options below:       |");
-            System.out.println("|--------------------------------------------|");
-            System.out.println("|  2. Education                             |");
-            System.out.println("|  3. Entrepreneurship                      |");
-            System.out.println("|  4. Tourism Management                    |");
-            System.out.println("|  5. Sociology                             |");
-            System.out.println("|  6. Agriculture                           |");
-            System.out.println("|  7. Fisheries                             |");
-            System.out.println("==============================================");
+            printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+            printCenter("║                            COURSE SELECTION MENU                         ║");
+            printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
+            printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+            printCenter("║                      Your first choice is: ENGINEERING                   ║");
+            printCenter("║                                                                          ║");
+            printCenter("║ Please enter your second and third choice of courses from the options    ║");
+            printCenter("║  below:                                                                  ║");
+            printCenter("║                      2. Education                                        ║");
+            printCenter("║                      3. Entrepreneurship                                 ║");
+            printCenter("║                      4. Tourism Management                               ║");
+            printCenter("║                      5. Sociology                                        ║");
+            printCenter("║                      6. Agriculture                                      ║");
+            printCenter("║                      7. Fisheries                                        ║");
+            printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
     
             selectedCourses[0] = getCourseSelection(scan, "> Enter your second choice: ");
             selectedCourses[1] = getCourseSelection(scan, "> Enter your third choice: ");
     
-            System.out.println("==============================================");
-            System.out.println("|  You selected:                             |");
-            System.out.println("|  1st Choice: Engineering                   |");
-            System.out.println("|  2nd Choice: " + selectedCourses[0] + "              |");
-            System.out.println("|  3rd Choice: " + selectedCourses[1] + "              |");
-            System.out.println("==============================================");
+            printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+            printCenter("║  You selected:                                                           ║");
+            printCenter("║  1st Choice: Engineering                                                 ║");
+            printCenter("║  2nd Choice: " + selectedCourses[0] + "                                                  ║");
+            printCenter("║  3rd Choice: " + selectedCourses[1] + "                                                ║");
+            printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
         }
     
         private static String getCourseSelection(Scanner scan, String prompt) {
@@ -282,12 +311,12 @@ public class Map {
         }
     
         public static void displaySelectedCourses() {
-            System.out.println("==============================================");
-            System.out.println("|          Your selected courses:            |");
-            System.out.println("==============================================");
-            System.out.println("|  2nd Choice: " + selectedCourses[0] + "            |");
-            System.out.println("|  3rd Choice: " + selectedCourses[1] + "            |");
-            System.out.println("==============================================");      
+            printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+            printCenter("║                        Your selected courses:                           ║");
+            printCenter("╠══════════════════════════════════════════════════════════════════════════╣");
+            printCenter("║  2nd Choice: " + selectedCourses[0] + "                                                 ║");
+            printCenter("║  3rd Choice: " + selectedCourses[1] + "                                                 ║");
+            printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
         }
         static void printCenter(String text) {
             int Page_width = 120;
@@ -1330,7 +1359,7 @@ public class Map {
         Scanner scan = new Scanner(System.in);
         Random random = new Random();
 
-        //Title();
+        Title();
         String currentLocation = showMenu(scan);
         int[] visitedRooms = new int[5]; // Initialize visitedRooms array
         
