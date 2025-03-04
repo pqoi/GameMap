@@ -345,7 +345,7 @@ public class Map {
                 },
                 { // Room 3 - Filipino
                     "Ano ang kahulugan ng 'Maligaya'?\nA) Malungkot\nB) Masaya\nC) Galit\nD) Takot",
-                    "Ano ang pambansang bayani ng Pilipinas?\nA) Emilio Aguinaldo\nB) Andres Bonifacio\nC) Jose Rizal\nD) Lapu-Lapu",
+                    "Sino ang pambansang bayani ng Pilipinas?\nA) Emilio Aguinaldo\nB) Andres Bonifacio\nC) Jose Rizal\nD) Lapu-Lapu",
                     "Ano ang kabisera ng Pilipinas?\nA) Cebu\nB) Davao\nC) Manila\nD) Baguio",
                     "Ano ang salitang balbal para sa 'Pera'?\nA) Kuwarta\nB) Datung\nC) Kaban\nD) Lupa",
                     "Ano ang salitang ugat ng 'Kumakain'?\nA) Kain\nB) Kumain\nC) Kakain\nD) Kinain"
@@ -570,7 +570,7 @@ public class Map {
             if (totalScore >= (5 * 3.75)) {
                 System.out.println("Congratulations! You passed the entrance exams.");
                 System.out.println("You will now proceed to the entrance exam for the engineering course.");
-                //EngineerExam();
+                EngineerExam();
             } else {
                 System.out.println("Unfortunately, you did not pass the entrance exams. Better luck next time.");
             }
