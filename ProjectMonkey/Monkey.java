@@ -76,7 +76,7 @@ public class Monkey {
 
         // Create and display the deck
         String[] deck = new String[52];
-        int index = 0;
+        int cardIndex = 0;
         
         for (String rank : RANKS) {
             // Top border
@@ -88,7 +88,7 @@ public class Monkey {
             // Rank
             for (String suit : SUITS) {
                 System.out.printf("| %-2s |\t", rank);
-                deck[index++] = rank + suit;
+                deck[cardIndex++] = rank + suit;
             }
             System.out.println();
 
@@ -115,6 +115,7 @@ public class Monkey {
         System.out.printf("| %-2s |\n", chosenCard.substring(0, chosenCard.length() - 1));
         System.out.printf("|  %s |\n", chosenCard.substring(chosenCard.length() - 1));
         System.out.println("+----+");
+
         System.out.println("Enter any key to shuffle the cards:");
         scanner.next();
         // Remove the chosen card from the deck
@@ -164,7 +165,146 @@ public class Monkey {
         }
         System.out.println("Enter any key to distribute the cards to the players and 4 computers:");
         scanner.next();
-        // Distribute the cards to the players and 4 computers
-        
+        // Reset card index
+        cardIndex = 0;
+
+        // Distribute the cards
+        String[] humanHand = new String[11];
+        String[][] botHands = new String[4][10];
+
+        // Assign 11 cards to the human player
+        for (int i = 0; i < 11; i++) {
+            humanHand[i] = deck[cardIndex++];
+        }
+
+        // Assign 10 cards to each bot
+        for (int b = 0; b < 4; b++) {
+            for (int i = 0; i < 10; i++) {
+                botHands[b][i] = deck[cardIndex++];
+            }
+        }
+
+        // Display hands
+        System.out.println("\nHuman Player's Hand:");
+        for (String card : humanHand) {
+            System.out.print(card + " ");
+        }
+        System.out.println("\n");
+
+        // Display bot hands
+        for (int b = 0; b < 4; b++) {
+            System.out.println("Bot " + (b + 1) + "'s Hand:");
+            for (String card : botHands[b]) {
+                System.out.print(card + " ");
+            }
+            System.out.println("\n");
+        }
+
+        // Hidden card remains secret
+        System.out.println("A card is hidden for game mechanics.");
+        System.out.println(("Checking Duplicate Cards..."));
+
+        // Check for duplicate cards
+        boolean hasDuplicates = false;
+        String[] seenCards = new String[52];
+        int seenIndex = 0;
+        String[] duplicates = new String[52];
+        int duplicateIndex = 0;
+
+        // Check human hand for duplicates
+        for (String card : humanHand) {
+            boolean isDuplicate = false;
+            for (int i = 0; i < seenIndex; i++) {
+            if (seenCards[i].equals(card)) {
+                duplicates[duplicateIndex++] = card;
+                isDuplicate = true;
+                hasDuplicates = true;
+                break;
+            }
+            }
+            if (!isDuplicate) {
+            seenCards[seenIndex++] = card;
+            }
+        }
+
+        // Check bot hands for duplicates
+        for (String[] botHand : botHands) {
+            for (String card : botHand) {
+            boolean isDuplicate = false;
+            for (int i = 0; i < seenIndex; i++) {
+                if (seenCards[i].equals(card)) {
+                duplicates[duplicateIndex++] = card;
+                isDuplicate = true;
+                hasDuplicates = true;
+                break;
+                }
+            }
+            if (!isDuplicate) {
+                seenCards[seenIndex++] = card;
+            }
+            }
+        }
+
+        if (hasDuplicates) {
+            System.out.print("Duplicate cards found: ");
+            for (int i = 0; i < duplicateIndex; i++) {
+            System.out.print(duplicates[i] + " ");
+            }
+            System.out.println();
+        } else {
+            System.out.println("No duplicate cards found.");
+        }
+
+        // Remove duplicates from human hand
+        String[] newHumanHand = new String[11];
+        int newHumanIndex = 0;
+        for (String card : humanHand) {
+            boolean isDuplicate = false;
+            for (int i = 0; i < duplicateIndex; i++) {
+            if (duplicates[i].equals(card)) {
+                isDuplicate = true;
+                break;
+            }
+            }
+            if (!isDuplicate) {
+            newHumanHand[newHumanIndex++] = card;
+            }
+        }
+        humanHand = Arrays.copyOf(newHumanHand, newHumanIndex);
+
+        // Remove duplicates from bot hands
+        for (int b = 0; b < botHands.length; b++) {
+            String[] newBotHand = new String[10];
+            int newBotIndex = 0;
+            for (String card : botHands[b]) {
+            boolean isDuplicate = false;
+            for (int i = 0; i < duplicateIndex; i++) {
+                if (duplicates[i].equals(card)) {
+                isDuplicate = true;
+                break;
+                }
+            }
+            if (!isDuplicate) {
+                newBotHand[newBotIndex++] = card;
+            }
+            }
+            botHands[b] = Arrays.copyOf(newBotHand, newBotIndex);
+        }
+
+        // Display remaining cards for each player
+        System.out.println("\nHuman Player's Hand after removing duplicates:");
+        for (String card : humanHand) {
+            System.out.print(card + " ");
+        }
+        System.out.println("\n");
+
+        for (int b = 0; b < botHands.length; b++) {
+            System.out.println("Bot " + (b + 1) + "'s Hand after removing duplicates:");
+            for (String card : botHands[b]) {
+            System.out.print(card + " ");
+            }
+            System.out.println("\n");
+        }
+
     }
 }
