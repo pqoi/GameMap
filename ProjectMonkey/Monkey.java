@@ -33,14 +33,58 @@ public class Monkey {
         System.out.println("                                                           ");
         System.out.println("");
         System.out.println("  █████████████████████████████████████████████████████████████████████████████");
+        }
+
+        public static void clearScreen() {
+        try {
+            if (System.getProperty("os.name").contains("Windows")) {
+            for (int i = 0; i < 10; i++) {
+                Thread.sleep(50);
+                System.out.print("\r" + " ".repeat(80) + "\r");
+            }
+            new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            } else {
+            for (int i = 0; i < 10; i++) {
+                Thread.sleep(50);
+                System.out.print("\033[H\033[2J");
+                System.out.flush();
+            }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        }
+        
+    static String getCardASCII(String card) {
+        String rank = card.substring(0, card.length() - 1); // Extract rank (e.g., "A" from "A♠")
+        String suit = card.substring(card.length() - 1); // Extract suit (e.g., "♠" from "A♠")
+        
+        // Padding for ranks to ensure proper alignment
+        String paddedRank = rank.length() == 1 ? rank + " " : rank;
+        
+        return String.format(
+            "┌───────┐\n" +
+            "│ %s    │\n" +
+            "│       │\n" +
+            "│   %s   │\n" +
+            "│       │\n" +
+            "│    %s │\n" +
+            "└───────┘", 
+            paddedRank, suit, paddedRank);
+    }
+ static String getSuitName(String suit) {
+        switch (suit) {
+            case "♣": return "Clubs";
+            case "♦": return "Diamonds";
+            case "♥": return "Hearts";
+            case "♠": return "Spades";
+            default: return "";
+        }
     }
 
-    static void clearScreen() {  
-        System.out.print("\033[H\033[2J");  
-        System.out.flush();  
-    } 
-
     public static void main(String[] args) {
+        Random random = new Random();
+        Scanner scanner = new Scanner(System.in);
         Title();
         System.out.println("1. Start Game");
         System.out.println("2. How to Play");
@@ -68,42 +112,39 @@ public class Monkey {
         String[] SUIT_NAMES = {"Clubs", "Spades", "Hearts", "Diamonds"};
         String[] RANKS = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
 
-        // Print suit names
-        for (String suitName : SUIT_NAMES) {
-            System.out.printf("%-10s", suitName);
-        }
-        System.out.println("\n");
-
         // Create and display the deck
         String[] deck = new String[52];
         int cardIndex = 0;
         
+       for (String suit : SUITS) {
+            System.out.println("=== " + suit + " (" + getSuitName(suit) + ") ===\n");
+            
+            // Create an array to hold all cards of current suit
+            String[] suitCards = new String[RANKS.length];
+            for (int i = 0; i < RANKS.length; i++) {
+                suitCards[i] = RANKS[i] + suit;
+            }
+
+            String[][] cardLines = new String[suitCards.length][];
+            for (int i = 0; i < suitCards.length; i++) {
+                cardLines[i] = getCardASCII(suitCards[i]).split("\n");
+            }
+                
+                // Print each row of all cards
+                for (int line = 0; line < 7; line++) {  // 7 lines per card
+                    for (int j = 0; j < cardLines.length; j++) {
+                        System.out.print(cardLines[j][line] + "  ");
+                    }
+                    System.out.println();
+                }
+                System.out.println();  // Extra space between rows
+            
+    }
+    for (String suit : SUITS) {
         for (String rank : RANKS) {
-            // Top border
-            for (String suit : SUITS) {
-                System.out.print("+----+\t");
-            }
-            System.out.println();
-
-            // Rank
-            for (String suit : SUITS) {
-                System.out.printf("| %-2s |\t", rank);
-                deck[cardIndex++] = rank + suit;
-            }
-            System.out.println();
-
-            // Suit
-            for (String suit : SUITS) {
-                System.out.printf("|  %s |\t", suit);
-            }
-            System.out.println();
-
-            // Bottom border
-            for (String suit : SUITS) {
-                System.out.print("+----+\t");
-            }
-            System.out.println();
+            deck[cardIndex++] = rank + suit;
         }
+    }
 
         // Pick a random card from the deck
         Random rand = new Random();
@@ -111,11 +152,8 @@ public class Monkey {
         System.out.println("\nRandomly Picked Card: ");
 
         // Display the chosen card in ASCII art
-        System.out.println("+----+");
-        System.out.printf("| %-2s |\n", chosenCard.substring(0, chosenCard.length() - 1));
-        System.out.printf("|  %s |\n", chosenCard.substring(chosenCard.length() - 1));
-        System.out.println("+----+");
-
+        System.out.println(getCardASCII(chosenCard));
+        
         System.out.println("Enter any key to shuffle the cards:");
         scanner.next();
         // Remove the chosen card from the deck
@@ -138,31 +176,25 @@ public class Monkey {
         }
 
         // Visual representation of the deck after shuffling and removing the chosen card
-        for (int i = 0; i < deck.length; i += 4) {
-            // Top border
-            for (int j = i; j < i + 4 && j < deck.length; j++) {
-            System.out.print("+----+\t");
-            }
-            System.out.println();
+         System.out.println("Deck after shuffling and removing the chosen card:");
+          int cardsPerRow = 13; // Number of cards per row
+          for (int i = 0; i < deck.length; i += cardsPerRow) {
+          String[][] cardLines = new String[Math.min(cardsPerRow, deck.length - i)][];
 
-            // Rank
-            for (int j = i; j < i + 4 && j < deck.length; j++) {
-            System.out.printf("| %-2s |\t", deck[j].substring(0, deck[j].length() - 1));
+            // Convert each card into ASCII format and split into lines
+            for (int j = 0; j < cardLines.length; j++) {
+                cardLines[j] = getCardASCII(deck[i + j]).split("\n");
             }
-            System.out.println();
 
-            // Suit
-            for (int j = i; j < i + 4 && j < deck.length; j++) {
-            System.out.printf("|  %s |\t", deck[j].substring(deck[j].length() - 1));
+            // Print each line of all cards side by side
+            for (int line = 0; line < 7; line++) {  // Each card has 7 lines
+            for (int j = 0; j < cardLines.length; j++) {
+            System.out.print(cardLines[j][line] + "  "); // Print each card line side by side
             }
-            System.out.println();
-
-            // Bottom border
-            for (int j = i; j < i + 4 && j < deck.length; j++) {
-            System.out.print("+----+\t");
-            }
-            System.out.println();
+                System.out.println(); // Move to the next line
         }
+        System.out.println(); // Add space between rows of cards
+    }
         System.out.println("Enter any key to distribute the cards to the players and 4 computers:");
         scanner.next();
         // Reset card index
@@ -306,5 +338,78 @@ public class Monkey {
             System.out.println("\n");
         }
 
+        System.out.println("Enter any key to roll the dice to decide who picks first:");
+        scanner.next();
+
+        // Simulate dice rolling animation for human player
+        int humanRoll = 0;
+        try {
+            humanRoll = rollDiceWithAnimation(random);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        int[] botRolls = new int[4];
+        boolean[] rollUsed = new boolean[7]; // Track used rolls (1-6)
+        rollUsed[humanRoll] = true;
+
+        for (int i = 0; i < 4; i++) {
+            int roll;
+            do {
+            // Simulate dice rolling animation for each bot
+            try {
+                roll = rollDiceWithAnimation(random);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                roll = random.nextInt(6) + 1; // Fallback in case of interruption
+            }
+            } while (rollUsed[roll]);
+            botRolls[i] = roll;
+            rollUsed[roll] = true;
+        }
+
+        // Display dice roll results
+        System.out.println("Human Player rolled: " + humanRoll);
+        for (int i = 0; i < 4; i++) {
+            System.out.println("Bot " + (i + 1) + " rolled: " + botRolls[i]);
+        }
+
+        // Determine picking order
+        int[] rolls = new int[5];
+        rolls[0] = humanRoll;
+        System.arraycopy(botRolls, 0, rolls, 1, 4);
+
+        Integer[] order = new Integer[5];
+        for (int i = 0; i < 5; i++) {
+            order[i] = i;
+        }
+
+        Arrays.sort(order, (a, b) -> Integer.compare(rolls[a], rolls[b]));
+
+        System.out.println("Picking order:");
+        for (int i = 0; i < 5; i++) {
+            if (order[i] == 0) {
+            System.out.println((i + 1) + ": Human Player");
+            } else {
+            System.out.println((i + 1) + ": Bot " + order[i]);
+            }
+        }
+
+    }
+
+    // Dice rolling animation
+    private static int rollDiceWithAnimation(Random random) throws InterruptedException {
+        int finalRoll = random.nextInt(6) + 1;
+        String[] diceFaces = {"⚀", "⚁", "⚂", "⚃", "⚄", "⚅"};
+
+        System.out.print("Rolling: ");
+        for (int i = 0; i < 10; i++) {  // Simulate rolling animation
+            System.out.print(diceFaces[random.nextInt(6)] + " ");
+            Thread.sleep(200);  // Delay to create animation effect
+        }
+        System.out.println("\nFinal Roll: " + diceFaces[finalRoll - 1]);
+
+        return finalRoll;
     }
 }
+ 
