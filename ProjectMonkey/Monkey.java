@@ -15,45 +15,53 @@ public class Monkey {
     static String[] deck = new String[52];
 
     static void Title() {
-        System.out.println("  █████████████████████████████████████████████████████████████████████████████");
-        System.out.println("");
-        System.out.println("███╗   ███╗ ██████╗ ███╗   ██╗██╗  ██╗███████╗██╗   ██╗    ");
-        System.out.println("████╗ ████║██╔═══██╗████╗  ██║██║ ██╔╝██╔════╝╚██╗ ██╔╝    ");
-        System.out.println("██╔████╔██║██║   ██║██╔██╗ ██║█████╔╝ █████╗   ╚████╔╝     ");
-        System.out.println("██║╚██╔╝██║██║   ██║██║╚██╗██║██╔═██╗ ██╔══╝    ╚██╔╝      ");
-        System.out.println("██║ ╚═╝ ██║╚██████╔╝██║ ╚████║██║  ██╗███████╗   ██║       ");
-        System.out.println("╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝   ╚═╝       ");
-        System.out.println("                                                           ");
-        System.out.println("███╗   ███╗ ██████╗ ███╗   ██╗██╗  ██╗███████╗██╗   ██╗    ");
-        System.out.println("████╗ ████║██╔═══██╗████╗  ██║██║ ██╔╝██╔════╝╚██╗ ██╔╝    ");
-        System.out.println("██╔████╔██║██║   ██║██╔██╗ ██║█████╔╝ █████╗   ╚████╔╝     ");
-        System.out.println("██║╚██╔╝██║██║   ██║██║╚██╗██║██╔═██╗ ██╔══╝    ╚██╔╝      ");
-        System.out.println("██║ ╚═╝ ██║╚██████╔╝██║ ╚████║██║  ██╗███████╗   ██║       ");
-        System.out.println("╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝   ╚═╝       ");
-        System.out.println("                                                           ");
-        System.out.println("");
-        System.out.println("  █████████████████████████████████████████████████████████████████████████████");
-        }
+        String[] titleLines = {
+            "  █████████████████████████████████████████████████████████████████████████████",
+            "",
+            "███╗   ███╗ ██████╗ ███╗   ██╗██╗  ██╗███████╗██╗   ██╗    ",
+            "████╗ ████║██╔═══██╗████╗  ██║██║ ██╔╝██╔════╝╚██╗ ██╔╝    ",
+            "██╔████╔██║██║   ██║██╔██╗ ██║█████╔╝ █████╗   ╚████╔╝     ",
+            "██║╚██╔╝██║██║   ██║██║╚██╗██║██╔═██╗ ██╔══╝    ╚██╔╝      ",
+            "██║ ╚═╝ ██║╚██████╔╝██║ ╚████║██║  ██╗███████╗   ██║       ",
+            "╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝   ╚═╝       ",
+            "                                                           ",
+            "███╗   ███╗ ██████╗ ███╗   ██╗██╗  ██╗███████╗██╗   ██╗    ",
+            "████╗ ████║██╔═══██╗████╗  ██║██║ ██╔╝██╔════╝╚██╗ ██╔╝    ",
+            "██╔████╔██║██║   ██║██╔██╗ ██║█████╔╝ █████╗   ╚████╔╝     ",
+            "██║╚██╔╝██║██║   ██║██║╚██╗██║██╔═██╗ ██╔══╝    ╚██╔╝      ",
+            "██║ ╚═╝ ██║╚██████╔╝██║ ╚████║██║  ██╗███████╗   ██║       ",
+            "╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝   ╚═╝       ",
+            "                                                           ",
+            "",
+            "  █████████████████████████████████████████████████████████████████████████████"
+        };
 
-        public static void clearScreen() {
+        for (int i = 0; i < titleLines.length; i++) {
+            clearScreen();
+            for (int j = 0; j <= i; j++) {
+                System.out.println(titleLines[j]);
+            }
+            try {
+                Thread.sleep(100); // Adjust the delay for animation speed
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void clearScreen() {
         try {
             if (System.getProperty("os.name").contains("Windows")) {
-            for (int i = 0; i < 10; i++) {
-                Thread.sleep(50);
-                System.out.print("\r" + " ".repeat(80) + "\r");
-            }
-            new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
             } else {
-            for (int i = 0; i < 10; i++) {
-                Thread.sleep(50);
                 System.out.print("\033[H\033[2J");
                 System.out.flush();
-            }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        }
+    }
+       
         
     static String getCardASCII(String card) {
         String rank = card.substring(0, card.length() - 1); // Extract rank (e.g., "A" from "A♠")
@@ -353,6 +361,8 @@ public class Monkey {
         boolean[] rollUsed = new boolean[7]; // Track used rolls (1-6)
         rollUsed[humanRoll] = true;
 
+        System.out.println("Human Player rolled: " + humanRoll);
+        
         for (int i = 0; i < 4; i++) {
             int roll;
             do {
@@ -366,6 +376,7 @@ public class Monkey {
             } while (rollUsed[roll]);
             botRolls[i] = roll;
             rollUsed[roll] = true;
+            System.out.println("Bot " + (i + 1) + " rolled: " + roll);
         }
 
         // Display dice roll results
@@ -399,15 +410,27 @@ public class Monkey {
 
     // Dice rolling animation
     private static int rollDiceWithAnimation(Random random) throws InterruptedException {
-        int finalRoll = random.nextInt(6) + 1;
-        String[] diceFaces = {"⚀", "⚁", "⚂", "⚃", "⚄", "⚅"};
+        String[] diceFaces = {
+            "┌───────┐\n│       │\n│   ●   │\n│       │\n└───────┘", // 1
+            "┌───────┐\n│ ●     │\n│       │\n│     ● │\n└───────┘", // 2
+            "┌───────┐\n│ ●     │\n│   ●   │\n│     ● │\n└───────┘", // 3
+            "┌───────┐\n│ ●   ● │\n│       │\n│ ●   ● │\n└───────┘", // 4
+            "┌───────┐\n│ ●   ● │\n│   ●   │\n│ ●   ● │\n└───────┘", // 5
+            "┌───────┐\n│ ●   ● │\n│ ●   ● │\n│ ●   ● │\n└───────┘"  // 6
+        };
 
-        System.out.print("Rolling: ");
+        int finalRoll = random.nextInt(6) + 1;
+
         for (int i = 0; i < 10; i++) {  // Simulate rolling animation
-            System.out.print(diceFaces[random.nextInt(6)] + " ");
+            clearScreen();
+            System.out.println("Rolling: ");
+            System.out.println(diceFaces[random.nextInt(6)]);
             Thread.sleep(200);  // Delay to create animation effect
         }
-        System.out.println("\nFinal Roll: " + diceFaces[finalRoll - 1]);
+
+        clearScreen();
+        System.out.println("Final Roll: ");
+        System.out.println(diceFaces[finalRoll - 1]);
 
         return finalRoll;
     }
