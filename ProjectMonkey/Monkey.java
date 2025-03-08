@@ -13,7 +13,6 @@ public class Monkey {
     static String[][] players = new String[4][13]; // Max 13 cards per player
     static int[] playerCardCount = {0, 0, 0, 0}; // Track card count per player
     static String[] deck = new String[52];
-
     static void Title() {
         String[] titleLines = {
             "  █████████████████████████████████████████████████████████████████████████████",
@@ -61,6 +60,7 @@ public class Monkey {
             e.printStackTrace();
         }
     }
+ 
        
         
     static String getCardASCII(String card) {
@@ -80,6 +80,36 @@ public class Monkey {
             "└───────┘", 
             paddedRank, suit, paddedRank);
     }
+    // ETO NADAGDAG 
+    static String[] backCard() {
+        String cardASCII = 
+            "┌───────┐\n" +
+            "│░░░░░░░│\n" +
+            "│░░░░░░░│\n" +
+            "│░░░░░░░│\n" +
+            "│░░░░░░░│\n" +
+            "│░░░░░░░│\n" +
+            "└───────┘";
+        
+        return cardASCII.split("\n");
+    }
+    static void printCard(String[] hand, boolean reveal) {
+        String[][] cardLines = new String[hand.length][];
+
+        for (int i = 0; i < hand.length; i++) {
+            cardLines[i] = reveal ? getCardASCII(hand[i]).split("\n") : backCard();
+        }
+
+        // Print each row of all cards side by side
+        for (int line = 0; line < 7; line++) {
+            for (int i = 0; i < hand.length; i++) {
+                System.out.print(cardLines[i][line] + "  ");
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
+    
  static String getSuitName(String suit) {
         switch (suit) {
             case "♣": return "Clubs";
@@ -115,6 +145,7 @@ public class Monkey {
                 System.out.println("Invalid choice");
                 break;
         }
+       
         // Define card suits and ranks
         String[] SUITS = {"♣", "♠", "♥", "♦"};
         String[] SUIT_NAMES = {"Clubs", "Spades", "Hearts", "Diamonds"};
@@ -226,17 +257,14 @@ public class Monkey {
 
         // Display hands
         System.out.println("\nHuman Player's Hand:");
-        for (String card : humanHand) {
-            System.out.print(card + " ");
-        }
+            printCard(humanHand, true); 
+        
         System.out.println("\n");
 
         // Display bot hands
         for (int b = 0; b < 4; b++) {
             System.out.println("Bot " + (b + 1) + "'s Hand:");
-            for (String card : botHands[b]) {
-                System.out.print(card + " ");
-            }
+            printCard(botHands[b], false);
             System.out.println("\n");
         }
 
@@ -334,15 +362,12 @@ public class Monkey {
         // Display remaining cards for each player
         System.out.println("\nHuman Player's Hand after removing duplicates:");
         for (String card : humanHand) {
-            System.out.print(card + " ");
-        }
-        System.out.println("\n");
+            printCard(humanHand, true);
+
 
         for (int b = 0; b < botHands.length; b++) {
             System.out.println("Bot " + (b + 1) + "'s Hand after removing duplicates:");
-            for (String card : botHands[b]) {
-            System.out.print(card + " ");
-            }
+            printCard(botHands[b], false);
             System.out.println("\n");
         }
 
@@ -407,7 +432,7 @@ public class Monkey {
         }
 
     }
-
+ }
     // Dice rolling animation
     private static int rollDiceWithAnimation(Random random) throws InterruptedException {
         String[] diceFaces = {
@@ -422,13 +447,12 @@ public class Monkey {
         int finalRoll = random.nextInt(6) + 1;
 
         for (int i = 0; i < 10; i++) {  // Simulate rolling animation
-            clearScreen();
+            
             System.out.println("Rolling: ");
             System.out.println(diceFaces[random.nextInt(6)]);
             Thread.sleep(200);  // Delay to create animation effect
         }
 
-        clearScreen();
         System.out.println("Final Roll: ");
         System.out.println(diceFaces[finalRoll - 1]);
 
