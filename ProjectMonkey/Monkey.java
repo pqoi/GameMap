@@ -211,7 +211,7 @@ public class Monkey {
             int j = random.nextInt(i + 1);
             String temp = deck[i];
             deck[i] = deck[j];
-            deck[j] = temp;
+            deck[j] = temp; 
         }
 
         // Visual representation of the deck after shuffling and removing the chosen card
@@ -367,7 +367,7 @@ public class Monkey {
 
         for (int b = 0; b < botHands.length; b++) {
             System.out.println("Bot " + (b + 1) + "'s Hand after removing duplicates:");
-            printCard(botHands[b], false);
+            printCard(botHands[b], true); // turn true to see the card false to not
             System.out.println("\n");
         }
 
@@ -433,8 +433,8 @@ public class Monkey {
 
     }
  }
-    // Dice rolling animation
-    private static int rollDiceWithAnimation(Random random) throws InterruptedException {
+     // Dice rolling animation
+     private static int rollDiceWithAnimation(Random random) throws InterruptedException {
         String[] diceFaces = {
             "┌───────┐\n│       │\n│   ●   │\n│       │\n└───────┘", // 1
             "┌───────┐\n│ ●     │\n│       │\n│     ● │\n└───────┘", // 2
@@ -447,16 +447,16 @@ public class Monkey {
         int finalRoll = random.nextInt(6) + 1;
 
         for (int i = 0; i < 10; i++) {  // Simulate rolling animation
-            
+            clearScreen();
             System.out.println("Rolling: ");
             System.out.println(diceFaces[random.nextInt(6)]);
             Thread.sleep(200);  // Delay to create animation effect
         }
 
+        clearScreen();
         System.out.println("Final Roll: ");
         System.out.println(diceFaces[finalRoll - 1]);
 
         return finalRoll;
     }
 }
- 
