@@ -119,6 +119,55 @@ public class Monkey {
             default: return "";
         }
     }
+    // Function to check and remove duplicates from a player's hand
+    static String[] checkAndRemoveDuplicates(String[] hand) {
+        boolean[] isPaired = new boolean[hand.length];
+        int newSize = hand.length;
+
+        for (int i = 0; i < hand.length; i++) {
+            for (int j = i + 1; j < hand.length; j++) {
+                if (!isPaired[i] && !isPaired[j] && hand[i].substring(0, hand[i].length() - 1).equals(hand[j].substring(0, hand[j].length() - 1))) {
+                    isPaired[i] = isPaired[j] = true;
+                    newSize -= 2;
+                    break;
+                }
+            }
+        }
+
+        String[] newHand = new String[newSize];
+        int newIndex = 0;
+        for (int i = 0; i < hand.length; i++) {
+            if (!isPaired[i]) {
+                newHand[newIndex++] = hand[i];
+            }
+        }
+        return newHand;
+    }
+    static boolean hasDuplicates = false;
+        // Function to check for duplicates and return the found duplicate cards
+            static String[] findDuplicates(String[] hand) {
+                String[] seenCards = new String[hand.length];
+                int seenIndex = 0;
+                String[] duplicates = new String[hand.length];
+                int duplicateIndex = 0;
+    
+                for (String card : hand) {
+                    boolean isDuplicate = false;
+                    for (int i = 0; i < seenIndex; i++) {
+                        if (seenCards[i].substring(0, seenCards[i].length() - 1)
+                            .equals(card.substring(0, card.length() - 1))) {
+                            duplicates[duplicateIndex++] = card;
+                            isDuplicate = true;
+                            hasDuplicates = true;
+                        break;
+                    }
+                }
+                if (!isDuplicate) {
+                    seenCards[seenIndex++] = card;
+                }
+            }
+            return Arrays.copyOf(duplicates, duplicateIndex);
+        }
 
     public static void main(String[] args) {
         Random random = new Random();
@@ -278,99 +327,51 @@ public class Monkey {
         int seenIndex = 0;
         String[] duplicates = new String[52];
         int duplicateIndex = 0;
+        
 
-        // Check human hand for duplicates
-        for (String card : humanHand) {
-            boolean isDuplicate = false;
-            for (int i = 0; i < seenIndex; i++) {
-            if (seenCards[i].equals(card)) {
-                duplicates[duplicateIndex++] = card;
-                isDuplicate = true;
-                hasDuplicates = true;
-                break;
-            }
-            }
-            if (!isDuplicate) {
-            seenCards[seenIndex++] = card;
-            }
-        }
+    
 
-        // Check bot hands for duplicates
-        for (String[] botHand : botHands) {
-            for (String card : botHand) {
-            boolean isDuplicate = false;
-            for (int i = 0; i < seenIndex; i++) {
-                if (seenCards[i].equals(card)) {
-                duplicates[duplicateIndex++] = card;
-                isDuplicate = true;
-                hasDuplicates = true;
-                break;
-                }
-            }
-            if (!isDuplicate) {
-                seenCards[seenIndex++] = card;
-            }
-            }
-        }
-
-        if (hasDuplicates) {
-            System.out.print("Duplicate cards found: ");
-            for (int i = 0; i < duplicateIndex; i++) {
-            System.out.print(duplicates[i] + " ");
-            }
-            System.out.println();
+        // Check and list duplicates for the Human Player
+        String[] humanDuplicates = findDuplicates(humanHand);
+        if (humanDuplicates.length > 0) {
+            System.out.print("Human Player has found duplicate cards: ");
+            System.out.println(Arrays.toString(humanDuplicates));
         } else {
-            System.out.println("No duplicate cards found.");
+            System.out.println("Human Player has no duplicate cards.");
         }
 
-        // Remove duplicates from human hand
-        String[] newHumanHand = new String[11];
-        int newHumanIndex = 0;
-        for (String card : humanHand) {
-            boolean isDuplicate = false;
-            for (int i = 0; i < duplicateIndex; i++) {
-            if (duplicates[i].equals(card)) {
-                isDuplicate = true;
-                break;
-            }
-            }
-            if (!isDuplicate) {
-            newHumanHand[newHumanIndex++] = card;
-            }
-        }
-        humanHand = Arrays.copyOf(newHumanHand, newHumanIndex);
-
-        // Remove duplicates from bot hands
+        // Check and list duplicates for each bot
         for (int b = 0; b < botHands.length; b++) {
-            String[] newBotHand = new String[10];
-            int newBotIndex = 0;
-            for (String card : botHands[b]) {
-            boolean isDuplicate = false;
-            for (int i = 0; i < duplicateIndex; i++) {
-                if (duplicates[i].equals(card)) {
-                isDuplicate = true;
-                break;
-                }
+            String[] botDuplicates = findDuplicates(botHands[b]);
+            if (botDuplicates.length > 0) {
+                System.out.print("Bot " + (b + 1) + " has found duplicate cards: ");
+                System.out.println(Arrays.toString(botDuplicates));
+            } else {
+                System.out.println("Bot " + (b + 1) + " has no duplicate cards.");
             }
-            if (!isDuplicate) {
-                newBotHand[newBotIndex++] = card;
-            }
-            }
-            botHands[b] = Arrays.copyOf(newBotHand, newBotIndex);
+        }
+
+        // Now remove duplicates using checkAndRemoveDuplicates()
+        humanHand = checkAndRemoveDuplicates(humanHand);
+        for (int b = 0; b < botHands.length; b++) {
+            botHands[b] = checkAndRemoveDuplicates(botHands[b]);
+        }
+        // Process each player's hand to remove duplicates
+        humanHand = checkAndRemoveDuplicates(humanHand);
+
+        for (int b = 0; b < botHands.length; b++) {
+            botHands[b] = checkAndRemoveDuplicates(botHands[b]);
         }
 
         // Display remaining cards for each player
         System.out.println("\nHuman Player's Hand after removing duplicates:");
-        
         printCard(humanHand, true);
-
 
         for (int b = 0; b < botHands.length; b++) {
             System.out.println("Bot " + (b + 1) + "'s Hand after removing duplicates:");
-            printCard(botHands[b], true); // turn true to see the card false to not
+            printCard(botHands[b], true);
             System.out.println("\n");
         }
-
         System.out.println("Enter any key to roll the dice to decide who picks first:");
         scanner.next();
 
@@ -430,42 +431,106 @@ public class Monkey {
             System.out.println((i + 1) + ": Bot " + order[i]);
             }
         }
+        int activePlayers = 5;
         // Picking process  
         while (activePlayers > 1) { // Continue until one player remains
             for (int i = 0; i < order.length; i++) {
                 int currentPlayer = order[i];
-                int targetIndex = (i + 1) % order.length; // Next player in order
+        
+                // Skip if the current player has no cards
+                if (currentPlayer == 0) {
+                    if (humanHand.length == 0) continue;
+                } else {
+                    if (botHands[currentPlayer - 1].length == 0) continue;
+                }
+        
+                // 🛑 **Fix: Stop game immediately when only one player remains**
+                if (activePlayers == 1) {
+                    System.out.println("Only one player remains. Ending game...");
+                    break;
+                }
+        
+                // Find the next player with cards
+                int targetIndex = (i + 1) % order.length;
                 int targetPlayer = order[targetIndex];
         
-                if (botHands[currentPlayer - 1].length == 0) continue; // Skip if no cards left
+                // Keep looking for a player with cards if the current target has none
+                int searchCount = 0;
+                while ((targetPlayer == 0 && humanHand.length == 0) || 
+                       (targetPlayer != 0 && botHands[targetPlayer - 1].length == 0)) {
+                    
+                    // Move to the next player in the order
+                    targetIndex = (targetIndex + 1) % order.length;
+                    targetPlayer = order[targetIndex];
         
+                    searchCount++;
+                    if (searchCount >= order.length) {
+                        // 🛑 **Fix: If no valid targets remain, end the game**
+                        System.out.println("No other players with cards found!");
+                        activePlayers = 1;
+                        break;
+                    }
+                }
+        
+               
+        
+                // 🛑 **Fix: Prevent the last player from picking a card from themselves**
+                if (activePlayers == 1) {
+                    System.out.println("Only one player remains. Ending game...");
+                    break;
+                }
+                 // 🛑 **Fix: Prevent the last player from picking from themselves**
+                if (currentPlayer == targetPlayer) {
+                    System.out.println("No valid opponents left. Ending game...");
+                    activePlayers = 1;
+                    break;
+                }
                 String pickedCard = "";
         
+                // 🔹 Continue with picking logic...
+        
+        
+                // 🔹 Existing picking logic continues...
+        
+                
                 // Display both players' hands before picking
                 System.out.println("\nPicking Player: " + (currentPlayer == 0 ? "Human Player" : "Bot " + currentPlayer));
                 printCard(currentPlayer == 0 ? humanHand : botHands[currentPlayer - 1], true);
-        
+                
                 System.out.println("Opponent: " + (targetPlayer == 0 ? "Human Player" : "Bot " + targetPlayer));
                 printCard(targetPlayer == 0 ? humanHand : botHands[targetPlayer - 1], true);
-        
+                
                 if (currentPlayer == 0) {
                     // Human picks manually
-                    System.out.print("Enter index (0-" + (botHands[targetPlayer - 1].length - 1) + "): ");
-                    int pickIndex = scanner.nextInt();
-                    pickedCard = botHands[targetPlayer - 1][pickIndex];
-                    botHands[targetPlayer - 1] = removeCard(botHands[targetPlayer - 1], pickIndex);
+                    if (targetPlayer == 0) {
+                        // Shouldn't happen with proper checks above
+                        System.out.println("Error: Human cannot pick from themselves!");
+                        continue;
+                    } else {
+                        System.out.print("Enter index (0-" + (botHands[targetPlayer - 1].length - 1) + "): ");
+                        int pickIndex = scanner.nextInt();
+                        pickedCard = botHands[targetPlayer - 1][pickIndex];
+                        botHands[targetPlayer - 1] = removeCard(botHands[targetPlayer - 1], pickIndex);
+                    }
                 } else {
                     // Bot picks using shift cipher but follows opponent order
                     int botIndex = (currentPlayer - 1) % 4;
-                    int pickIndex = botIndex % botHands[targetPlayer - 1].length;
                     
-                    // Ensure pickedCard is assigned before removing it
-                    pickedCard = botHands[targetPlayer - 1][pickIndex];
-                    botHands[targetPlayer - 1] = removeCard(botHands[targetPlayer - 1], pickIndex);
-        
+                    if (targetPlayer == 0) {
+                        // If target is human player
+                        int pickIndex = botIndex % humanHand.length;
+                        pickedCard = humanHand[pickIndex];
+                        humanHand = removeCard(humanHand, pickIndex);
+                    } else {
+                        // If target is another bot
+                        int pickIndex = botIndex % botHands[targetPlayer - 1].length;
+                        pickedCard = botHands[targetPlayer - 1][pickIndex];
+                        botHands[targetPlayer - 1] = removeCard(botHands[targetPlayer - 1], pickIndex);
+                    }
+                    
                     System.out.println("Bot " + currentPlayer + " picked " + pickedCard + " from " + (targetPlayer == 0 ? "Human Player" : "Bot " + targetPlayer));
                 }
-        
+                
                 // Add picked card to the picking player's hand
                 if (currentPlayer == 0) {
                     humanHand = addCard(humanHand, pickedCard);
@@ -474,7 +539,7 @@ public class Monkey {
                     botHands[currentPlayer - 1] = addCard(botHands[currentPlayer - 1], pickedCard);
                     printCard(botHands[currentPlayer - 1], true);
                 }
-        
+                
                 // Check for duplicate pairs based on both rank and suit
                 boolean duplicateFound = false;
                 if (currentPlayer == 0) {
@@ -486,33 +551,74 @@ public class Monkey {
                     duplicateFound = updatedHand.length < botHands[currentPlayer - 1].length;
                     botHands[currentPlayer - 1] = updatedHand;
                 }
-        
+                
                 // Display message about duplicate
                 if (duplicateFound) {
                     System.out.println("Duplicate found: " + pickedCard + ". Both cards removed!");
                 } else {
                     System.out.println("No duplicate found. " + pickedCard + " added to hand.");
                 }
-        
+                
                 // Check if a player wins and adjust order
-                if ((currentPlayer == 0 && humanHand.length == 0) || botHands[currentPlayer - 1].length == 0) {
-                    System.out.println((currentPlayer == 0 ? "Human Player" : "Bot " + currentPlayer) + " has finished their cards!");
+                if ((currentPlayer == 0 && humanHand.length == 0) || 
+                    (currentPlayer != 0 && botHands[currentPlayer - 1].length == 0)) {
+                    
+                    System.out.println((currentPlayer == 0 ? "Human Player" : "Bot " + currentPlayer) + 
+                                    " has finished and has no cards left.");
+                    
                     order = removePlayerFromOrder(order, currentPlayer);
                     activePlayers--;
                     if (activePlayers == 1) break; // Stop if only one player remains
                 }
             }
         }
-        
-        // Determine the last player with the monkey card
-        System.out.println("\nGame Over! The last player with the Monkey Card loses.");
+                            // End the game properly when only one player remains
+                if (activePlayers == 1) {
+                    System.out.println("\nGame Over! The last player with the Monkey Card loses.");
+
+                    // Find the last player (human or bot)
+                    int lastPlayer = -1;
+                    if (humanHand.length == 1) {
+                        lastPlayer = 0;
+                        System.out.println("Human Player is the last with one card.");
+                    } else {
+                        for (int i = 0; i < botHands.length; i++) {
+                            if (botHands[i].length == 1) {
+                                lastPlayer = i + 1;
+                                System.out.println("Bot " + lastPlayer + " is the last with one card.");
+                                break;
+                            }
+                        }
+                    }
+
+                    // Display the Monkey Card
+                    System.out.println("\nThe Monkey Card is:");
+                    System.out.println(getCardASCII(chosenCard));
+
+                    // Announce the loser
+                    if (lastPlayer == 0) {
+                        System.out.println("\nYou got the Monkey Card! You lose!");
+                    } else {
+                        System.out.println("\nBot " + lastPlayer + " got the Monkey Card and loses!");
+                    }
+
+                    return; // **Exit the game to prevent further looping**
+                }
+
+
+
+            // Display winning order
+            System.out.println("\nWinning Order:");
+            for (int i = 0; i < order.length; i++) {
+                System.out.println((i + 1) + ": " + (order[i] == 0 ? "Human Player" : "Bot " + order[i]));
+            }
         
         
         
 
     }
     // Method to count the number of active players
-    static int countActivePlayers(String[] humanHand, String[][] botHands) {
+    static int activePlayers(String[] humanHand, String[][] botHands) {
         int count = humanHand.length > 0 ? 1 : 0; // Count human if they have cards
 
         for (String[] botHand : botHands) {
@@ -522,9 +628,10 @@ public class Monkey {
         return count;
     }
 
-    // Method to remove a player from the picking order when they finish
-    static int[] removePlayerFromOrder(int[] order, int finishedPlayer) {
-        int[] newOrder = new int[order.length - 1];
+   
+   // Method to remove a player from the picking order when they finish
+    static Integer[] removePlayerFromOrder(Integer[] order, int finishedPlayer) {
+        Integer[] newOrder = new Integer[order.length - 1];
         int index = 0;
 
         for (int player : order) {
