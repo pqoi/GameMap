@@ -120,34 +120,34 @@ public class Map {
         currentAd[currentIndex] = "x";
     
         String map = "" +
-                " ___________________                                                  ___________________   \n" +
-                "|                   |                                                |                   |  \n" +
-                "|                   |________________________________________________|                   |  \n" +
-                "|       " + mapLoc[0] + "                       " + mapLoc[6] + "                         " + mapLoc[1] + "      |  \n" +
-                "|        (" + currentAd[0] + ")                                ("   +  currentAd[6]  +   ")                                  ("  + currentAd[1] +  ")        |  \n" +
-                "|                    _____________________   ________________________                    |  \n" +
-                "|                   |          "  + dist1 +  "m        |  |            "  +  dist2 +  "m        |                   |  \n" +
-                "|________  _________|                     |  |                       |________   ________|  \n" +
-                "        |  |                              |  |                                |  |      \n" +
-                "        |  |                              |  | "  + dist3 +  "m                            |  |      \n" +
-                "        |  |                              |  |                                |  |       \n" +
-                "        |  |                       _______|  |________                        |  |\n" +
-                "        |  |                      |                   |                       |  |  \n" +
-                "  "  + dist4 +  "m   |  |                      |      "  + mapLoc[4] +  "       |                       |  |  " + dist5 +  "m     \n" +
-                "        |  |                      |        ("  + currentAd[4] +  ")         |                       |  |           \n" +
-                "        |  |                      |                   |                       |  |   \n" +
-                "        |  |                      |_______    ________|                       |  |   \n" +
-                "        |  |                              |  |                                |  |   \n" +
-                "        |  |                              |  | " + dist6 + "m                            |  |   \n" +
-                " _______|  |_________                     |  |                        ________|  |_______  \n" +
-                "|                   |          " + dist7 + "m        |  |          "  + dist8 +  "m           |                  |   \n"  +
-                "|                   |_____________________|  |________________________|                  |  \n" +
-                "|                                                                                        |    \n" +
-                "|      " + mapLoc[3] + "                        " + mapLoc[5] + "                          " + mapLoc[2] + "      |  \n" +
-                "|        ("  + currentAd[3] +  ")                               (" + currentAd[5] + ")                                  (" + currentAd[2] + ")         |    \n" +
-                "|                   __________________________________________________                   |    \n" +
-                "|                   |                                                 |                  |        \n" +
-                "|___________________|                                                 |__________________|                  \n";
+                "                ___________________                                                  ___________________   \n" +
+                "               |                   |                                                |                   |  \n" +
+                "               |                   |________________________________________________|                   |  \n" +
+                "               |       " + mapLoc[0] + "                       " + mapLoc[6] + "                         " + mapLoc[1] + "      |  \n" +
+                "               |        (" + currentAd[0] + ")                                ("   +  currentAd[6]  +   ")                                  ("  + currentAd[1] +  ")        |  \n" +
+                "               |                    _____________________   ________________________                    |  \n" +
+                "               |                   |          "  + dist1 +  "m        |  |            "  +  dist2 +  "m        |                   |  \n" +
+                "               |________  _________|                     |  |                       |________   ________|  \n" +
+                "                       |  |                              |  |                                |  |      \n" +
+                "                       |  |                              |  | "  + dist3 +  "m                            |  |      \n" +
+                "                       |  |                              |  |                                |  |       \n" +
+                "                       |  |                       _______|  |________                        |  |\n" +
+                "                       |  |                      |                   |                       |  |  \n" +
+                "                 "  + dist4 +  "m   |  |                      |      "  + mapLoc[4] +  "       |                       |  |  " + dist5 +  "m     \n" +
+                "                       |  |                      |        ("  + currentAd[4] +  ")         |                       |  |           \n" +
+                "                       |  |                      |                   |                       |  |   \n" +
+                "                       |  |                      |_______    ________|                       |  |   \n" +
+                "                       |  |                              |  |                                |  |   \n" +
+                "                       |  |                              |  | " + dist6 + "m                            |  |   \n" +
+                "                _______|  |_________                     |  |                        ________|  |_______  \n" +
+                "               |                   |          " + dist7 + "m        |  |          "  + dist8 +  "m           |                  |   \n"  +
+                "               |                   |_____________________|  |________________________|                  |  \n" +
+                "               |                                                                                        |    \n" +
+                "               |      " + mapLoc[3] + "                        " + mapLoc[5] + "                          " + mapLoc[2] + "      |  \n" +
+                "               |        ("  + currentAd[3] +  ")                               (" + currentAd[5] + ")                                  (" + currentAd[2] + ")         |    \n" +
+                "               |                   __________________________________________________                   |    \n" +
+                "               |                   |                                                 |                  |        \n" +
+                "               |___________________|                                                 |__________________|                  \n";
 
         return map;
     }
@@ -157,9 +157,11 @@ public class Map {
         printCenter("╠══════════════════════════════════╣");
         printCenter("║  Enter Username:                 ║");
         printCenter("╚══════════════════════════════════╝");
-        printCenter("> "); // Input prompt
-        scan.nextLine(); // Consume the newline character
-        String username = scan.nextLine();
+        scan.nextLine(); 
+        String username = (" > ");
+        int padding = (PAGE_WIDTH2 - 9) / 2; 
+        System.out.print("║" + " ".repeat(padding) + username);
+        username = scan.nextLine();
        
 
         printCenter("╔══════════════════════════════════╗");
@@ -183,6 +185,8 @@ public class Map {
                 printCenter("║  3. About          ║");
                 printCenter("╚════════════════════╝");
                 printCenter("Choose key to proceed:");
+                int padding = (PAGE_WIDTH2 - 4) / 2; 
+                System.out.print("║" + " ".repeat(padding));
                 int choice = scan.nextInt();
     
                 switch (choice) {
@@ -282,8 +286,11 @@ public class Map {
             printCenter("║                      6. Agriculture                                      ║");
             printCenter("║                      7. Fisheries                                        ║");
             printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
-    
+            int padding = (PAGE_WIDTH2 - 40) / 2; 
+            System.out.print("║" + " ".repeat(padding));
             selectedCourses[0] = getCourseSelection(scan, "> Enter your second choice: ");
+            padding = (PAGE_WIDTH2 - 40) / 2; 
+            System.out.print("║" + " ".repeat(padding));
             selectedCourses[1] = getCourseSelection(scan, "> Enter your third choice: ");
     
             printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
@@ -292,6 +299,7 @@ public class Map {
             printCenter("║  2nd Choice: " + selectedCourses[0] + "                                                  ║");
             printCenter("║  3rd Choice: " + selectedCourses[1] + "                                                ║");
             printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
+            println(HORIZONTAL_LINE2);
         }
     
         private static String getCourseSelection(Scanner scan, String prompt) {
@@ -511,15 +519,27 @@ public class Map {
                 for (int i = 0; i < 5; i++) { // Only sum the scores of the first 5 rooms
                 totalScore += scores[i];
                 }
-                println("Your total score is: " + totalScore + " out of " + (5 * 5));
+                printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+                printCenter("║ Your total score is: " + totalScore + " out of " + (5 * 5) + "         ║");
+                printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
+
                 double percentage = ((double) totalScore / (5 * 5)) * 100;
-                println("Your percentage score is: " + String.format("%.2f", percentage) + "%");
+                printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+                printCenter("║ Your percentage score is: " + String.format("%.2f", percentage) + "%    ║");
+                printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
+                
                 if (totalScore >= (5 * 3.75)) { // 75% of 25 is 18.75
-                println("Congratulations! You passed the entrance exams.");
-                println("Proceeding to the entrance exam for the engineering course...");
-                //EngineerExam();
+                    printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+                    printCenter("║ Congratulations! You passed the entrance exams.                         ║");
+                    printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
+                    printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+                    printCenter("║ Proceeding to the entrance exam for the engineering course...           ║");
+                    printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
+                EngineerExam();
                 } else {
-                println("Unfortunately, you did not pass the exams. Better luck next time.");
+                    printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+                    printCenter("║ Unfortunately, you did not pass the exams. Better luck next time.       ║");
+                    printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
                 }
                 System.exit(0);
 
@@ -561,18 +581,38 @@ public class Map {
         }
 
         if (availableRoomCount == 0) {
-            System.out.println("All exams have been completed.");
+            printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+            printCenter("║                     All exams have been completed.                       ║");
+            printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
+
             int totalScore = 0;
             for (int i = 0; i < 5; i++) {
                 totalScore += scores[i];
             }
-            System.out.println("Your total score is: " + totalScore + " out of " + (5 * 5));
+            printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+            printCenter("║ Your total score is: " + totalScore + " out of " + (5 * 5) + "         ║");
+            printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
+            double percentage = ((double) totalScore / (5 * 5)) * 100;
+            printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+            printCenter("║ Your percentage score is: " + String.format("%.2f", percentage) + "%    ║");
+            printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
+
+
             if (totalScore >= (5 * 3.75)) {
-                System.out.println("Congratulations! You passed the entrance exams.");
-                System.out.println("You will now proceed to the entrance exam for the engineering course.");
+                printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+                printCenter("║ Congratulations! You passed the entrance exams.                         ║");
+                printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
+                
+                printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+                printCenter("║ Proceeding to the entrance exam for the engineering course...           ║");
+                printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
+                
                 EngineerExam();
             } else {
-                System.out.println("Unfortunately, you did not pass the entrance exams. Better luck next time.");
+                printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+                printCenter("║ Unfortunately, you did not pass the entrance exams. Better luck next time. ║");
+                printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
+
             }
             System.exit(0);
         }
@@ -883,18 +923,29 @@ public class Map {
             minIndex = i;
             }
         }
-        
-        System.out.println("All possible routes:");
+        println(HORIZONTAL_LINE2);
+        printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+        printCenter("║                            All possible routes                           ║");
+        printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
+
         for (int i = 0; i < routeCount; i++) {
             System.out.println(routes[i] + " (Total distance: " + routeDistances[i] + "m)");
         }
         
         if (routeCount > 0) {
-            System.out.println("\nShortest Path: " + routes[minIndex] + " (" + routeDistances[minIndex] + "m)");
+            println(HORIZONTAL_LINE2);
+            printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+            printCenter("║ Shortest Path: " + routes[minIndex] + " (" + routeDistances[minIndex] + "m) ║");
+            printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
+
             int travelTimeSeconds = routeDistances[minIndex] * 2; // 1 meter takes 2 seconds to travel
             int travelTimeMinutes = travelTimeSeconds / 60;
             int remainingSeconds = travelTimeSeconds % 60;
-            System.out.println("Estimated Travel Time: " + travelTimeMinutes + " minutes and " + remainingSeconds + " seconds");
+            printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+            printCenter("║ Estimated Travel Time: " + travelTimeMinutes + " minutes and " + remainingSeconds + " seconds ║");
+            printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
+            println(HORIZONTAL_LINE2);
+
         } else {
             System.out.println("No available path found.");
         }
@@ -996,11 +1047,18 @@ public class Map {
                 }
 
                 if (!newLocation.equals(currentLocation)) {
-                    System.out.println("Moving to " + newLocation);
+                    printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+                    printCenter("║                           Moving to " + newLocation + "                           ║");
+                    printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
+                    
                     int travelTimeMinutes = travelTimeSeconds / 60;
                     int remainingSeconds = travelTimeSeconds % 60;
                     addTime(travelTimeMinutes, remainingSeconds); // Apply time in minutes and seconds
-                    System.out.println("Current Time: " + getCurrentTime());
+                    printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+                    printCenter("║                          Current Time: " + getCurrentTime() + "                          ║");
+                    printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
+                    println(HORIZONTAL_LINE2);
+
                     currentLocation = newLocation;
                     System.out.println(showMap(currentLocation));
 
@@ -1024,128 +1082,177 @@ public class Map {
 
 
             
-            static void EngineerExam() {
-                Scanner scan = new Scanner(System.in);
-                
-                System.out.println( HORIZONTAL_LINE);
-                printCentered(" ███████ ███    ██  ██████  ██ ███    ██ ███████ ███████ ██████  ██ ███    ██  ██████ ");
-                printCentered(" ██      ████   ██ ██       ██ ████   ██ ██      ██      ██   ██ ██ ████   ██ ██      ");
-                printCentered(" █████   ██ ██  ██ ██   ███ ██ ██ ██  ██ █████   █████   ██████  ██ ██ ██  ██ ██   ███");
-                printCentered(" ██      ██  ██ ██ ██    ██ ██ ██  ██ ██ ██      ██      ██   ██ ██ ██  ██ ██ ██    ██");
-                printCentered(" ███████ ██   ████  ██████  ██ ██   ████ ███████ ███████ ██   ██ ██ ██   ████  ██████ ");                                                                                              
-                System.out.println(EMPTY_LINE);                                                                                                       
-                printCentered("███████ ███    ██ ████████ ██████   █████  ███    ██  ██████ ███████     ███████ ██   ██  █████  ███    ███");
-                printCentered("██      ████   ██    ██    ██   ██ ██   ██ ████   ██ ██      ██          ██       ██ ██  ██   ██ ████  ████");
-                printCentered("█████   ██ ██  ██    ██    ██████  ███████ ██ ██  ██ ██      █████       █████     ███   ███████ ██ ████ ██");
-                printCentered("██      ██  ██ ██    ██    ██   ██ ██   ██ ██  ██ ██ ██      ██          ██       ██ ██  ██   ██ ██  ██  ██"); 
-                printCentered("███████ ██   ████    ██    ██   ██ ██   ██ ██   ████  ██████ ███████     ███████ ██   ██ ██   ██ ██      ██");
-                System.out.println( HORIZONTAL_LINE); 
-
-
-                String[][] questions = {
-                    {"In how many ways can you arrange a group of 5 girls and 3 boys in 7 vacant chairs?\na. 40320\nb. 5040\nc. 720\nd. 8"},
-                    {"How many 3-digit numbers can you make out of the numbers 1 to 5 without repetition?\na. 720\nb. 10\nc. 60\nd. 120"},
-                    {"There are 2 white, 3 red, and 4 blue balls inside a basket. If three balls are drawn randomly in succession without replacement,what is the probability\n that the first ball is white, and the next two balls are blue?\na. 32/729\nb. 4/63\nc. 8/243\nd. 1/21"},
-                    {"What is the mode of the following numbers: 54, 45, 75, 60, 65, 65, 60, and 57?\na. 65\nb. 60\nc. 62.5\nd. 60 and 65"},
-                    {"From the given numbers of question number 4, what is the median?\na. 62.5\nb. 60\nc. 65\nd. 60 and 65"},
-                    {"From the given numbers of question number 4, what is the variance?\na. 77.84\nb. 60.125\nc. 68.11\nd. 8.82"},
-                    {"Seven boys are to be seated around a circular table. How many arrangements can be made?\na. 7\nb. 2520\nc. 5040\nd. 720"},
-                    {"In how many ways can you arrange 3 boys and 4 girls in a 7-seater bench supposing that the four girls want to be seated together?\na. 24\nb. 5040\nc. 576\nd. 48"},
-                    {"The probability that you will arrive late is 35% and the probability that you will be scolded by your boss is 15%. What is the probability that you will be both late and scolded by your boss?\na. 5.25%\nb. 50%\nc. 44.75%\nd. 2.33%"},
-                    {"From question number 9, what is the probability that you will either be late or scolded by your boss?\na. 5.25%\nb. 50%\nc. 44.75%\nd. 2.33%"}
-                };
-
-                char[] answers = {'B', 'C', 'B', 'D', 'B', 'C', 'D', 'C', 'A', 'C'};
-
-                int score = takeEngExam(questions, answers, questions.length, scan);
-                boolean passed = checkIfExamPassed(score, questions.length, 0.75);
-
-                scan.close();
-            }
-
-            static int takeEngExam(String[][] questions, char[] answers, int totalQuestions, Scanner scan) {
-                int score = 0;
-                char[] userAnswers = new char[totalQuestions];
-
-                for (int i = 0; i < totalQuestions; i++) {
-                    System.out.println(HORIZONTAL_LINE);
-
-                    String questionText = questions[i][0];
-                    String[] parts = questionText.split("\n");
-
-                    System.out.printf("| %2d: %-" + (PAGE_WIDTH - 16) + "s         |\n", (i + 1), parts[0]);
+        static void EngineerExam() {
+            Scanner scan = new Scanner(System.in);
             
+            System.out.println( HORIZONTAL_LINE2);
+            printCenter(" ███████ ███    ██  ██████  ██ ███    ██ ███████ ███████ ██████  ██ ███    ██  ██████ ");
+            printCenter(" ██      ████   ██ ██       ██ ████   ██ ██      ██      ██   ██ ██ ████   ██ ██      ");
+            printCenter(" █████   ██ ██  ██ ██   ███ ██ ██ ██  ██ █████   █████   ██████  ██ ██ ██  ██ ██   ███");
+            printCenter(" ██      ██  ██ ██ ██    ██ ██ ██  ██ ██ ██      ██      ██   ██ ██ ██  ██ ██ ██    ██");
+            printCenter(" ███████ ██   ████  ██████  ██ ██   ████ ███████ ███████ ██   ██ ██ ██   ████  ██████ ");                                                                                              
+            printCenter("                                                                                      ");                                                                                                     
+            printCenter("███████ ███    ██ ████████ ██████   █████  ███    ██  ██████ ███████     ███████ ██   ██  █████  ███    ███");
+            printCenter("██      ████   ██    ██    ██   ██ ██   ██ ████   ██ ██      ██          ██       ██ ██  ██   ██ ████  ████");
+            printCenter("█████   ██ ██  ██    ██    ██████  ███████ ██ ██  ██ ██      █████       █████     ███   ███████ ██ ████ ██");
+            printCenter("██      ██  ██ ██    ██    ██   ██ ██   ██ ██  ██ ██ ██      ██          ██       ██ ██  ██   ██ ██  ██  ██"); 
+            printCenter("███████ ██   ████    ██    ██   ██ ██   ██ ██   ████  ██████ ███████     ███████ ██   ██ ██   ██ ██      ██");
+            System.out.println( HORIZONTAL_LINE2); 
+            printCenter("  Read the question Carefully. And choose the correct answer.");
 
-                    for (int j = 1; j < parts.length; j++) {
-                        String line = "| " + " ".repeat(12) + parts[j];
-                        System.out.printf("%-" + (PAGE_WIDTH - 1) + "s|\n", line);
-                    
-                }
-                System.out.println(EMPTY_LINE);
-                boolean validInput = false;
-                while (!validInput) {
-                    System.out.print("|" + "  Enter your answer (A/B/C/D): " );
-                    String input = scan.nextLine().trim().toUpperCase();
-                    if (input.isEmpty()) {
-                        input = scan.nextLine().trim().toUpperCase();
-                    }
-                    
-                    if (input.length() == 1 && "ABCD".contains(input)) {
-                        userAnswers[i] = input.charAt(0);
-                        validInput = true;
-                    } else {
-                        System.out.println("Invalid input. Please enter A, B, C, or D.");
-                    }
-                }
+
+            String[][] questions = {
+                {"In how many ways can you arrange a group of 5 girls and 3 boys in 7 vacant chairs?\na. 40320\nb. 5040\nc. 720\nd. 8"},
+                {"How many 3-digit numbers can you make out of the numbers 1 to 5 without repetition?\na. 720\nb. 10\nc. 60\nd. 120"},
+                {"There are 2 white, 3 red, and 4 blue balls inside a basket. If three balls are drawn randomly in \nsuccession without replacement,what is the probability\n that the first ball is white, and the next two balls are blue?\na. 32/729\nb. 4/63\nc. 8/243\nd. 1/21"},
+                {"What is the mode of the following numbers: 54, 45, 75, 60, 65, 65, 60, and 57?\na. 65\nb. 60\nc. 62.5\nd. 60 and 65"},
+                {"From the given numbers of question number 4, what is the median?\na. 62.5\nb. 60\nc. 65\nd. 60 and 65"},
+                {"From the given numbers of question number 4, what is the variance?\na. 77.84\nb. 60.125\nc. 68.11\nd. 8.82"},
+                {"Seven boys are to be seated around a circular table. How many arrangements can be made?\na. 7\nb. 2520\nc. 5040\nd. 720"},
+                {"In how many ways can you arrange 3 boys and 4 girls in a 7-seater bench supposing that the four girls \nwant to be seated together?\na. 24\nb. 5040\nc. 576\nd. 48"},
+                {"The probability that you will arrive late is 35% and the probability that you will be scolded by your \nboss is 15%. What is the probability that you will be both late and scolded by your boss?\na. 5.25%\nb. 50%\nc. 44.75%\nd. 2.33%"},
+                {"From question number 9, what is the probability that you will either be late or scolded by your boss?\na. 5.25%\nb. 50%\nc. 44.75%\nd. 2.33%"}
+            };
+
+            char[] answers = {'B', 'C', 'B', 'D', 'B', 'C', 'D', 'C', 'A', 'C'};
+
+            int score = takeEngExam(questions, answers, questions.length, scan);
+            boolean passed = checkIfExamPassed(score, questions.length, 0.75);
+
+            scan.close();
+        }
+
+        static int takeEngExam(String[][] questions, char[] answers, int totalQuestions, Scanner scan) {
+            int score = 0;
+            char[] userAnswers = new char[totalQuestions];
+
+            for (int i = 0; i < totalQuestions; i++) {
+                System.out.println(HORIZONTAL_LINE2);
+
+                String questionText = questions[i][0];
+                String[] parts = questionText.split("\n");
+
+                System.out.printf("| %2d: %-" + (PAGE_WIDTH2 - 16) + "s         |\n", (i + 1), parts[0]);
+        
+
+                for (int j = 1; j < parts.length; j++) {
+                    String line = "| " + " ".repeat(12) + parts[j];
+                    System.out.printf("%-" + (PAGE_WIDTH2 - 1) + "s|\n", line);
+                
             }
-
-                for (int i = 0; i < totalQuestions; i++) {
-                    if (userAnswers[i] == answers[i]) {
-                        score++;
-                    }
+            System.out.println(EMPTY_LINE2);
+            boolean validInput = false;
+            while (!validInput) {
+                System.out.print("|" + "  Enter your answer (A/B/C/D): " );
+                String input = scan.nextLine().trim().toUpperCase();
+                if (input.isEmpty()) {
+                    input = scan.nextLine().trim().toUpperCase();
                 }
-
-                displayExamResults(score, totalQuestions,scan);
-                return score;
-            }
-
-            static boolean checkIfExamPassed(int score, int totalQuestions, double passing_score) {
-                return ((double) score / totalQuestions) >= passing_score;
-            }
-
-            static void displayExamResults(int score, int totalQuestions,Scanner scan) {
-                double percentage = ((double) score / totalQuestions) * 100;
-                System.out.println("\nYour Score: " + score + "/" + totalQuestions);
-                System.out.println("Percentage: " + String.format("%.1f", percentage) + "%");
-                if (percentage >= 85) {
-                    System.out.println("Congratulations! You passed the exam.");
-                    println("You continue to pursue your course.");
-                    println("Four years later...");
-                    println("You have now graduated from the university and will take the board exam.");      
-                    BoardExam();
+                
+                if (input.length() == 1 && "ABCD".contains(input)) {
+                    userAnswers[i] = input.charAt(0);
+                    validInput = true;
                 } else {
-                    System.out.println("Sorry, you did not pass the Engineer entrance exam.");
-                    println("You may choose between your 2nd and 3rd choice of courses to enroll and continue your studies at the university.");        displaySelectedCourses();
-                    println("Enter 1 to choose your 2nd choice or 2 to choose your 3rd choice:");
-                    int choice = scan.nextInt();
-                    scan.nextLine(); // Consume newline
-
-                    while (true) {
-                        if (choice == 1) {
-                            println("You have chosen: " + selectedCourses[0]);
-                            break;
-                        } else if (choice == 2) {
-                            println("You have chosen: " + selectedCourses[1]);
-                            break;
-                        } else {
-                            println("Invalid choice. Please enter 1 or 2:");
-                            choice = scan.nextInt();
-                            scan.nextLine(); // Consume newline
-                        }
-                    }      
+                    System.out.println("Invalid input. Please enter A, B, C, or D.");
                 }
-                System.out.println(HORIZONTAL_LINE); 
             }
+        }
+        System.out.println(HORIZONTAL_LINE2);
+
+            for (int i = 0; i < totalQuestions; i++) {
+                if (userAnswers[i] == answers[i]) {
+                    score++;
+                }
+            }
+
+            displayExamResults(score, totalQuestions,scan);
+            return score;
+        }
+
+        static boolean checkIfExamPassed(int score, int totalQuestions, double passing_score) {
+            return ((double) score / totalQuestions) >= passing_score;
+        }
+         
+
+        static void displayExamResults(int score, int totalQuestions,Scanner scan) {
+            double percentage = ((double) score / totalQuestions) * 100;
+            printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+            printCenter("║                            Your Score: " + score + "/" + totalQuestions + "                           ║");
+            printCenter("║                            Percentage: " + String.format("%.1f", percentage) + "%                           ║");
+            printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
+
+            if (percentage >= 80) {
+                printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+                printCenter("║                     Congratulations! You passed the exam.                ║");
+                printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
+                printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+                printCenter("║                   You continue to pursue your course.                    ║");
+                printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
+                
+                printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+                printCenter("║                             Four years later...                           ║");
+                printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
+                
+                printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+                printCenter("║  You have now graduated from the university and will take the board exam. ║");
+                printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
+                     
+                BoardExam();
+            } else {
+                printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+                printCenter("║            Sorry, you did not pass the Engineer entrance exam.            ║");
+                printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
+
+                printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+                printCenter("║ You may choose between your 2nd and 3rd choice of courses to enroll      ║");
+                printCenter("║ and continue your studies at the university.                             ║");
+                printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
+
+                displaySelectedCourses(); // Keep this function call outside the ASCII formatting
+
+                printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+                printCenter("║   Enter 1 to choose your 2nd choice or 2 to choose your 3rd choice:      ║");
+                printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
+
+                int choice = scan.nextInt();
+                scan.nextLine(); // Consume newline
+
+                while (true) {
+                    if (choice == 1) {
+                        printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+                        printCenter("║                      You have chosen: " + selectedCourses[0] + "                      ║");
+                        printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
+                        printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+                        printCenter("║   You will now continue your studies in the " + selectedCourses[0] + " course.   ║");
+                        printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
+
+                        printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+                        printCenter("║                      Good luck on your new journey!                      ║");
+                        printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
+                        println(HORIZONTAL_LINE2);
+                        break;
+                    } else if (choice == 2) {
+                        printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+                        printCenter("║                      You have chosen: " + selectedCourses[1] + "                      ║");
+                        printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
+                        printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+                        printCenter("║   You will now continue your studies in the " + selectedCourses[1] + " course.   ║");
+                        printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
+                        
+                        printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+                        printCenter("║                      Good luck on your new journey!                      ║");
+                        printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
+                        println(HORIZONTAL_LINE2);
+                        break;
+                    } else {
+                        println("Invalid choice. Please enter 1 or 2:");
+                        choice = scan.nextInt();
+                        scan.nextLine(); // Consume newline
+                    }
+                }      
+            }
+
+        }
             static void printCentered(String text) {    int padding = (PAGE_WIDTH - text.length() - 2) / 2;
                 String paddedText = "|" + " ".repeat(padding) + text;
                 paddedText += " ".repeat(PAGE_WIDTH - paddedText.length() - 1) + "|";
@@ -1157,37 +1264,37 @@ public class Map {
         
         
                 String[][] questionsSet1 = {
-                    {"A bridge engineer is deciding between two designs: high-strength steel (complex welding) vs. standard steel (simpler welding). \nConsidering long-term maintenance and local labor, which is most logical? \nA. High-strength steel, as it's inherently stronger. \nB. Standard steel, as it's always cheaper. \nC. The choice depends on a balance of factors, including maintenance costs, labor availability, and material costs. \nD. The design with the lowest initial cost."},
+                    {"A bridge engineer is deciding between two designs: high-strength steel (complex welding) vs. standard \nsteel (simpler welding). Considering long-term maintenance and local labor, which is most logical? \nA. High-strength steel, as it's inherently stronger. \nB. Standard steel, as it's always cheaper. \nC. The choice depends on a balance of factors, including maintenance costs, labor availability, \nand material costs. \nD. The design with the lowest initial cost."},
                     {"In highway design, what is the primary purpose of superelevation? \nA. Reduce noise \nB. Counteract centrifugal force \nC. Improve drainage \nD. Reduce tire wear"},
                     {"What is the purpose of a slump test in concrete? \nA. To measure the compressive strength \nB. To measure the workability \nC. To measure the tensile strength \nD. To measure the density"},
                     {"What is the liquid limit of a soil? \nA. The moisture content at which the soil transitions from a liquid to a plastic state \nB. The moisture content at which the soil transitions from a plastic to a solid state \nC. The moisture content at which the soil has zero volume \nD. The moisture content at which the soil reaches its maximum density"},
                     {"Which sequence correctly represents the stages of concrete strength development? \nA. Setting → Hardening → Curing → Final strength \nB. Hardening - Setting - Curing - Final strength \nC. Setting - Curing - Hardening - Final strength \nD. Curing - Setting - Hardening - Final strength"},
                     {"In a critical path analysis, which statement is TRUE? \nA. All activities have float time \nB. Critical activities have zero float time \nC. Critical path is always the longest path \nD. Both b and c"},
-                    {"If a concrete mix has a water-cement ratio of 0.45 and requires 180 kg of water per cubic meter, how much cement is needed? \nA. 400 kg \nB. 450 kg \nC. 350 kg \nD. 300 kg"},
+                    {"If a concrete mix has a water-cement ratio of 0.45 and requires 180 kg of water per cubic meter, how \nmuch cement is needed? \nA. 400 kg \nB. 450 kg \nC. 350 kg \nD. 300 kg"},
                     {"What is the most likely cause of diagonal cracks in a reinforced concrete beam? \nA. Pure bending \nB. Shear stress \nC. Axial compression \nD. Torsion"},
                     {"A project manager needs to reduce project duration. Which resource adjustment would be most effective? \nA. Adding more workers to non-critical activities \nB. Adding more workers to critical activities \nC. Reducing quality control checks \nD. Extending working hours for all activities"},
                     {"A concrete cylinder test shows 28-day strength of 25 MPa. What is the likely 7-day strength?  \nA. 12.5 MPa \nB. 15 MPa \nC. 17.5 MPa \nD. 20 MPa"}
                 };
                 
                 String[][] questionsSet2 = {
-                    {"Heavy traffic is predicted at a new interchange. Which factor should be least prioritized when choosing between a roundabout, flyover, or signalized intersection? \nA. Cost of construction \nB. Land availability \nC. Aesthetic appeal \nD. Environmental impact"},
+                    {"Heavy traffic is predicted at a new interchange. Which factor should be least prioritized when choosing \nbetween a roundabout, flyover, or signalized intersection? \nA. Cost of construction \nB. Land availability \nC. Aesthetic appeal \nD. Environmental impact"},
                     {"The capacity of a highway is typically expressed in: \nA. Vehicles per hour \nB. Passengers per hour \nC. Miles per hour \nD. Kilometers per hour"},
                     {"The angle of internal friction of a soil is a measure of: \nA. Its compressibility \nB. Its shear strength \nC. Its permeability \nD. Its plasticity"},
-                    {"From the given table, find the plasticity index of soil Y if its liquid limit is 70 and its plastic limit is 38. \nA. 25 \nB. 32 \nC. 28 \nD. 33"},
+                    {"From the given table, find the plasticity index of soil Y if its liquid limit is 70 and its plastic \nlimit is 38. \nA. 25 \nB. 32 \nC. 28 \nD. 33"},
                     {"In construction planning, which resource is typically most critical? \nA. Labor \nB. Equipment \nC. Materials \nD. Time"},
                     {"If a steel beam fails exactly at its yield strength, what type of failure occurred? \nA. Brittle failure \nB. Ductile failure \nC. Fatigue failure \nD. Cannot be determined from given information"},
-                    {"A construction project is delayed due to unexpected soil conditions. Which of the following should have been done to prevent this? \nA. Increase labor force \nB. Use faster equipment \nC. Conduct thorough geotechnical investigation \nD. Work overtime"},
+                    {"A construction project is delayed due to unexpected soil conditions. Which of the following should have \nbeen done to prevent this? \nA. Increase labor force \nB. Use faster equipment \nC. Conduct thorough geotechnical investigation \nD. Work overtime"},
                     {"If a retaining wall shows signs of overturning, which correction would be most effective? \nA. Increase wall thickness \nB. Extend base width \nC. Add surface drainage \nD. Increase wall height"},
                     {"What is the critical factor in determining the spacing of expansion joints in concrete pavements? \nA. Traffic load \nB. Temperature variation \nC. Subgrade condition \nD. Concrete strength"},
-                    {"A surveyor measures a horizontal distance of 100m at sea level. What would be the grid distance if the scale factor is 0.9996? \nA. 99.96m \nB. 100.04m \nC. 99.94m \nD. 100.06m"}
+                    {"A surveyor measures a horizontal distance of 100m at sea level. What would be the grid distance if the \nscale factor is 0.9996? \nA. 99.96m \nB. 100.04m \nC. 99.94m \nD. 100.06m"}
                 };
         
                 String[][] questionsSet3 = {
-                    {"Two subcontractors are in dispute, delaying a project. What's the most logical approach for the project manager? \nA. Take sides with one of the subcontractors. \nB. Mediate the dispute fairly and focus on the project's overall timeline. \nC. Ignore the dispute and hope it resolves itself. \nD. Impose penalties on both subcontractors equally."},
+                    {"Two subcontractors are in dispute, delaying a project. What's the most logical approach for the project \nmanager? \nA. Take sides with one of the subcontractors. \nB. Mediate the dispute fairly and focus on the project's overall timeline. \nC. Ignore the dispute and hope it resolves itself. \nD. Impose penalties on both subcontractors equally."},
                     {"What is the critical path in a project schedule? \nA. The shortest path through the project network. \nB. The longest path through the project network. \nC. The path with the most resources. \nD. The path with the least risk."},
                     {"Consolidation of soil refers to: \nA. The decrease in volume due to the expulsion of water. \nB. The increase in volume due to the absorption of water. \nC. The shear deformation of the soil. \nD. The compaction of the soil."},
-                    {"A concrete beam with a rectangular cross-section has dimensions of 300mm width and 600mm depth. If the allowable bending stress is 12 MPa, what is the maximum bending moment that can be safely applied? \nA. 432 kN⋅m \nB. 216 kN⋅m \nC. 648 kN⋅m \nD. 324 kN⋅m"},
-                    {"In project scheduling, if Activity B cannot start until Activity A is 50% complete, this is an example of: \nA. Finish-to-Start relationship. \nB. Start-to-Start relationship. \nC. Lag relationship. \nD. Lead relationship."},
+                    {"A concrete beam with a rectangular cross-section has dimensions of 300mm width and 600mm depth. If the \nallowable bending stress is 12 MPa, what is the maximum bending moment that can be safely applied? \nA. 432 kN⋅m \nB. 216 kN⋅m \nC. 648 kN⋅m \nD. 324 kN⋅m"},
+                    {"In project scheduling, if Activity B cannot start until Activity A is 50% complete, this is an example \nof: \nA. Finish-to-Start relationship. \nB. Start-to-Start relationship. \nC. Lag relationship. \nD. Lead relationship."},
                     {"Which foundation type would be most suitable for a building on expansive soil? \nA. Spread footing. \nB. Pile foundation. \nC. Raft foundation. \nD. Strip footing."},
                     {"What is the most effective way to reduce concrete shrinkage? \nA. Increase cement content. \nB. Reduce water content. \nC. Add more fine aggregate. \nD. Increase mixing time."},
                     {"Which factor most affects the capacity of a driven pile? \nA. Pile length. \nB. Soil properties. \nC. Driving method. \nD. All of the above."},
@@ -1204,30 +1311,23 @@ public class Map {
                 int totalQuestions = answerset1.length;
         
                 // Print welcome message
-                System.out.println( HORIZONTAL_LINE);
-           
-                System.out.println(EMPTY_LINE);
-                System.out.print("\u001B[33m");   
-                printCentered("  ██████ ██ ██    ██ ██ ██          ███████ ███    ██  ██████  ██ ███    ██ ███████ ███████ ██████  ██ ███    ██  ██████          ");   
-                printCentered(" ██      ██ ██    ██ ██ ██          ██      ████   ██ ██       ██ ████   ██ ██      ██      ██   ██ ██ ████   ██ ██               ");   
-                printCentered(" ██      ██ ██    ██ ██ ██          █████   ██ ██  ██ ██   ███ ██ ██ ██  ██ █████   █████   ██████  ██ ██ ██  ██ ██   ███         ");   
-                printCentered(" ██      ██  ██  ██  ██ ██          ██      ██  ██ ██ ██    ██ ██ ██  ██ ██ ██      ██      ██   ██ ██ ██  ██ ██ ██    ██         ");
-                printCentered("  ██████ ██   ████   ██ ███████     ███████ ██   ████  ██████  ██ ██   ████ ███████ ███████ ██   ██ ██ ██   ████  ██████          ");
-                System.out.print("\u001B[0m");                                                                                                                        
-                System.out.println(EMPTY_LINE);     
-                System.out.print("\u001B[33m");                                                                                                                           
-                printCentered("██████   ██████   █████  ██████  ██████      ███████ ██   ██  █████  ███    ███ ██ ███    ██  █████  ████████ ██  ██████  ███    ██ ");
-                printCentered("██   ██ ██    ██ ██   ██ ██   ██ ██   ██     ██       ██ ██  ██   ██ ████  ████ ██ ████   ██ ██   ██    ██    ██ ██    ██ ████   ██ ");
-                printCentered("██████  ██    ██ ███████ ██████  ██   ██     █████     ███   ███████ ██ ████ ██ ██ ██ ██  ██ ███████    ██    ██ ██    ██ ██ ██  ██ ");
-                printCentered("██   ██ ██    ██ ██   ██ ██   ██ ██   ██     ██       ██ ██  ██   ██ ██  ██  ██ ██ ██  ██ ██ ██   ██    ██    ██ ██    ██ ██  ██ ██ ");
-                printCentered("██████   ██████  ██   ██ ██   ██ ██████      ███████ ██   ██ ██   ██ ██      ██ ██ ██   ████ ██   ██    ██    ██  ██████  ██   ████ ");
-                System.out.print("\u001B[0m"); 
-                System.out.println( EMPTY_LINE);                                                                                                                                   
-                                                                                                                                                                                                                                                   
+                System.out.println( HORIZONTAL_LINE2);
+                                                                                                                                
+                                                                                                                                   
+                printCenter("██████   ██████   █████  ██████  ██████      ███████ ██   ██  █████  ███    ███");
+                printCenter("██   ██ ██    ██ ██   ██ ██   ██ ██   ██     ██       ██ ██  ██   ██ ████  ████");
+                printCenter("██████  ██    ██ ███████ ██████  ██   ██     █████     ███   ███████ ██ ████ ██");
+                printCenter("██   ██ ██    ██ ██   ██ ██   ██ ██   ██     ██       ██ ██  ██   ██ ██  ██  ██");
+                printCenter("██████   ██████  ██   ██ ██   ██ ██████      ███████ ██   ██ ██   ██ ██      ██");                                                                                                                                 
+                                                                                                                                            
+        
+                                                                                                                                             
          
-                System.out.println( HORIZONTAL_LINE);
-                System.out.println("|" + "  Read the question Carefully. And choose the correct answer."  +                "                                                                                                                |" );
-            
+                System.out.println( HORIZONTAL_LINE2);
+                printCenter("  Read the question Carefully. And choose the correct answer."  );
+               
+                
+                
         
                 // First attempt with Set 1
                 int score = takeExam(questionsSet1, answerset1, totalQuestions, scan);
@@ -1235,6 +1335,7 @@ public class Map {
         
                 // If failed, offer additional attempts
                 while (!passed && attempts > 0) {
+                    System.out.println("\nYou have " + attempts + " chance(s) left.");
                     System.out.print("\nWould you like to try again? (yes/no): ");
                     String chance = scan.nextLine().trim().toLowerCase();
                     if (chance.isEmpty()) {
@@ -1242,13 +1343,15 @@ public class Map {
                     }
         
                     if (chance.equals("yes")) {
-                        System.out.println("\nYou have " + attempts + " chance(s) left.");
-        
                         if (attempts == 2) {
-                            printCentered("\n=== Second Attempt - Exam Set 2 ===");
+                            System.out.println(HORIZONTAL_LINE1);
+                            printCenter("=== Second Attempt - Exam Set 2 ===");
+                            System.out.println(HORIZONTAL_LINE1);
                             score = takeExam(questionsSet2, answerset2, totalQuestions, scan);
                         } else {
-                            printCentered("\n=== Final Attempt - Exam Set 3 ===");
+                            System.out.println(HORIZONTAL_LINE1);
+                            printCenter("=== Final Attempt - Exam Set 3 ===");
+                            System.out.println(HORIZONTAL_LINE1);
                             score = takeExam(questionsSet3, answerset3, totalQuestions, scan);
                         }
         
@@ -1278,20 +1381,20 @@ public class Map {
         
                 for (int i = 0; i < totalQuestions; i++) {
                     // Print question header
-                    System.out.println(HORIZONTAL_LINE);
+                    System.out.println(HORIZONTAL_LINE2);
                     
                     // Print question and options
                     String questionText = questions[i][0];
                     String[] parts = questionText.split("\n");
-                    
-                    System.out.printf("| %2d: %-" + (PAGE_WIDTH - 16) + "s         |\n", (i + 1), parts[0]);
+                    System.out.printf("| %2d: %-" + (PAGE_WIDTH2- 16) + "s         |\n", (i + 1), parts[0]);
                     
                     for (int j = 1; j < parts.length; j++) {
                         String line = "| " + " ".repeat(12) + parts[j];
-                        System.out.printf("%-" + (PAGE_WIDTH - 1) + "s|\n", line);
+        
+                        System.out.printf("%-" + (PAGE_WIDTH2 - 1) + "s|\n", line);
                     }
-                    
-                    System.out.println(EMPTY_LINE);
+                
+                    System.out.println(EMPTY_LINE2);
                     
                     // Get user answer
                     boolean validInput = false;
@@ -1327,32 +1430,30 @@ public class Map {
             }
         
             static void displayResults(int score, int totalQuestions) {
-                System.out.println(HORIZONTAL_LINE);
+                System.out.println(HORIZONTAL_LINE2);
                 double percentage = ((double) score / totalQuestions) * 100;
                 System.out.println("\nYour Score: " + score + "/" + totalQuestions);
                 System.out.println("Percentage: " + String.format("%.1f", percentage) + "%");
                 if (percentage >= 75) {
-                                        System.out.println(HORIZONTAL_LINE);
-                                        System.out.print("\u001B[33m");   
-                                        printCentered("                                                                                                                                                      ");
-                                        printCentered("         ██████  ██████  ███    ██  ██████  ██████   █████  ████████ ██    ██ ██       █████  ████████ ██  ██████  ███    ██ ███████ ██               ");
-                                        printCentered("        ██      ██    ██ ████   ██ ██       ██   ██ ██   ██    ██    ██    ██ ██      ██   ██    ██    ██ ██    ██ ████   ██ ██      ██               ");
-                                        printCentered("        ██      ██    ██ ██ ██  ██ ██   ███ ██████  ███████    ██    ██    ██ ██      ███████    ██    ██ ██    ██ ██ ██  ██ ███████ ██               ");
-                                        printCentered("        ██      ██    ██ ██  ██ ██ ██    ██ ██   ██ ██   ██    ██    ██    ██ ██      ██   ██    ██    ██ ██    ██ ██  ██ ██      ██                  ");
-                                        printCentered("         ██████  ██████  ██   ████  ██████  ██   ██ ██   ██    ██     ██████  ███████ ██   ██    ██    ██  ██████  ██   ████ ███████ ██               ");
-                                        printCentered("                                                                                                                                                      ");
-                                        printCentered("                                                                                                                                                      ");
-                                        printCentered("██    ██  ██████  ██    ██     ██████   █████  ███████ ███████ ███████ ██████      ████████ ██   ██ ███████     ███████ ██   ██  █████  ███    ███ ██ ");
-                                        printCentered(" ██  ██  ██    ██ ██    ██     ██   ██ ██   ██ ██      ██      ██      ██   ██        ██    ██   ██ ██          ██       ██ ██  ██   ██ ████  ████ ██ ");
-                                        printCentered("  ████   ██    ██ ██    ██     ██████  ███████ ███████ ███████ █████   ██   ██        ██    ███████ █████       █████     ███   ███████ ██ ████ ██ ██ ");
-                                        printCentered("   ██    ██    ██ ██    ██     ██      ██   ██      ██      ██ ██      ██   ██        ██    ██   ██ ██          ██       ██ ██  ██   ██ ██  ██  ██    ");
-                                        printCentered("   ██     ██████   ██████      ██      ██   ██ ███████ ███████ ███████ ██████         ██    ██   ██ ███████     ███████ ██   ██ ██   ██ ██      ██ ██ ");
-                                        printCentered("                                                                                                                                                      ");
-                                        System.out.print("\u001B[0m"); 
+                                        System.out.println(HORIZONTAL_LINE2);
+                                        
+                                        printCenter("         ██████  ██████  ███    ██  ██████  ██████   █████  ████████ ███████ ██");
+                                        printCenter("        ██      ██    ██ ████   ██ ██       ██   ██ ██   ██    ██    ██      ██");
+                                        printCenter("        ██      ██    ██ ██ ██  ██ ██   ███ ██████  ███████    ██    ███████ ██");
+                                        printCenter("        ██      ██    ██ ██  ██ ██ ██    ██ ██   ██ ██   ██    ██         ██   ");
+                                        printCenter("         ██████  ██████  ██   ████  ██████  ██   ██ ██   ██    ██    ███████ ██");
+                                        printCenter("                                                                               ");
+                                        printCenter("                                                                               ");
+                                        printCenter("██    ██  ██████  ██    ██     ██████   █████  ███████ ███████ ███████ ██████  ██ ");
+                                        printCenter(" ██  ██  ██    ██ ██    ██     ██   ██ ██   ██ ██      ██      ██      ██   ██ ██ ");
+                                        printCenter("  ████   ██    ██ ██    ██     ██████  ███████ ███████ ███████ █████   ██   ██ ██ ");
+                                        printCenter("   ██    ██    ██ ██    ██     ██      ██   ██      ██      ██ ██      ██   ██    ");
+                                        printCenter("   ██     ██████   ██████      ██      ██   ██ ███████ ███████ ███████ ██████  ██ ");
+                                       
                 } else {
                     System.out.println("Sorry, you did not pass the exam.");
                 }
-                System.out.println(HORIZONTAL_LINE);
+                System.out.println(HORIZONTAL_LINE2);
             }
 
     public static void main(String[] args) {
@@ -1372,25 +1473,11 @@ public class Map {
             showMovement(currentLocation, selectedDestination, scan);
             currentLocation = selectedDestination;
         }
+       
 
     }
         
-
-        /*String filePath = "C:\\Code Practice\\GameMap\\gamemap\\src\\main\\java\\com\\GameMap\\School_boy.ansi.txt";
-      
-        try {
-            String content = new String(Files.readAllBytes(Paths.get(filePath)));
-            
-            // Example: Wrapping content with ANSI color codes (green text)
-            String greenText = "\u001B[32m" + content + "\u001B[0m";
-
-            System.out.println(greenText);
-        } catch (IOException e) {
-            System.out.println("Error reading the file: " + e.getMessage());
-        }*/
-
       
 }
-
 
 
