@@ -1,6 +1,8 @@
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.Set;
 
 public class Monkey {
     static Scanner scanner = new Scanner(System.in);
@@ -108,7 +110,24 @@ public class Monkey {
             e.printStackTrace();
         }
     }
- 
+   // Function to check for duplicate cards in the deck using an array
+    public static void checkForDuplicates(String[] deck) {
+        boolean hasDuplicate = false;
+
+        for (int i = 0; i < deck.length; i++) {
+            for (int j = i + 1; j < deck.length; j++) {
+                if (deck[i].equals(deck[j])) {
+                    System.out.println("Duplicate found: " + deck[i]);
+                    hasDuplicate = true;
+                }
+            }
+        }
+
+        if (!hasDuplicate) {
+            System.out.println("No duplicates found in the deck.");
+        }
+        System.out.println("Total number of cards: " + deck.length);
+    }
        
         
     static String getCardASCII(String card) {
@@ -281,7 +300,11 @@ public class Monkey {
             deck[cardIndex++] = rank + suit;
         }
     }
+        // Call the duplicate check function
+        checkForDuplicates(deck);
 
+        System.out.println("Enter any key to pick random card from the deck:");
+        scanner.next();
         // Pick a random card from the deck
         Random rand = new Random();
         String chosenCard = deck[rand.nextInt(52)];
@@ -289,6 +312,9 @@ public class Monkey {
 
         // Display the chosen card in ASCII art
         System.out.println(getCardASCII(chosenCard));
+
+        System.out.println("The Deck after removing the chosen card:");
+        
         
         System.out.println("Enter any key to shuffle the cards:");
         scanner.next();
@@ -603,6 +629,7 @@ public class Monkey {
                 // Display message about duplicate
                 if (duplicateFound) {
                     System.out.println("Duplicate found: " + pickedCard + ". Both cards removed!");
+                    System.out.println(getCardASCII(pickedCard));
                 } else {
                     System.out.println("No duplicate found. " + pickedCard + " added to hand.");
                 }
