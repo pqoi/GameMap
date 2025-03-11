@@ -241,8 +241,14 @@ public class Monkey {
         Random random = new Random();
         Scanner scanner = new Scanner(System.in);
         Title();
-        System.out.println("1. Start Game");
-        System.out.println("2. How to Play");
+        System.out.println("╔════════════════════════════════╗");
+        System.out.println("║          Main Menu             ║");
+        System.out.println("╠════════════════════════════════╣");
+        System.out.println("║  1. Start Game                 ║");
+        System.out.println("║  2. How to Play                ║");
+        System.out.println("║  3. Exit                       ║");
+        System.out.println("╚════════════════════════════════╝");
+        
         System.out.println("Enter your choice:");
         int choice = scanner.nextInt();
         switch (choice) {
@@ -257,6 +263,10 @@ public class Monkey {
                 System.out.println("The player with the highest card wins the round.");
                 System.out.println("The game continues until all 52 cards are played.");
                 System.out.println("The player with the most number of rounds won is the winner.");
+                break;
+            case 3:
+                System.out.println("Exiting game...");
+                System.exit(0);
                 break;
             default:
                 System.out.println("Invalid choice");
@@ -309,7 +319,10 @@ public class Monkey {
         // Pick a random card from the deck
         Random rand = new Random();
         String chosenCard = deck[rand.nextInt(52)];
-        System.out.println("\nRandomly Picked Card: ");
+        System.out.println("╔══════════════════════════════════════════════════════════════════════════╗");
+        System.out.println("║                          Randomly Picked Card:                           ║");
+        System.out.println("╚══════════════════════════════════════════════════════════════════════════╝");
+        
 
         // Display the chosen card in ASCII art
         System.out.println(getCardASCII(chosenCard));
@@ -323,7 +336,10 @@ public class Monkey {
         }
 
         deck = newDeck; 
-        System.out.println("The Deck after removing the chosen card:");
+        System.out.println("╔══════════════════════════════════════════════════════════════════════════╗");
+        System.out.println("║         The Deck Cards after removing the chosen card:                   ║");
+        System.out.println("╚══════════════════════════════════════════════════════════════════════════╝");
+
             // Display cards by suit in a more organized way
         for (String suit : SUITS) {
              System.out.println("\n=== " + suit + " (" + getSuitName(suit) + ") ===");
@@ -382,25 +398,55 @@ public class Monkey {
         }
 
         // Visual representation of the deck after shuffling and removing the chosen card
-         System.out.println("Deck after shuffling:");
-          int cardsPerRow = 13; // Number of cards per row
-          for (int i = 0; i < deck.length; i += cardsPerRow) {
-          String[][] cardLines = new String[Math.min(cardsPerRow, deck.length - i)][];
+        System.out.println("╔══════════════════════════════════════════════════════════════════════════╗");
+        System.out.println("║                             Shuffled Deck:                               ║");
+        System.out.println("╚══════════════════════════════════════════════════════════════════════════╝");
 
-            // Convert each card into ASCII format and split into lines
-            for (int j = 0; j < cardLines.length; j++) {
-                cardLines[j] = getCardASCII(deck[i + j]).split("\n");
+        // Ensure no duplicate values exist in the shuffled deck using an array
+        boolean hasDuplicate = false;
+        for (int i = 0; i < deck.length; i++) {
+            for (int j = i + 1; j < deck.length; j++) {
+                if (deck[i].equals(deck[j])) {
+                    System.out.println("Error: Duplicate card detected - " + deck[i]);
+                    hasDuplicate = true;
+                }
             }
-
-            // Print each line of all cards side by side
-            for (int line = 0; line < 7; line++) {  // Each card has 7 lines
-            for (int j = 0; j < cardLines.length; j++) {
-            System.out.print(cardLines[j][line] + "  "); // Print each card line side by side
-            }
-                System.out.println(); // Move to the next line
         }
-        System.out.println(); // Add space between rows of cards
-    }
+
+        if (!hasDuplicate) {
+            int cardsPerRow = 13; // Number of cards per row
+            for (int i = 0; i < deck.length; i += cardsPerRow) {
+                String[][] cardLines = new String[Math.min(cardsPerRow, deck.length - i)][];
+
+                // Convert each card into ASCII format and split into lines
+                for (int j = 0; j < cardLines.length; j++) {
+                    cardLines[j] = getCardASCII(deck[i + j]).split("\n");
+                }
+
+                // Print each line of all cards side by side
+                for (int line = 0; line < 7; line++) {  // Each card has 7 lines
+                    for (int j = 0; j < cardLines.length; j++) {
+                        System.out.print(cardLines[j][line] + "  "); // Print each card line side by side
+                    }
+                    System.out.println(); // Move to the next line
+                }
+                System.out.println(); // Add space between rows of cards
+            }
+        }
+
+        // Print final message about duplicate check
+        if (hasDuplicate) {
+            System.out.println("╔══════════════════════════════════════════════════════════════════════════╗");
+            System.out.println("║                   Duplicate values were found in the deck.               ║");
+            System.out.println("╚══════════════════════════════════════════════════════════════════════════╝");
+
+        } else {
+            System.out.println("╔══════════════════════════════════════════════════════════════════════════╗");
+            System.out.println("║                 No duplicate values found in the deck.                   ║");
+            System.out.println("╚══════════════════════════════════════════════════════════════════════════╝");
+
+        }
+
     System.out.println("Enter any key to distribute the cards to the players and 4 computers:");
     scanner.next();
     // Reset card index
@@ -717,33 +763,47 @@ public class Monkey {
                 if ((currentPlayer == 0 && humanHand.length == 0) || 
                 (currentPlayer != 0 && botHands[currentPlayer - 1].length == 0)) {
 
-                int playersRemaining = activePlayers - 1; // Count players left after removal
+                // Decrement active players first
+                activePlayers--; 
 
-                switch (playersRemaining) {
-                    case 4:
-                        System.out.println((currentPlayer == 0 ? "Human Player" : "Bot " + currentPlayer) + 
-                                        " is the first player to finish all their cards!");
-                        break;
-                    case 3:
-                        System.out.println((currentPlayer == 0 ? "Human Player" : "Bot " + currentPlayer) + 
-                                        " is the second player to finish all their cards!");
+                // Use playersFinished to determine ranking
+                playersFinished++;
+
+                switch (playersFinished) {
+                    case 1:
+                        System.out.println("╔══════════════════════════════════════════════════════════════════════════╗");
+                        System.out.println("║  " + (currentPlayer == 0 ? "Human Player" : "Bot " + currentPlayer) +  
+                                        " is the first player to finish all their cards!                                 ║");
+                        System.out.println("╚══════════════════════════════════════════════════════════════════════════╝");
+
                         break;
                     case 2:
-                        System.out.println((currentPlayer == 0 ? "Human Player" : "Bot " + currentPlayer) + 
-                                        " is the third player to finish all their cards!");
+                        System.out.println("╔══════════════════════════════════════════════════════════════════════════╗");
+                        System.out.println("║  " + (currentPlayer == 0 ? "Human Player" : "Bot " + currentPlayer) +  
+                                        " is the second player to finish all their cards!                                ║");
+                        System.out.println("╚══════════════════════════════════════════════════════════════════════════╝");
+
                         break;
-                    case 1:
-                        System.out.println((currentPlayer == 0 ? "Human Player" : "Bot " + currentPlayer) + 
-                                        " is the fourth player to finish all their cards!");
+                    case 3:
+                        System.out.println("╔══════════════════════════════════════════════════════════════════════════╗");
+                        System.out.println("║  " + (currentPlayer == 0 ? "Human Player" : "Bot " + currentPlayer) +  
+                                        " is the third player to finish all their cards!                                 ║");
+                        System.out.println("╚══════════════════════════════════════════════════════════════════════════╝");
+
+                        break;
+                    case 4:
+                        System.out.println("╔══════════════════════════════════════════════════════════════════════════╗");
+                        System.out.println("║  " + (currentPlayer == 0 ? "Human Player" : "Bot " + currentPlayer) +  
+                                        " is the fourth player to finish all their cards!                                ║");
+                        System.out.println("╚══════════════════════════════════════════════════════════════════════════╝");
+                    
                         break;
                 }
 
+                // Remove player from order after announcing their ranking
                 order = removePlayerFromOrder(order, currentPlayer);
-                activePlayers--;
-
-                if (activePlayers == 1) break; // Stop if only one player remains
+                
                 }
-
             }
         }
          // End the game properly when only one player remains
@@ -907,7 +967,11 @@ public class Monkey {
             case 3: ordinal = "third"; break;
             case 4: ordinal = "fourth"; break;
         }
-        System.out.println((player == 0 ? "Human Player" : "Bot " + player) + 
-                           " is the " + ordinal + " player to finish all their cards!");
+    
+        System.out.println("╔══════════════════════════════════════════════════════════════════════════╗");
+        System.out.println("║  " + (player == 0 ? "Human Player" : "Bot " + player) +  
+                           " is the " + ordinal + " player to finish all their cards!                    ║");
+        System.out.println("╚══════════════════════════════════════════════════════════════════════════╝");
     }
+    
 }
