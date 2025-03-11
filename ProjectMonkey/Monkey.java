@@ -17,55 +17,27 @@ public class Monkey {
     static int[] botPickIndices = {0, 1, 2, 3}; // Bot 1 starts at 0, Bot 2 at 1, etc.
     static int playersFinished = 0; // Tracks how many players have finished their cards
     static void Title() {
-        String[] titleLines = {
-            "████████████████████████████████████████████████████████████",
-            "",
-            "███╗   ███╗ ██████╗ ███╗   ██╗██╗  ██╗███████╗██╗   ██╗    ",
-            "████╗ ████║██╔═══██╗████╗  ██║██║ ██╔╝██╔════╝╚██╗ ██╔╝    ",
-            "██╔████╔██║██║   ██║██╔██╗ ██║█████╔╝ █████╗   ╚████╔╝     ",
-            "██║╚██╔╝██║██║   ██║██║╚██╗██║██╔═██╗ ██╔══╝    ╚██╔╝      ",
-            "██║ ╚═╝ ██║╚██████╔╝██║ ╚████║██║  ██╗███████╗   ██║       ",
-            "╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝   ╚═╝       ",
-            "                                                           ",
-            "███╗   ███╗ ██████╗ ███╗   ██╗██╗  ██╗███████╗██╗   ██╗    ",
-            "████╗ ████║██╔═══██╗████╗  ██║██║ ██╔╝██╔════╝╚██╗ ██╔╝    ",
-            "██╔████╔██║██║   ██║██╔██╗ ██║█████╔╝ █████╗   ╚████╔╝     ",
-            "██║╚██╔╝██║██║   ██║██║╚██╗██║██╔═██╗ ██╔══╝    ╚██╔╝      ",
-            "██║ ╚═╝ ██║╚██████╔╝██║ ╚████║██║  ██╗███████╗   ██║       ",
-            "╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝   ╚═╝       ",
-            "                                                           ",
-            "",
-            "███████████████████████████████████████████████████████████"
-        };
         String[] Monkey = {
-                        "                                                     .--.\r\n" + //
-                        "                                                   .-    \\\r\n" + //
-                        "                                                  /_      \\\r\n" + //
-                        "                                                 (o        )\r\n" + //
-                        "                                               _/          |\r\n" + //
-                        "                                              (c       .-. |\r\n" + //
-                        "             ___                  ;;          /      .'   \\\r\n" + //
-                        "          .''   ``.               ;;         O)     |      \\\r\n" + //
-                        "        _/ .-. .-. \\_     () ()  / _          `.__  \\       \\\r\n" + //
-                        "       (o|( O   O )|o)   ()(O)() |/ )           /    \\       \\\r\n" + //
-                        "        .'         `.      ()\\  _|_            /      \\       \\\r\n" + //
-                        "       /    (c c)    \\        \\(_  \\          /        \\       \\\r\n" + //
-                        "       |             |        (__)  `.______ ( ._/      \\       )\r\n" + //
-                        "       \\     (o)     /        (___)`._      .'           )     /\r\n" + //
-                        "        `.         .'         (__)  ______ /            /     /\r\n" + //
-                        "          `-.___.-'            /|\\         |           /     /\r\n" + //
-                        "          ___)(___            /  \\         \\          /     /\r\n" + //
-                        "       .-'        `-.                       `.      .'     /\r\n" + //
-                        "      / .-.      .-. \\                        `-  /.'     /\r\n" + //
-                        "     / /  ( .  . )  \\ \\                         / \\)| | | |\r\n" + //
-                        "    / /    \\    /    \\ \\                       /     \\_\\_\\_)\r\n" + //
-                        "    \\ \\     )  (     / /                     (    /\r\n" + //
-                        "     \\ \\   ( __ )   / /                        \\   \\ \\  \\\r\n" + //
-                        "    /   )  //  \\\\  (   \\                        \\   \\ \\  \\\r\n" + //
-                        "(\\ / / /\\) \\\\  // (/\\ \\ \\ /)                     )   \\ \\  \\\r\n" + //
-                        " -'-'-'  .'  )(  `.  `-`-`-                     .'   |.'   |\r\n" + //
-                        "       .'_ .'  `. _`.                      _.--'     (     (\r\n" + //
-                        "MJP  oOO(_)      (_)OOo                   (__.--._____)_____)\n"+
+                        "                     __------__\r\n" + //
+                        "                   /~          ~\\\r\n" + //
+                        "                  |    //^\\\\//^\\|\r\n" + //
+                        "                /~~\\  ||  o| |o|:~\\\r\n" + //
+                        "               | |6   ||___|_|_||:|\r\n" + //
+                        "                \\__.  /      o  \\/'\r\n" + //
+                        "                 |   (       O   )\r\n" + //
+                        "        /~~~~\\    `\\  \\         /\r\n" + //
+                        "       | |~~\\ |     )  ~------~`\\\r\n" + //
+                        "      /' |  | |   /     ____ /~~~)\\\r\n" + //
+                        "     (_/'   | | |     /'    |    ( |\r\n" + //
+                        "            | | |     \\    /   __)/ \\\r\n" + //
+                        "            \\  \\ \\      \\/    /' \\   `\\\r\n" + //
+                        "              \\  \\|\\        /   | |\\___|\r\n" + //
+                        "                \\ |  \\____/     | |\r\n" + //
+                        "                /^~>  \\        _/ <\r\n" + //
+                        "               |  |         \\       \\\r\n" + //
+                        "               |  | \\        \\        \\\r\n" + //
+                        "               -^-\\  \\       |        )\r\n" + //
+                        "                    `\\_______/^\\______/\n"+
                         "████████████████████████████████████████████████████████████",
                         "",
                         "  ███╗   ███╗ ██████╗ ███╗   ██╗██╗  ██╗███████╗██╗   ██╗    ",
@@ -98,6 +70,25 @@ public class Monkey {
             }
         }
     }
+    
+    static void printCenter(String text) {
+        int Page_width = 120;
+        int totalPadding = Page_width - text.length();
+    
+        // Ensure padding is not negative
+        if (totalPadding < 0) {
+            System.out.println(text); // Just print the text as it is
+            return;
+        }
+    
+        int leftPadding = totalPadding / 2;
+        int rightPadding = totalPadding - leftPadding;
+    
+        System.out.println(" ".repeat(leftPadding) + text + " ".repeat(rightPadding));
+    }
+    
+    
+    
 
     public static void clearScreen() {
         try {
@@ -125,9 +116,15 @@ public class Monkey {
         }
 
         if (!hasDuplicate) {
-            System.out.println("No duplicates found in the deck.");
+            System.out.println("╔══════════════════════════════════════════════════════════════════════════╗");
+            System.out.println("║                 No duplicates found in the deck.                         ║");
+            System.out.println("╚══════════════════════════════════════════════════════════════════════════╝");
+            
         }
-        System.out.println("Total number of cards: " + deck.length);
+       System.out.println("╔══════════════════════════════════════════════════════════════════════════╗");
+       System.out.println("║                 Total number of cards: " + deck.length + "                  ║");
+       System.out.println("╚══════════════════════════════════════════════════════════════════════════╝");
+        
     }
        
         
@@ -241,13 +238,14 @@ public class Monkey {
         Random random = new Random();
         Scanner scanner = new Scanner(System.in);
         Title();
-        System.out.println("╔════════════════════════════════╗");
-        System.out.println("║          Main Menu             ║");
-        System.out.println("╠════════════════════════════════╣");
-        System.out.println("║  1. Start Game                 ║");
-        System.out.println("║  2. How to Play                ║");
-        System.out.println("║  3. Exit                       ║");
-        System.out.println("╚════════════════════════════════╝");
+        System.out.println("         ╔════════════════════════════════╗");
+        System.out.println("         ║          Main Menu             ║");
+        System.out.println("         ╠════════════════════════════════╣");
+        System.out.println("         ║  1. Start Game                 ║");
+        System.out.println("         ║  2. How to Play                ║");
+        System.out.println("         ║  3. Exit                       ║");
+        System.out.println("         ╚════════════════════════════════╝");
+        
         
         System.out.println("Enter your choice:");
         int choice = scanner.nextInt();
@@ -336,9 +334,9 @@ public class Monkey {
         }
 
         deck = newDeck; 
-        System.out.println("╔══════════════════════════════════════════════════════════════════════════╗");
-        System.out.println("║         The Deck Cards after removing the chosen card:                   ║");
-        System.out.println("╚══════════════════════════════════════════════════════════════════════════╝");
+        printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+        printCenter("║         The Deck Cards after removing the chosen card:                   ║");
+        printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
 
             // Display cards by suit in a more organized way
         for (String suit : SUITS) {
@@ -398,9 +396,9 @@ public class Monkey {
         }
 
         // Visual representation of the deck after shuffling and removing the chosen card
-        System.out.println("╔══════════════════════════════════════════════════════════════════════════╗");
-        System.out.println("║                             Shuffled Deck:                               ║");
-        System.out.println("╚══════════════════════════════════════════════════════════════════════════╝");
+        printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+        printCenter("║                             Shuffled Deck:                               ║");
+        printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
 
         // Ensure no duplicate values exist in the shuffled deck using an array
         boolean hasDuplicate = false;
@@ -436,18 +434,18 @@ public class Monkey {
 
         // Print final message about duplicate check
         if (hasDuplicate) {
-            System.out.println("╔══════════════════════════════════════════════════════════════════════════╗");
-            System.out.println("║                   Duplicate values were found in the deck.               ║");
-            System.out.println("╚══════════════════════════════════════════════════════════════════════════╝");
+            printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+            printCenter("║                   Duplicate values were found in the deck.               ║");
+            printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
 
         } else {
-            System.out.println("╔══════════════════════════════════════════════════════════════════════════╗");
-            System.out.println("║                 No duplicate values found in the deck.                   ║");
-            System.out.println("╚══════════════════════════════════════════════════════════════════════════╝");
+            printCenter("╔══════════════════════════════════════════════════════════════════════════╗");
+            printCenter("║                 No duplicate values found in the deck.                   ║");
+            printCenter("╚══════════════════════════════════════════════════════════════════════════╝");
 
         }
 
-    System.out.println("Enter any key to distribute the cards to the players and 4 computers:");
+        System.out.println("Enter any key to distribute the cards to the players and 4 computers:");
     scanner.next();
     // Reset card index
     cardIndex = 0;
@@ -499,8 +497,13 @@ public class Monkey {
     }
     
     // Hidden card remains secret
-    System.out.println("A card is hidden for game mechanics.");
-    System.out.println(("Checking Duplicate Cards..."));
+    System.out.println("╔══════════════════════════════════════════════════════════════════════════╗");
+    System.out.println("║                A card is hidden for game mechanics.                      ║");
+    System.out.println("╚══════════════════════════════════════════════════════════════════════════╝");
+    System.out.println("╔══════════════════════════════════════════════════════════════════════════╗");
+    System.out.println("║                    Checking Duplicate Cards...                           ║");
+    System.out.println("╚══════════════════════════════════════════════════════════════════════════╝");
+    
     
 
         // Check for duplicate cards
@@ -548,11 +551,17 @@ public class Monkey {
         }
 
         // Display remaining cards for each player
-        System.out.println("\nHuman Player's Hand after removing duplicates:");
+        System.out.println("╔══════════════════════════════════════════════════════════════════════════╗");
+        System.out.println("║      Human Player's Hand after removing duplicates:                      ║");
+        System.out.println("╚══════════════════════════════════════════════════════════════════════════╝");
+        
         printCard(humanHand, true);
 
         for (int b = 0; b < botHands.length; b++) {
-            System.out.println("Bot " + (b + 1) + "'s Hand after removing duplicates:");
+            System.out.println("╔══════════════════════════════════════════════════════════════════════════╗");
+            System.out.println("║      Bot " + (b + 1) + "'s Hand after removing duplicates:               ║");
+            System.out.println("╚══════════════════════════════════════════════════════════════════════════╝");
+
             printCard(botHands[b], true);
             System.out.println("\n");
         }
@@ -602,14 +611,18 @@ public class Monkey {
 
         Arrays.sort(order, (a, b) -> Integer.compare(rolls[a], rolls[b]));
 
-        System.out.println("Picking order:");
+        System.out.println("╔══════════════════════════════════════════════════════════════════════════╗");
+        System.out.println("║                            Picking Order:                                ║");
+        System.out.println("╚══════════════════════════════════════════════════════════════════════════╝");
+        
         for (int i = 0; i < 5; i++) {
             if (order[i] == 0) {
-            System.out.println((i + 1) + ": Human Player");
+                printCenter((i + 1) + ": Human Player");
             } else {
-            System.out.println((i + 1) + ": Bot " + order[i]);
+                printCenter((i + 1) + ": Bot " + order[i]);
             }
         }
+        
         int activePlayers = 5;
         
         // Picking process  
