@@ -699,6 +699,19 @@ public class Monkey {
                         int pickIndex = scanner.nextInt();
                         pickedCard = botHands[targetPlayer - 1][pickIndex];
                         botHands[targetPlayer - 1] = removeCard(botHands[targetPlayer - 1], pickIndex);
+                         // Check if the bot has finished their cards after the human picks
+                         if (botHands[targetPlayer - 1].length == 0) {
+                            announcePlayerFinish(targetPlayer);
+    
+                            // Update the order to remove the finished bot
+                            order = removePlayerFromOrder(order, targetPlayer);
+                            activePlayers--;
+    
+                            // Check if only one player remains
+                            if (activePlayers == 1) {
+                                 break;
+                                }
+                        }
                     }
                 } else {
                     
@@ -821,18 +834,27 @@ public class Monkey {
         }
          // End the game properly when only one player remains
         if (activePlayers == 1) {
-            System.out.println("\nGame Over! The last player with the Monkey Card loses.");
+            System.out.println("╔══════════════════════════════════════════════════════════════════════════╗");
+            System.out.println("║               Game Over! The last player with the Monkey Card loses.      ║");
+            System.out.println("╚══════════════════════════════════════════════════════════════════════════╝");
+
 
             // Find the last player (human or bot)
             int lastPlayer = -1;
             if (humanHand.length == 1) {
                 lastPlayer = 0;
-                System.out.println("Human Player is the last with one card.");
+                System.out.println("╔══════════════════════════════════════════════════════════════════════════╗");
+                System.out.println("║                  Human Player is the last with one card.                 ║");
+                System.out.println("╚══════════════════════════════════════════════════════════════════════════╝");
+                
             } else {
                 for (int i = 0; i < botHands.length; i++) {
                     if (botHands[i].length == 1) {
                         lastPlayer = i + 1;
-                        System.out.println("Bot " + lastPlayer + " is the last with one card.");
+                        System.out.println("╔══════════════════════════════════════════════════════════════════════════╗");
+                        System.out.println("║                      Bot " + lastPlayer + " is the last with one card.                     ║");
+                        System.out.println("╚══════════════════════════════════════════════════════════════════════════╝");
+
                         System.out.println(getCardASCII(botHands[i][0]));
                         break;
                     }
@@ -845,21 +867,27 @@ public class Monkey {
 
             // Announce the loser
             if (lastPlayer == 0) {
-                System.out.println("\nYou got the Monkey Card! You lose!");
-            } else {
-                System.out.println("\nBot " + lastPlayer + " got the Monkey Card and loses!");
-            }
+                System.out.println("╔══════════════════════════════════════════════════════════════════════════╗");
+                System.out.println("║                   You got the Monkey Card! You lose!                     ║");
+                System.out.println("╚══════════════════════════════════════════════════════════════════════════╝");
 
+            } else {
+                System.out.println("╔══════════════════════════════════════════════════════════════════════════╗");
+                System.out.println("║                Bot " + lastPlayer + " got the Monkey Card and loses!                  ║");
+                System.out.println("╚══════════════════════════════════════════════════════════════════════════╝");
+                
+            }
+            // Display winning order
+            System.out.println("\nWinning Order:");
+            for (int i = 0; i < order.length; i++) {
+                System.out.println((i + 1) + ": " + (order[i] == 0 ? "Human Player" : "Bot " + order[i]));
+            }
             return; // **Exit the game to prevent further looping**
         }
 
 
 
-        // Display winning order
-        System.out.println("\nWinning Order:");
-        for (int i = 0; i < order.length; i++) {
-            System.out.println((i + 1) + ": " + (order[i] == 0 ? "Human Player" : "Bot " + order[i]));
-        }
+        
     
         
         
