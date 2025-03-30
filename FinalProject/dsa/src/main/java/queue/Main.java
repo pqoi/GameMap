@@ -1,15 +1,12 @@
 package queue;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
+
 import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.List;
+import javax.sound.sampled.*;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
-import com.sun.jna.Platform;
-import com.sun.jna.ptr.IntByReference;
+
 
 public class Main {
     static String directions = "UP";
@@ -45,7 +42,7 @@ public class Main {
     
     public static void logo() {
         // ANSI escape code for pink/magenta color
-        String pink = "\u001B[38;5;206m";
+        String pink = "\033[1;35m";
         String reset = "\u001B[0m";  // Reset color to default
         
         // Panda logo
@@ -84,15 +81,16 @@ public class Main {
             System.out.println(reset);
 
             try {
-                Thread.sleep(100); // Adjust speed
+                Thread.sleep(10); // Adjust speed
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
         }
-
+        // Play sound after fade-in
+        LogoSound();
         // Pause before fade-out
         try {
-            Thread.sleep(1500);
+            Thread.sleep(10);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
@@ -109,7 +107,7 @@ public class Main {
             System.out.println(reset);
 
             try {
-                Thread.sleep(100); // Adjust speed
+                Thread.sleep(10); // Adjust speed
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
@@ -118,6 +116,22 @@ public class Main {
         // Final clear screen
         System.out.print("\033[H\033[2J");
         System.out.flush();
+
+    }
+    public static void LogoSound() {
+        File file = new File("C:\\Code Practice\\FinalProject\\dsa\\src\\main\\java\\queue\\FoodPandaSound.wav");
+        try (AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file)) {
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            clip.start();
+            // Wait for the sound to finish
+            while (!clip.isRunning())
+                Thread.sleep(10);
+            while (clip.isRunning())
+                Thread.sleep(10);
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
     
     
@@ -172,6 +186,15 @@ public class Main {
     public static void showBlinkingCompletion() {
         String message = "      ✅ LOADING COMPLETE";
         String box = 
+            "                                                                      \n "+
+            "                                                                       \n"+
+            "                                                                       \n"+
+            "                                                                       \n"+
+            "                                                                       \n"+
+            "                                                                       \n"+
+            "                                                                       \n"+
+            "                                                                       \n"+
+            "                                                                       \n"+
             "╔══════════════════════════════════════════════════════════════════════╗\n" +
             "║                                                                      ║\n" +
             "╚══════════════════════════════════════════════════════════════════════╝";
@@ -197,7 +220,25 @@ public class Main {
         int GetAsyncKeyState(int vKey);
     }
     public static void menuSelection() {
-        String[] mainMenuOptions = {"Start", "How to Play", "About", "Exit"};
+        String[][] mainMenuOptions = {
+            {  "┏┓                   ", 
+               "┗┓╋┏┓┏┓╋             ", 
+               "┗┛┗┗┻┛ ┗             " }, 
+
+            {  "┓┏              ┓    ", 
+               "┣┫┏┓┓┏┏  ╋┏┓  ┏┓┃┏┓┓┏", 
+               "┛┗┗┛┗┻┛  ┗┗┛  ┣┛┗┗┻┗┫" }, 
+
+            {  "┏┓┓                  ", 
+               "┣┫┣┓┏┓┓┏╋            ", 
+               "┛┗┗┛┗┛┗┻┗            " }, 
+
+            {  "┏┓  •                ", 
+               "┣ ┓┏┓╋               ", 
+               "┗┛┛┗┗┗               " }
+        };
+        
+
         int selectedIndex = 0;
 
         String[] foodPandaLogo = {
@@ -229,36 +270,40 @@ public class Main {
                 debounce();
             } else if (isEnterKeyPressed()) {
                 debounce();
-                handleMenuSelection(mainMenuOptions[selectedIndex]);
+                handleMenuSelection(mainMenuOptions[selectedIndex], selectedIndex);
             }
 
             sleep(50);
         }
     }
 
-    // Handle selected menu option
-    private static void handleMenuSelection(String option) {
-        switch (option) {
-            case "Start":
+    // Updated method to correctly handle menu selection
+    private static void handleMenuSelection(String[] mainMenuOptions, int selectedIndex) {
+        switch (selectedIndex) {
+            case 0:
                 showContent("Starting the game...", "Press any key to return");
                 break;
-            case "How to Play":
+            case 1:
                 showContent("How to Play:\n" +
                         "1. Use arrow keys to navigate.\n" +
                         "2. Press Enter to select an option.",
                         "Press any key to return to the main menu.");
                 break;
-            case "About":
+            case 2:
                 showContent("About:\n" +
                         "This is a JNA-based menu demo.\n" +
                         "Author: Your Name",
                         "Press any key to return to the main menu.");
                 break;
-            case "Exit":
+            case 3:
                 System.out.println("Exiting...");
                 System.exit(0);
+                break;
+            default:
+                System.out.println("Invalid selection.");
         }
     }
+
 
     // Show content and wait for user input
     private static void showContent(String content, String returnMessage) {
@@ -267,7 +312,6 @@ public class Main {
         System.out.println("\n" + returnMessage);
         waitForAnyKey();
     }
-
     // Key checks
     private static boolean isUpKeyPressed() {
         return (User32.INSTANCE.GetAsyncKeyState(0x26) & 0x8000) != 0;
@@ -290,15 +334,55 @@ public class Main {
         }
     }
 
-    private static void displayMenuWithLogo(String[] options, int selectedIndex, String[] logo) {
-        int maxLength = Math.max(options.length, logo.length);
-        System.out.println("┌────────────────────────────────────────────────────────────────────────┐");
+   private static void displayMenuWithLogo(String[][] menuOptions, int selectedIndex, String[] logo) {
+        int maxMenuLines = menuOptions.length * 3;
+        int maxLogoLines = logo.length;
+        int maxLength = Math.max(maxMenuLines, maxLogoLines);
+
+        System.out.println("┌───────────────────────────────────────────────────────────────────────────┐");
         for (int i = 0; i < maxLength; i++) {
-            String menuLine = (i < options.length) ? (i == selectedIndex ? "-> " + options[i] : "   " + options[i]) : "   ";
-            String logoLine = (i < logo.length) ? "\u001B[38;5;206m" + logo[i] + "\u001B[0m" : ""; // Pink color
-            System.out.printf("│ %-25s%-60s │%n", menuLine, logoLine);
+            StringBuilder line = new StringBuilder("│ ");
+            
+            // Handle menu part
+            if (i < maxMenuLines) {
+                int optionIndex = i / 3;
+                int lineIndex = i % 3;
+                String menuText = menuOptions[optionIndex][lineIndex];
+                
+                if (optionIndex == selectedIndex) {
+                    line.append("\033[1;35m").append(menuText).append("\033[0m");
+                } else {
+                    line.append(menuText);
+                }
+                
+                // Calculate padding based on visible text length, not ANSI code length
+                int visibleLength = menuText.length();
+                int padding = 25 - visibleLength;
+                line.append(" ".repeat(padding));
+            } else {
+                line.append(" ".repeat(25));
+            }
+            
+            line.append("│ ");
+            
+            // Handle logo part
+            if (i < maxLogoLines) {
+                line.append("\033[1;35m").append(logo[i]).append("\u001B[0m");
+                
+                // Calculate padding based on visible text length
+                int visibleLength = logo[i].length();
+                int padding = 46 - visibleLength;
+                if (padding > 0) {
+                    line.append(" ".repeat(padding));
+                }
+            } else {
+                line.append(" ".repeat(60));
+            }
+            
+            line.append(" │");
+            System.out.println(line);
         }
-        System.out.println("└────────────────────────────────────────────────────────────────────────┘");
+        System.out.println("└───────────────────────────────────────────────────────────────────────────┘");
     }
 
     private static void debounce() {
