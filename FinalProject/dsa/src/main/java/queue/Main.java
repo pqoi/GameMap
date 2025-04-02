@@ -219,7 +219,7 @@ public class Main {
 
         int GetAsyncKeyState(int vKey);
     }
-    public static void menuSelection() {
+    public static void menuSelection(String[] args) {
         String[][] mainMenuOptions = {
             {  "┏┓                   ", 
                "┗┓╋┏┓┏┓╋             ", 
@@ -270,7 +270,7 @@ public class Main {
                 debounce();
             } else if (isEnterKeyPressed()) {
                 debounce();
-                handleMenuSelection(mainMenuOptions[selectedIndex], selectedIndex);
+                handleMenuSelection(mainMenuOptions[selectedIndex], selectedIndex, args);
             }
 
             sleep(50);
@@ -278,10 +278,11 @@ public class Main {
     }
 
     // Updated method to correctly handle menu selection
-    private static void handleMenuSelection(String[] mainMenuOptions, int selectedIndex) {
+    private static void handleMenuSelection(String[] mainMenuOptions, int selectedIndex, String[] args) {
         switch (selectedIndex) {
             case 0:
-                showContent("Starting the game...", "Press any key to return");
+                StartGame.main(args);
+                System.exit(0); // Ensure the program exits after the game ends
                 break;
             case 1:
                 showContent("How to Play:\n" +
@@ -430,7 +431,7 @@ public class Main {
         clearConsole();
         logo();
         clearConsole();
-        menuSelection();
+        menuSelection(args);
          
          
     }
