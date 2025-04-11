@@ -1,6 +1,7 @@
 package com.trial3.version3;
 
 import com.googlecode.lanterna.TerminalSize;
+import com.googlecode.lanterna.TextCharacter;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.screen.Screen;
@@ -23,6 +24,8 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import com.googlecode.lanterna.input.KeyStroke;
+import com.googlecode.lanterna.input.KeyType;
 
 public class Version3 {
 
@@ -91,8 +94,22 @@ public class Version3 {
             screen.refresh();
             displayFoodPandaLogo(screen);
             screen.refresh();
+            screen.clear();
+            screen.refresh();
             displayFoodPandaBackground(screen);
+            screen.refresh();
 
+            // This will display the background and the menu together
+            String selection = MenuSelection(screen);
+
+            // Handle the selection
+            if (selection.equals("START")) {
+                // Handle START
+            } else if (selection.equals("ABOUT")) {
+                // Handle ABOUT
+            } else if (selection.equals("EXIT")) {
+                // Handle EXIT
+            }
                 // Refresh the screen to display the image
                 screen.refresh();
                 Thread.sleep(4000); // Let the image stay for 4 seconds (optional)
@@ -113,26 +130,20 @@ public class Version3 {
         Arrays.fill(bar, filledLength, barLength, '░');
         return "[" + new String(bar) + "]";
     }
-    
-     private static void displayFoodPandaLogo(Screen screen) throws IOException {
+    private static void displayFoodPandaLogo(Screen screen) throws IOException {
         try {
-            // Load image from resources
-            InputStream imageStream = Version3.class.getClassLoader().getResourceAsStream("FoodPandaLogo.jpg");
+            InputStream imageStream = Version3.class.getClassLoader().getResourceAsStream("CuteLogo1.png");
             if (imageStream == null) {
                 throw new RuntimeException("Image not found in resources");
             }
-
+    
             BufferedImage original = ImageIO.read(imageStream);
-            System.out.println("Image loaded. Dimensions: " + original.getWidth() + "x" + original.getHeight());
-            System.out.println("Image type: " + getImageTypeName(original.getType()));
-
-            // Get terminal dimensions
             TextGraphics tg = screen.newTextGraphics();
             TerminalSize size = screen.getTerminalSize();
-            
-            // Scale image if too large
+    
             int maxWidth = size.getColumns();
-            int maxHeight = size.getRows() * 2; // *2 because we use half blocks
+            int maxHeight = size.getRows() * 2;
+    
             if (original.getWidth() > maxWidth || original.getHeight() > maxHeight) {
                 BufferedImage scaled = new BufferedImage(maxWidth, maxHeight, BufferedImage.TYPE_INT_RGB);
                 Graphics2D g = scaled.createGraphics();
@@ -140,49 +151,29 @@ public class Version3 {
                 g.drawImage(original, 0, 0, maxWidth, maxHeight, null);
                 g.dispose();
                 original = scaled;
-                System.out.println("Image scaled to: " + maxWidth + "x" + maxHeight);
             }
-
-            // Clear screen
-            tg.setBackgroundColor(TextColor.ANSI.BLACK);
-            tg.fill(' ');
-
-            // Calculate centered position
-            int startX = (size.getColumns() - original.getWidth()) / 2;
-            int startY = (size.getRows() - original.getHeight() / 2) / 2;
-
-            // Render image using half-block characters
-            for (int y = 0; y < original.getHeight() - 1; y += 2) {
-                for (int x = 0; x < original.getWidth(); x++) {
-                    Color top = new Color(original.getRGB(x, y), false);
-                    Color bottom = new Color(original.getRGB(x, y + 1), false);
-
-                    // Skip rendering if both pixels are transparent/black
-                    if (top.getRGB() == Color.BLACK.getRGB() && bottom.getRGB() == Color.BLACK.getRGB()) {
-                        continue;
-                    }
-
-                    TextColor.RGB bg = new TextColor.RGB(top.getRed(), top.getGreen(), top.getBlue());
-                    TextColor.RGB fg = new TextColor.RGB(bottom.getRed(), bottom.getGreen(), bottom.getBlue());
-
-                    tg.setBackgroundColor(bg);
-                    tg.setForegroundColor(fg);
-
-                    if (x + startX < size.getColumns() && (y / 2 + startY) < size.getRows()) {
-                        tg.putString(x + startX, y / 2 + startY, "▄");
-                    }
-                }
+    
+            int fullWidth = original.getWidth();
+            int fullHeight = original.getHeight();
+    
+            // POP IN Animation
+            for (double scale = 0.2; scale <= 1.0; scale += 0.1) {
+                drawImageWithScale(screen, original, scale);
+                Thread.sleep(50);
             }
-
-            screen.refresh();
+    
             LogoSound();
-            Thread.sleep(5000); // Display for 5 seconds
-
+            Thread.sleep(3000); // Hold full-size logo
+    
+            // POP OUT Animation
+            for (double scale = 1.0; scale >= 0.2; scale -= 0.1) {
+                drawImageWithScale(screen, original, scale);
+                Thread.sleep(50);
+            }
+    
         } catch (Exception e) {
             System.err.println("Error displaying image:");
             e.printStackTrace();
-            
-            // Show error message on screen
             TextGraphics tg = screen.newTextGraphics();
             tg.setForegroundColor(TextColor.ANSI.RED);
             tg.putString(0, 0, "Error displaying image: " + e.getMessage());
@@ -190,6 +181,47 @@ public class Version3 {
             try { Thread.sleep(3000); } catch (InterruptedException ie) {}
         }
     }
+    
+    // Helper: Draw scaled image centered on screen
+    private static void drawImageWithScale(Screen screen, BufferedImage original, double scale) throws IOException {
+        int newWidth = Math.max(1, (int)(original.getWidth() * scale));
+        int newHeight = Math.max(2, (int)(original.getHeight() * scale)); // ensure even for half blocks
+    
+        BufferedImage scaled = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = scaled.createGraphics();
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g.drawImage(original, 0, 0, newWidth, newHeight, null);
+        g.dispose();
+    
+        TerminalSize size = screen.getTerminalSize();
+        TextGraphics tg = screen.newTextGraphics();
+        tg.setBackgroundColor(TextColor.ANSI.BLACK);
+        tg.fill(' ');
+    
+        int startX = (size.getColumns() - newWidth) / 2;
+        int startY = (size.getRows() - newHeight / 2) / 2;
+    
+        for (int y = 0; y < newHeight - 1; y += 2) {
+            for (int x = 0; x < newWidth; x++) {
+                Color top = new Color(scaled.getRGB(x, y), false);
+                Color bottom = new Color(scaled.getRGB(x, y + 1), false);
+    
+                TextColor.RGB bg = new TextColor.RGB(top.getRed(), top.getGreen(), top.getBlue());
+                TextColor.RGB fg = new TextColor.RGB(bottom.getRed(), bottom.getGreen(), bottom.getBlue());
+    
+                tg.setBackgroundColor(bg);
+                tg.setForegroundColor(fg);
+    
+                if (x + startX < size.getColumns() && (y / 2 + startY) < size.getRows()) {
+                    tg.putString(x + startX, y / 2 + startY, "▄");
+                }
+            }
+        }
+    
+        screen.refresh();
+    }
+    
+    
       private static void displayFoodPandaBackground(Screen screen) throws IOException {
         try {
             // Load image from resources
@@ -252,7 +284,7 @@ public class Version3 {
 
             screen.refresh();
             
-            Thread.sleep(5000); // Display for 5 seconds
+            Thread.sleep(100); // Display for 5 seconds
 
         } catch (Exception e) {
             System.err.println("Error displaying image:");
@@ -266,6 +298,192 @@ public class Version3 {
             try { Thread.sleep(3000); } catch (InterruptedException ie) {}
         }
     }
+    private static String MenuSelection(Screen screen) throws IOException { 
+        final String[][] menuOptions = {
+            // Option 1: "START" (5 lines)
+            {
+                "███████╗████████╗ █████╗ ██████╗ ████████╗",
+                "██╔════╝╚══██╔══╝██╔══██╗██╔══██╗╚══██╔══╝",
+                "███████╗   ██║   ███████║██████╔╝   ██║   ",
+                "╚════██║   ██║   ██╔══██║██╔══██╗   ██║   ",
+                "███████║   ██║   ██║  ██║██║  ██║   ██║   "
+            },
+            // Option 2: "About" (6 lines)
+            {
+                " █████╗ ██████╗  ██████╗ ██╗   ██╗████████╗",
+                "██╔══██╗██╔══██╗██╔═══██╗██║   ██║╚══██╔══╝",
+                "███████║██████╔╝██║   ██║██║   ██║   ██║   ", 
+                "██╔══██║██╔══██╗██║   ██║██║   ██║   ██║   ", 
+                "██║  ██║██████╔╝╚██████╔╝╚██████╔╝   ██║   ", 
+                "╚═╝  ╚═╝╚═════╝  ╚═════╝  ╚═════╝    ╚═╝   " 
+            },
+            // Option 3: "EXIT" (5 lines)
+            {
+                "███████╗██╗  ██╗██╗████████╗        ",
+                "██╔════╝╚██╗██╔╝██║╚══██╔══╝        ",
+                "█████╗   ╚███╔╝ ██║   ██║           ",
+                "██╔══╝   ██╔██╗ ██║   ██║           ",
+                "███████╗██╔╝ ██╗██║   ██║           "
+            }
+        };
+        int selectedIndex = 0;
+        boolean running = true;
+        String selectedOption = "";
+
+        // Pink color for selection
+        TextColor.RGB pinkColor = new TextColor.RGB(255, 105, 180);
+        TextColor.RGB whiteColor = new TextColor.RGB(255, 255, 255);
+
+        // Spacing between menu options (adjust this value to increase/decrease spacing)
+        int optionSpacing = 3; // Additional spacing between menu options
+
+        // Display the background first - only once, not in the loop
+        displayFoodPandaBackground(screen);
+        
+        // Create a copy of the background
+        TextCharacter[][] backgroundCopy = captureScreenState(screen);
+        
+        while (running) {
+            TextGraphics tg = screen.newTextGraphics();
+            TerminalSize size = screen.getTerminalSize();
+            
+            // Position menu at left center
+            int startX = 22 ; // Left margin
+            int startY = size.getRows() / 2 - 10; // Adjust for better vertical positioning
+            
+            // Calculate the menu area total dimensions to clear
+            int totalMenuHeight = 0;
+            int maxMenuWidth = 0;
+            
+            for (String[] option : menuOptions) {
+                totalMenuHeight += option.length + optionSpacing;
+                for (String line : option) {
+                    maxMenuWidth = Math.max(maxMenuWidth, line.length());
+                }
+            }
+            
+            // Clear the entire menu area by restoring the background first
+            restoreBackgroundArea(screen, backgroundCopy, startX, startY, maxMenuWidth, totalMenuHeight + 5); // +5 for instructions
+            
+            // Draw menu options
+            int currentY = startY;
+            for (int i = 0; i < menuOptions.length; i++) {
+                String[] option = menuOptions[i];
+                
+                // Set foreground color based on selection
+                TextColor.RGB color = (i == selectedIndex) ? pinkColor : whiteColor;
+                
+                for (int j = 0; j < option.length; j++) {
+                    // Draw each character individually to avoid changing background
+                    String line = option[j];
+                    for (int x = 0; x < line.length(); x++) {
+                        // Get the original background character/color from our copy
+                        TextCharacter bgChar = backgroundCopy[currentY + j][startX + x];
+                        // Create a new character with the menu text color but keep the background
+                        TextCharacter overlayChar = bgChar.withForegroundColor(color)
+                                                        .withCharacter(line.charAt(x));
+                        
+                        // Place the new character
+                        screen.setCharacter(startX + x, currentY + j, overlayChar);
+                    }
+                }
+                
+                // Move to next option with spacing
+                currentY += option.length + optionSpacing;
+            }
+            
+           
+            
+            screen.refresh();
+            
+            // Handle keyboard input
+            KeyStroke key = screen.readInput();
+            
+            if (key.getKeyType() == KeyType.ArrowUp) {
+                selectedIndex = (selectedIndex - 1 + menuOptions.length) % menuOptions.length;
+            } 
+            else if (key.getKeyType() == KeyType.ArrowDown) {
+                selectedIndex = (selectedIndex + 1) % menuOptions.length;
+            }
+            else if (key.getKeyType() == KeyType.Enter) {
+                // Handle selection
+                selectedOption = switch (selectedIndex) {
+                    case 0 -> "START";
+                    case 1 -> "ABOUT";
+                    case 2 -> {
+                        System.exit(0);
+                        yield "EXIT";
+                    }
+                    default -> "";
+                };
+                running = false;
+            }
+            else if (key.getKeyType() == KeyType.Escape) {
+                selectedOption = "EXIT";
+                running = false;
+            }
+        }
+        
+        return selectedOption;
+    }
+
+    // Method to capture the current screen state
+    private static TextCharacter[][] captureScreenState(Screen screen) throws IOException {
+        TerminalSize size = screen.getTerminalSize();
+        TextCharacter[][] screenCopy = new TextCharacter[size.getRows()][size.getColumns()];
+        
+        // Copy each character from the screen
+        for (int y = 0; y < size.getRows(); y++) {
+            for (int x = 0; x < size.getColumns(); x++) {
+                screenCopy[y][x] = screen.getBackCharacter(x, y);
+            }
+        }
+        
+        return screenCopy;
+    }
+
+    // Method to restore a portion of the background
+    private static void restoreBackgroundArea(Screen screen, TextCharacter[][] backgroundCopy, 
+                                            int startX, int startY, int width, int height) {
+        TerminalSize size = screen.getTerminalSize();
+        
+        // Make sure we stay within bounds
+        int endX = Math.min(startX + width, size.getColumns());
+        int endY = Math.min(startY + height, size.getRows());
+        
+        // Restore each character in the specified area
+        for (int y = startY; y < endY; y++) {
+            for (int x = startX; x < endX; x++) {
+                if (y < backgroundCopy.length && x < backgroundCopy[0].length) {
+                    screen.setCharacter(x, y, backgroundCopy[y][x]);
+                }
+            }
+        }
+    }
+    // Add this new method to redraw a specific area of the background
+    private static void redrawBackgroundArea(Screen screen, int startX, int startY, int width, int height) throws IOException {
+        // This is a simplified method - we'll need to access the original background image
+        // or keep a cached copy of the background screen
+        
+        // Option 1: Keep a cached version of the background (better performance)
+        // We could maintain a BufferedImage or create a method to get pixel colors at specific locations
+        
+        // Option 2: For now, as a simple solution, just use empty spaces with a transparent effect
+        TextGraphics tg = screen.newTextGraphics();
+        
+        // Reset the background to transparent
+        // Note: In Lanterna, we can't actually do "transparent" but we can try to approximate it
+        tg.setBackgroundColor(TextColor.ANSI.DEFAULT); // This is closest to "transparent" in terminal
+        
+        // Clear the area with spaces (will use current background color)
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                tg.setCharacter(startX + x, startY + y, ' ');
+            }
+        }
+    }
+    
+        
       private static String getImageTypeName(int type) {
         switch (type) {
             case BufferedImage.TYPE_INT_RGB: return "TYPE_INT_RGB";
