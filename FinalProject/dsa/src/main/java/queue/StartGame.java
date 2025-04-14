@@ -3,7 +3,7 @@ package queue;
 import java.util.*;
 
 public class StartGame {
-    public static String[] DaetBarangay = {"Bagasbas", "Bacong", "Banga", "Bantigue", "Bignay I", "Bignay II", "Calasgasan", "Dapdap", "Del Pilar", "Gulod", "Ipil", "Lourdes", "Magsaysay", "Mambalit", "Mambalot", "Mamburao", "Manuel L. Quezon", "San Isidro", "San Jose", "San Juan", "San Roque"};
+    public static String[] DaetBarangay = {"Bagasbas","Baranggay I", "Baranggay II", "Calasgasan"};
     static String[] CustomerName = {"Luffy", "Zoro", "Nami", "Usopp", "Sanji"};
     static String[] CustomerAddress = {"Daet", "Mercedes", "San Vicente", "Talisay", "Basud", "Capalonga", "Labo", "Paracale", "San Lorenzo Ruiz", "Santa Elena", "Vinzons"};
     static String[] FoodOrder = {"Burger", "Pizza", "Pasta", "Salad", "Sushi", "Sandwich", "Spaghetti", "Fries", "Fried Chicken", "Doughnuts", "Cupcakes"};
