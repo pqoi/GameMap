@@ -19,13 +19,7 @@ import java.io.InputStream;
 
 import javax.swing.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioInputStream;
@@ -44,11 +38,6 @@ import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
 public class StartGame {
     public static String[] DaetBarangay = {"Bagasbas","Baranggay I", "Baranggay II", "Calasgasan"};
     static String[] CustomerName = {"Luffy", "Zoro", "Nami", "Usopp", "Sanji"};
@@ -57,12 +46,9 @@ public class StartGame {
         "Burger", "Fries", "Pizza", "Milk Tea", "Soda", 
         "Chicken", "Ice Cream", "Spaghetti", "Hotdog", "Nuggets"
     };
-    
-    public static final String[] FoodEmojis = {
-        "🍔", "🍟", "🍕", "🧋", "🥤", 
-        "🍗", "🍨", "🍝", "🌭", "🍖"
-    };
-    
+     public static String[] customerTypes = {"VIP", "Regular"};
+    public static String[] orderTypes = {"Standard", "Bulk", "Urgent"};
+ 
     static double[] FoodPrices = {80.0, 150.0, 120.0, 100.0, 200.0, 90.0, 110.0, 50.0, 130.0, 70.0, 60.0};
     static String[] PaymentMethods = {"Cash on Delivery (Paid)", "Online Payment (Paid)"};
 
@@ -73,7 +59,6 @@ public class StartGame {
 
             // Create the Swing terminal  
             SwingTerminalFrame terminal = terminalFactory.createSwingTerminal();
-
 
             terminal.setTitle("");
             terminal.setVisible(true);
@@ -88,7 +73,7 @@ public class StartGame {
             // Spinner frames
             String[] spinnerChars = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" };
 
-           // Animate loading bar (responsive)
+            // Animate loading bar (responsive)
             for (int i = 0; i <= 100; i++) {
                 Thread.sleep(40);
 
@@ -123,213 +108,203 @@ public class StartGame {
                         bar + " " + percent + " " + spinner);
 
                 screen.refresh();
-
             }
-            List<Order> orders = generateRandomOrders();
-            showOrders(screen, orders);
-
-            screen.stopScreen();
-            screen.stopScreen();
-    
-
-
             
+            displayOrdersBackground(screen);
+            List<FoodOrderEntry> orders = generateRandomOrders();
+            TextGraphics textGraphics = screen.newTextGraphics();
+            renderOrdersOnScreen(screen, orders, textGraphics);
+            
+            // Add an instruction for the user with transparent background
+            TerminalSize size = screen.getTerminalSize();
+            String instruction = "Press ENTER to continue";
+            int instructionX = size.getColumns() / 2 - instruction.length() / 2;
+            int instructionY = size.getRows() - 3;
 
-            } catch (Exception e) {
-                e.printStackTrace();
+            // Capture the current screen state (background)
+            TextCharacter[][] backgroundCopy = captureScreenState(screen);
+
+            // First restore the background area for the instruction text
+            restoreBackgroundArea(screen, backgroundCopy, instructionX, instructionY, instruction.length(), 1);
+
+            // Draw the instruction with black text over the background
+            TextColor.RGB blackColor = new TextColor.RGB(0, 0, 0);
+            drawTextOverBackground(screen, backgroundCopy, instructionX, instructionY, instruction, blackColor);
+            screen.refresh();
+            
+            // Wait for ENTER key
+            boolean waiting = true;
+            while (waiting) {
+                KeyStroke keyPress = screen.readInput();
+                if (keyPress.getKeyType() == KeyType.Enter) {
+                    waiting = false;
+                    // Here you will call your new function
+                    // yourNewFunction(screen);
+                }
             }
-        
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-    
-    public static class Order {
-        String item;
-        String municipality;
-        boolean isUrgent;
-        boolean isVIP;
+    static Random rand = new Random();
 
-        public Order(String item, String municipality, boolean isUrgent, boolean isVIP) {
-            this.item = item;
-            this.municipality = municipality;
-            this.isUrgent = isUrgent;
-            this.isVIP = isVIP;
-        }
+    public static class FoodOrderEntry {
+        String customerName;
+        String address;
+        String barangay;
+        String[] foodItems;
+        int[] quantities;
+        String customerType;
+        String orderType;
+        String paymentMethod;
+    }
+     public static List<FoodOrderEntry> generateRandomOrders() {
+        List<FoodOrderEntry> orders = new ArrayList<>();
+        Set<Integer> usedSpecial = new HashSet<>();  // For VIP/Urgent restriction
 
-        public String getDisplayText() {
-            return item + "\n" +
-                    "Municipality: " + municipality + "\n" +
-                    "Urgent: " + (isUrgent ? "Yes" : "No") + "\n" +
-                    "VIP: " + (isVIP ? "Yes" : "No");
-        }
-    } 
-    public static List<Order> generateRandomOrders() {
-        List<String> items = Arrays.asList("🍕 Small Pizza", "🍔 Burger Combo", "🍜 Noodles", "🍛 Rice Meal", "🥤 Drink Only", "🍩 Donuts", "🍟 Fries");
-        List<String> municipalities = Arrays.asList("A", "B", "C", "D", "E", "F", "G");
-        List<Order> orders = new ArrayList<>();
-        Random random = new Random();
+        for (int i = 0; i < 4; i++) {
+            FoodOrderEntry order = new FoodOrderEntry();
+            order.customerName = CustomerName[rand.nextInt(CustomerName.length)];
+            order.address = CustomerAddress[rand.nextInt(CustomerAddress.length)];
+            order.barangay = DaetBarangay[rand.nextInt(DaetBarangay.length)];
 
-        for (int i = 0; i < 5; i++) {
-            String item = items.get(random.nextInt(items.size()));
-            String municipality = municipalities.get(random.nextInt(municipalities.size()));
-            boolean isUrgent = random.nextBoolean();
-            boolean isVIP = random.nextBoolean();
-            orders.add(new Order(item, municipality, isUrgent, isVIP));
+            int itemCount = 1 + rand.nextInt(5);
+            List<Integer> indices = new ArrayList<>();
+            for (int j = 0; j < FoodOrder.length; j++) indices.add(j);
+            Collections.shuffle(indices);
+            order.foodItems = new String[itemCount];
+            order.quantities = new int[itemCount];
+
+            for (int j = 0; j < itemCount; j++) {
+                order.foodItems[j] = FoodOrder[indices.get(j)];
+                order.quantities[j] = 1 + rand.nextInt(2);
+            }
+
+            order.paymentMethod = PaymentMethods[rand.nextInt(PaymentMethods.length)];
+
+            // Classify one as VIP/Urgent
+            if (usedSpecial.isEmpty()) {
+                String special = rand.nextBoolean() ? "VIP" : "Urgent";
+                order.customerType = special.equals("VIP") ? "VIP" : "Regular";
+                order.orderType = special.equals("Urgent") ? "Urgent" : "Standard";
+                usedSpecial.add(i);
+            } else {
+                order.customerType = "Regular";
+                order.orderType = (itemCount == 5) ? "Bulk" : "Standard";
+            }
+
+            orders.add(order);
         }
 
         return orders;
     }
 
-    public static void showOrders(Screen screen, List<Order> orders) {
-        MultiWindowTextGUI gui = new MultiWindowTextGUI(screen);
-        Panel mainPanel = new Panel(new GridLayout(3));
-
-        TerminalSize panelSize = new TerminalSize(30, 7);
-
-        for (int i = 0; i < orders.size(); i++) {
-            Order order = orders.get(i);
-            Panel orderPanel = new Panel();
-            orderPanel.setPreferredSize(panelSize);
-            orderPanel.setLayoutManager(new LinearLayout(Direction.VERTICAL));
-            orderPanel.setTheme(new SimpleTheme(TextColor.ANSI.BLACK, TextColor.ANSI.WHITE));
-            orderPanel.addComponent(new Label(order.getDisplayText()));
-            orderPanel.withBorder(Borders.singleLine("Order " + (i + 1)));
-            mainPanel.addComponent(orderPanel);
-        }
-
-        // Fill empty cell to align last row
-        if (orders.size() == 5) {
-            mainPanel.addComponent(new EmptySpace(panelSize));
-        }
-
-        BasicWindow window = new BasicWindow("Random Orders");
-        window.setComponent(mainPanel);
-        gui.addWindowAndWait(window);
-    }
-     
-    public static String[] generateOrder(String orderType, Random rand, List<String> usedNames) {
-        String name;
-        do {
-            name = CustomerName[rand.nextInt(CustomerName.length)];
-        } while (usedNames.contains(name));
-        usedNames.add(name);
-    
-        String location = CustomerAddress[rand.nextInt(CustomerAddress.length)];
-        if (location.equals("Daet")) {
-            location += ", Barangay " + DaetBarangay[rand.nextInt(DaetBarangay.length)];
-        }
-    
-        int numItems = orderType.equals("Bulk") ? rand.nextInt(6) + 5 : rand.nextInt(4) + 1;
-        Map<String, Integer> orderDetails = new LinkedHashMap<>();
-        double totalPrice = 0;
-    
-        for (int i = 0; i < numItems; i++) {
-            int foodIndex;
-            String foodItem;
-            do {
-                foodIndex = rand.nextInt(FoodOrder.length);
-                foodItem = FoodOrder[foodIndex];
-            } while (orderDetails.containsKey(foodItem));
-            int quantity = rand.nextInt(3) + 1;
-            orderDetails.put(foodItem, quantity);
-            totalPrice += FoodPrices[foodIndex] * quantity;
-        }
-    
-        String paymentMethod = PaymentMethods[rand.nextInt(PaymentMethods.length)];
-    
-        // Calculate the maximum width needed for the card
-        int maxWidth = 26; // Minimum width
-        
-        maxWidth = Math.max(maxWidth, "Customer: ".length() + name.length() + 2);
-        maxWidth = Math.max(maxWidth, "Order Type: ".length() + orderType.length() + 2);
-        maxWidth = Math.max(maxWidth, "Location: ".length() + location.length() + 2);
-        
-        for (Map.Entry<String, Integer> entry : orderDetails.entrySet()) {
-            int foodIndex = Arrays.asList(FoodOrder).indexOf(entry.getKey());
-            String emoji = FoodEmojis[foodIndex];
-            String itemLine = String.format("%s %s x%d | ₱%.2f", 
-                emoji, entry.getKey(), entry.getValue(), 
-                FoodPrices[foodIndex] * entry.getValue());
+        public static void renderOrdersOnScreen(Screen screen, List<FoodOrderEntry> orders, TextGraphics tg) throws IOException {
+            TerminalSize size = screen.getTerminalSize();
+            int startX = 8; // Left-side corner
+            int startY = size.getRows() / 2 - 8;
             
-            maxWidth = Math.max(maxWidth, itemLine.length() + 4); // +4 for margins
-        }
-        
-        maxWidth = Math.max(maxWidth, "Total Price: ₱".length() + String.format("%.2f", totalPrice).length() + 2);
-        maxWidth = Math.max(maxWidth, paymentMethod.length() + 2);
-        
-        // Make sure width is even for symmetry
-        if (maxWidth % 2 != 0) maxWidth++;
-        
-        // Create the order card with dynamic width
-        List<String> orderCard = new ArrayList<>();
-        
-        String topBorder = "+" + "-".repeat(maxWidth - 2) + "+";
-        orderCard.add(topBorder);
-        
-        orderCard.add(formatLine("Customer: " + name, maxWidth));
-        orderCard.add(formatLine("Order Type: " + orderType, maxWidth));
-        orderCard.add(formatLine("Location: " + location, maxWidth));
-        
-        String divider = "|" + "-".repeat(maxWidth - 2) + "|";
-        orderCard.add(divider);
-        
-        for (Map.Entry<String, Integer> entry : orderDetails.entrySet()) {
-            int foodIndex = Arrays.asList(FoodOrder).indexOf(entry.getKey());
-            double itemTotalPrice = FoodPrices[foodIndex] * entry.getValue();
-            orderCard.add(formatLine(String.format("%s x%d | ₱%.2f", entry.getKey(), 
-                                    entry.getValue(), itemTotalPrice), maxWidth));
-        }
-        
-        orderCard.add(divider);
-        orderCard.add(formatLine(String.format("Total Price: ₱%.2f", totalPrice), maxWidth));
-        orderCard.add(formatLine(paymentMethod, maxWidth));
-        orderCard.add(topBorder);
-        
-        return orderCard.toArray(new String[0]);
-    }
-    
-    // Helper method to format a line with proper padding in the card
-    private static String formatLine(String content, int width) {
-        int contentLength = content.length();
-        int padding = width - 2 - contentLength;
-        return "| " + content + " ".repeat(padding) + "|";
-    }
-    
-    public static void displayOrdersLanterna(Screen screen, List<String[]> orders) throws IOException {
-        screen.clear();
-        TextGraphics tg = screen.newTextGraphics();
-    
-        TerminalSize terminalSize = screen.getTerminalSize();
-        int totalCards = orders.size();
-        int spacing = 4;
-    
-        // Determine the max height of cards
-        int cardHeight = orders.stream().mapToInt(order -> order.length).max().orElse(10);
-        int[] cardWidths = orders.stream().mapToInt(card -> card[0].length()).toArray();
-    
-        int totalWidth = Arrays.stream(cardWidths).sum() + spacing * (totalCards - 1);
-        int startX = (terminalSize.getColumns() - totalWidth) / 2;
-        int startY = (terminalSize.getRows() - cardHeight) / 2;
-    
-        int currentX = startX;
-    
-        for (int i = 0; i < totalCards; i++) {
-            String[] order = orders.get(i);
-            int cardWidth = cardWidths[i];
-    
-            for (int j = 0; j < order.length; j++) {
-                tg.putString(currentX, startY + j, order[j]);
+            // Capture the current screen state (background)
+            TextCharacter[][] backgroundCopy = captureScreenState(screen);
+            
+            for (int i = 0; i < orders.size(); i++) {
+                int x = startX + (i % 2) * 40; // 2x2 horizontal layout
+                int y = startY + (i / 2) * 12; // 2 rows vertically
+                
+                FoodOrderEntry order = orders.get(i);
+                
+                // Calculate maximum order width and height for this order
+                int maxOrderWidth = 30; // Estimate, adjust based on your content
+                int orderHeight = 6 + order.foodItems.length; // Base lines + food items
+                
+                // First restore the background area for this order
+                restoreBackgroundArea(screen, backgroundCopy, x, y, maxOrderWidth, orderHeight);
+                
+                // Define text colors - changed to WHITE
+                TextColor.RGB whiteColor = new TextColor.RGB(255, 255, 255);
+                
+                // Draw order information character by character
+                String line = String.format("Customer: %-15s", order.customerName);
+                drawTextOverBackground(screen, backgroundCopy, x, y, line, whiteColor);
+                
+                line = String.format("Address: %-20s", order.address);
+                drawTextOverBackground(screen, backgroundCopy, x, y + 1, line, whiteColor);
+                
+                // Show barangay only if address contains "Daet"
+                int lineOffset = 2;
+                if (order.address.contains("Daet")) {
+                    line = String.format("Barangay: %-15s", order.barangay);
+                    drawTextOverBackground(screen, backgroundCopy, x, y + lineOffset++, line, whiteColor);
+                }
+                
+                line = String.format("CustomerType: %-10s", order.customerType);
+                drawTextOverBackground(screen, backgroundCopy, x, y + lineOffset++, line, whiteColor);
+                
+                line = String.format("OrderType: %-10s", order.orderType);
+                drawTextOverBackground(screen, backgroundCopy, x, y + lineOffset++, line, whiteColor);
+                
+                line = String.format("Payment: %-25s", order.paymentMethod);
+                drawTextOverBackground(screen, backgroundCopy, x, y + lineOffset++, line, whiteColor);
+                
+                line = "Items:";
+                drawTextOverBackground(screen, backgroundCopy, x, y + lineOffset++, line, whiteColor);
+                
+                for (int j = 0; j < order.foodItems.length; j++) {
+                    line = "  - " + order.foodItems[j] + " x" + order.quantities[j];
+                    drawTextOverBackground(screen, backgroundCopy, x, y + lineOffset + j, line, whiteColor);
+                }
             }
-    
-            currentX += cardWidth + spacing;
+        }
+
+    // Helper method to draw text character by character over background
+        private static void drawTextOverBackground(Screen screen, TextCharacter[][] backgroundCopy, 
+                                                int startX, int startY, String text, TextColor color) {
+            for (int i = 0; i < text.length(); i++) {
+                if (startY < backgroundCopy.length && (startX + i) < backgroundCopy[0].length) {
+                    TextCharacter bgChar = backgroundCopy[startY][startX + i];
+                    TextCharacter overlayChar = bgChar.withForegroundColor(color)
+                                                    .withCharacter(text.charAt(i));
+                    screen.setCharacter(startX + i, startY, overlayChar);
+                }
+            }
         }
     
-        screen.refresh();
+        // Method to capture the current screen state (copied from Version3.java)
+        private static TextCharacter[][] captureScreenState(Screen screen) throws IOException {
+            TerminalSize size = screen.getTerminalSize();
+            TextCharacter[][] screenCopy = new TextCharacter[size.getRows()][size.getColumns()];
+            
+            // Copy each character from the screen
+            for (int y = 0; y < size.getRows(); y++) {
+                for (int x = 0; x < size.getColumns(); x++) {
+                    screenCopy[y][x] = screen.getBackCharacter(x, y);
+                }
+            }
+            
+            return screenCopy;
+        }
     
-        // Wait for ENTER key
-        KeyStroke key;
-        do {
-            key = screen.readInput();
-        } while (key.getKeyType() != KeyType.Enter);
-    }
+    // Method to restore a portion of the background (copied from Version3.java)
+        private static void restoreBackgroundArea(Screen screen, TextCharacter[][] backgroundCopy, 
+                                                int startX, int startY, int width, int height) {
+            TerminalSize size = screen.getTerminalSize();
+            
+            // Make sure we stay within bounds
+            int endX = Math.min(startX + width, size.getColumns());
+            int endY = Math.min(startY + height, size.getRows());
+            
+            // Restore each character in the specified area
+            for (int y = startY; y < endY; y++) {
+                for (int x = startX; x < endX; x++) {
+                    if (y < backgroundCopy.length && x < backgroundCopy[0].length) {
+                        screen.setCharacter(x, y, backgroundCopy[y][x]);
+                    }
+                }
+            }
+        }
+       
+        
     
 
      // Helper to generate a progress bar string
@@ -340,10 +315,10 @@ public class StartGame {
         Arrays.fill(bar, filledLength, barLength, '░');
         return "[" + new String(bar) + "]";
     }
-    private static void displayHomeBackground(Screen screen) throws IOException {
+    private static void displayOrdersBackground(Screen screen) throws IOException {
         try {
             // Load image from resources
-            InputStream imageStream = Version3.class.getClassLoader().getResourceAsStream("FBBackground.jpg");
+            InputStream imageStream = Version3.class.getClassLoader().getResourceAsStream("OrdersFP.png");
             if (imageStream == null) {
                 throw new RuntimeException("Image not found in resources");
             }
