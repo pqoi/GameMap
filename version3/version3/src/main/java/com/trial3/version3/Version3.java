@@ -53,7 +53,7 @@ public class Version3 {
 
            // Animate loading bar (responsive)
             for (int i = 0; i <= 100; i++) {
-                Thread.sleep(40);
+                Thread.sleep(5);
 
                 screen.clear();
                 TextGraphics tg = screen.newTextGraphics();
@@ -410,7 +410,13 @@ public class Version3 {
             else if (key.getKeyType() == KeyType.Enter) {
                 // Handle selection
                 selectedOption = switch (selectedIndex) {
-                    case 0 -> "START";
+                    case 0 -> {
+                        screen.clear();
+                        screen.refresh();
+                        StartGame.main(null);
+                        yield  "START";
+                    } 
+                    
                     case 1 -> {
                         screen.clear();
                         AboutContent(screen);
