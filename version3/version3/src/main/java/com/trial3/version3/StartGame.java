@@ -128,7 +128,7 @@ public class StartGame {
             // Spinner frames
             String[] spinnerChars = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" };
 
-            // Animate loading bar (responsive)
+           // First animation block modification
             for (int i = 0; i <= 100; i++) {
                 Thread.sleep(10);
 
@@ -153,10 +153,20 @@ public class StartGame {
                 int maxBarLength = Math.min(70, size.getColumns() - 20);
                 int barLength = Math.max(20, maxBarLength);
 
-                String bar = getProgressBar(i, barLength);
+                String[] progressData = getProgressBarWithMotorPosition(i, barLength);
+                String bar = progressData[0];
+                int motorPos = Integer.parseInt(progressData[1]);
                 String percent = i + "%";
                 String spinner = spinnerChars[i % spinnerChars.length];
 
+                // Calculate position for motor to move across the bar
+                int motorStartX = centerX - barLength/2;
+                int motorX = motorStartX + motorPos - 15; // Center the motor horizontally
+                int motorY = centerY - 12; // Position above the progress bar
+                
+                // Draw motor first so the bar and text appear on top
+                drawMotor(screen, motorX, motorY, tg);
+                
                 // Draw centered content
                 tg.putString(centerX - title.length() / 2, centerY - 2, title);
                 tg.putString(centerX - (bar.length() + percent.length() + spinner.length() + 2) / 2, centerY,
@@ -207,7 +217,8 @@ public class StartGame {
                     screen = new TerminalScreen(terminal);
                     screen.startScreen();
 
-                    // Animate loading bar (responsive)
+                    
+                    // Second animation block modification (after ENTER key pressed)
                     for (int i = 0; i <= 100; i++) {
                         Thread.sleep(40);
 
@@ -230,10 +241,20 @@ public class StartGame {
                         int maxBarLength = Math.min(70, size.getColumns() - 20);
                         int barLength = Math.max(20, maxBarLength);
 
-                        String bar = getProgressBar(i, barLength);
+                        String[] progressData = getProgressBarWithMotorPosition(i, barLength);
+                        String bar = progressData[0];
+                        int motorPos = Integer.parseInt(progressData[1]);
                         String percent = i + "%";
                         String spinner = spinnerChars[i % spinnerChars.length];
 
+                        // Calculate position for motor to move across the bar
+                        int motorStartX = centerX - barLength/2;
+                        int motorX = motorStartX + motorPos - 15; // Center the motor horizontally
+                        int motorY = centerY - 12; // Position above the progress bar
+                        
+                        // Draw motor first so the bar and text appear on top
+                        drawMotor(screen, motorX, motorY, tg);
+                        
                         // Draw centered content
                         tg.putString(centerX - title.length() / 2, centerY - 2, title);
                         tg.putString(centerX - (bar.length() + percent.length() + spinner.length() + 2) / 2, centerY,
@@ -241,10 +262,11 @@ public class StartGame {
 
                         screen.refresh();
                     }
-                    // yourNewFunction(screen);
+                    screen.clear();
+                    displayDeliverysBackground(screen, orders);
                 }
             }
-
+ 
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -431,18 +453,36 @@ public static void renderOrdersOnScreen(Screen screen, List<FoodOrderEntry> orde
         drawTextOverBackground(screen, backgroundCopy, x, y + lineOffset++, line, whiteColor);
     }
 }
-    // Helper method to draw text character by character over background
+    // Improved helper method to draw text character by character over background with bounds checking
         private static void drawTextOverBackground(Screen screen, TextCharacter[][] backgroundCopy, 
-                                                int startX, int startY, String text, TextColor color) {
-            for (int i = 0; i < text.length(); i++) {
-                if (startY < backgroundCopy.length && (startX + i) < backgroundCopy[0].length) {
-                    TextCharacter bgChar = backgroundCopy[startY][startX + i];
-                    TextCharacter overlayChar = bgChar.withForegroundColor(color)
-                                                    .withCharacter(text.charAt(i));
-                    screen.setCharacter(startX + i, startY, overlayChar);
+                int startX, int startY, String text, TextColor color) {
+                // Add bounds checking to avoid ArrayIndexOutOfBoundsException
+                if (startY < 0 || startY >= backgroundCopy.length) {
+                return; // Y coordinate is out of bounds
+                }
+
+                for (int i = 0; i < text.length(); i++) {
+                int x = startX + i;
+                // Check if x is within bounds before accessing array
+                if (x >= 0 && x < backgroundCopy[0].length && startY < backgroundCopy.length) {
+                TextCharacter bgChar = backgroundCopy[startY][x];
+                // Additional null check for background character
+                if (bgChar != null) {
+                TextCharacter overlayChar = bgChar.withForegroundColor(color)
+                        .withCharacter(text.charAt(i));
+                screen.setCharacter(x, startY, overlayChar);
+                } else {
+                // If background is null, create a new character with black background
+                TextCharacter newChar = new TextCharacter(
+                text.charAt(i), 
+                color, 
+                TextColor.ANSI.BLACK
+                );
+                screen.setCharacter(x, startY, newChar);
                 }
             }
         }
+    }
     
         // Method to capture the current screen state (copied from Version3.java)
         private static TextCharacter[][] captureScreenState(Screen screen) throws IOException {
@@ -479,15 +519,43 @@ public static void renderOrdersOnScreen(Screen screen, List<FoodOrderEntry> orde
         }
        
         
-    
+        private static final String[] Motor = {
+            "                           `   `.",
+            "           <```--...       .---.//  < `.",
+            "            `..     `.___ /       ___`.'",
+            "              _`_ .      `      .'\\\\__",
+            "            .'---`.`.          / .'---`.",
+            "           /.'  _`.\\_\\        / /.'\\\\ `.\\",
+            "           ||  <__||_|        | ||  ~  ||",
+            "           \\`.___.'/ /________\\ \\`.___.'/",
+            "            `.___.'              `.___.'"
+        };
+        // This method draws the provided ASCII motor at a specific position
+        private static void drawMotor(Screen screen, int x, int y, TextGraphics tg) {
+            // Use the provided ASCII motor art
+            String[] motorArt = Motor;
+            
+            // Draw the motor
+            for (int i = 0; i < motorArt.length; i++) {
+                // Ensure we're not going beyond screen bounds
+                if (y + i < screen.getTerminalSize().getRows()) {
+                    tg.putString(x, y + i, motorArt[i]);
+                }
+            }
+        }
 
-     // Helper to generate a progress bar string
-     private static String getProgressBar(int percent, int barLength) {
+    // Modify the getProgressBar method to calculate and return the position
+    private static String[] getProgressBarWithMotorPosition(int percent, int barLength) {
         int filledLength = percent * barLength / 100;
         char[] bar = new char[barLength];
         Arrays.fill(bar, 0, filledLength, '█');
         Arrays.fill(bar, filledLength, barLength, '░');
-        return "[" + new String(bar) + "]";
+        
+        // Calculate motor position along the bar - scaled to bar length
+        int motorPosition = (percent * barLength) / 100;
+        if (motorPosition >= barLength) motorPosition = barLength - 1;
+        
+        return new String[] {"[" + new String(bar) + "]", String.valueOf(motorPosition)};
     }
     private static void displayOrdersBackground(Screen screen) throws IOException {
         try {
@@ -565,42 +633,225 @@ public static void renderOrdersOnScreen(Screen screen, List<FoodOrderEntry> orde
             try { Thread.sleep(3000); } catch (InterruptedException ie) {}
         }
     } 
-    private static void drawImageWithScale(Screen screen, BufferedImage original, double scale) throws IOException {
-        int newWidth = Math.max(1, (int)(original.getWidth() * scale));
-        int newHeight = Math.max(2, (int)(original.getHeight() * scale)); // ensure even for half blocks
+    private static void displayDeliverysBackground(Screen screen, List<FoodOrderEntry> orders) throws IOException {
+        try {
+            // Load image from resources
+            InputStream imageStream = Version3.class.getClassLoader().getResourceAsStream("DeliveryOrder.png");
+            if (imageStream == null) {
+                throw new RuntimeException("Image not found in resources");
+            }
     
-        BufferedImage scaled = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
-        Graphics2D g = scaled.createGraphics();
-        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        g.drawImage(original, 0, 0, newWidth, newHeight, null);
-        g.dispose();
+            BufferedImage original = ImageIO.read(imageStream);
+            System.out.println("Image loaded. Dimensions: " + original.getWidth() + "x" + original.getHeight());
+            System.out.println("Image type: " + getImageTypeName(original.getType()));
     
-        TerminalSize size = screen.getTerminalSize();
-        TextGraphics tg = screen.newTextGraphics();
-        tg.setBackgroundColor(TextColor.ANSI.BLACK);
-        tg.fill(' ');
+            // Get terminal dimensions
+            TextGraphics tg = screen.newTextGraphics();
+            TerminalSize size = screen.getTerminalSize();
+            
+            // Scale image if too large
+            int maxWidth = size.getColumns();
+            int maxHeight = size.getRows() * 2; // *2 because we use half blocks
+            if (original.getWidth() > maxWidth || original.getHeight() > maxHeight) {
+                BufferedImage scaled = new BufferedImage(maxWidth, maxHeight, BufferedImage.TYPE_INT_RGB);
+                Graphics2D g = scaled.createGraphics();
+                g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+                g.drawImage(original, 0, 0, maxWidth, maxHeight, null);
+                g.dispose();
+                original = scaled;
+                System.out.println("Image scaled to: " + maxWidth + "x" + maxHeight);
+            }
     
-        int startX = (size.getColumns() - newWidth) / 2;
-        int startY = (size.getRows() - newHeight / 2) / 2;
+            // Clear screen
+            tg.setBackgroundColor(TextColor.ANSI.BLACK);
+            tg.fill(' ');
     
-        for (int y = 0; y < newHeight - 1; y += 2) {
-            for (int x = 0; x < newWidth; x++) {
-                Color top = new Color(scaled.getRGB(x, y), false);
-                Color bottom = new Color(scaled.getRGB(x, y + 1), false);
+            // Calculate centered position
+            int startX = (size.getColumns() - original.getWidth()) / 2;
+            int startY = (size.getRows() - original.getHeight() / 2) / 2;
     
-                TextColor.RGB bg = new TextColor.RGB(top.getRed(), top.getGreen(), top.getBlue());
-                TextColor.RGB fg = new TextColor.RGB(bottom.getRed(), bottom.getGreen(), bottom.getBlue());
+            // Render image using half-block characters
+            for (int y = 0; y < original.getHeight() - 1; y += 2) {
+                for (int x = 0; x < original.getWidth(); x++) {
+                    if (y < original.getHeight() && x < original.getWidth()) {
+                        Color top = new Color(original.getRGB(x, y), false);
+                        Color bottom = y + 1 < original.getHeight() ? 
+                                    new Color(original.getRGB(x, y + 1), false) : 
+                                    Color.BLACK;
     
-                tg.setBackgroundColor(bg);
-                tg.setForegroundColor(fg);
+                        // Skip rendering if both pixels are transparent/black
+                        if (top.getRGB() == Color.BLACK.getRGB() && bottom.getRGB() == Color.BLACK.getRGB()) {
+                            continue;
+                        }
     
-                if (x + startX < size.getColumns() && (y / 2 + startY) < size.getRows()) {
-                    tg.putString(x + startX, y / 2 + startY, "▄");
+                        TextColor.RGB bg = new TextColor.RGB(top.getRed(), top.getGreen(), top.getBlue());
+                        TextColor.RGB fg = new TextColor.RGB(bottom.getRed(), bottom.getGreen(), bottom.getBlue());
+    
+                        tg.setBackgroundColor(bg);
+                        tg.setForegroundColor(fg);
+    
+                        if (x + startX < size.getColumns() && (y / 2 + startY) < size.getRows()) {
+                            tg.putString(x + startX, y / 2 + startY, "▄");
+                        }
+                    }
                 }
             }
-        }
     
-        screen.refresh();
+            screen.refresh();
+          
+            
+            // Sort orders using priority queue with custom comparator
+            PriorityQueue<FoodOrderEntry> priorityQueue = new PriorityQueue<>(
+                new DeliveryOrderComparator()
+            );
+            
+            // Add all orders to the priority queue
+            for (FoodOrderEntry order : orders) {
+                priorityQueue.add(order);
+            }
+            
+            // Capture the background after rendering the background image
+            TextCharacter[][] backgroundCopy = captureScreenState(screen);
+            
+            // Display orders in a horizontal line
+            int orderWidth = 35;  // Width for each order box
+            int orderHeight = 10; // Height for each order box
+            int spacing = 3;      // Spacing between orders
+            
+            // Calculate the total width needed for all orders with spacing
+            int totalWidth = Math.min(orders.size(), 4) * (orderWidth + spacing) - spacing;
+            
+            // Calculate the starting position for orders
+            // Position them at the center horizontally, but 1/3 from the top vertically
+            int orderStartX = (size.getColumns() - totalWidth) / 2;
+            int orderStartY = size.getRows() / 3;
+            
+            // Add the rider location label at the top
+            String riderLocation = "Rider Location: Barangay VI Centro";
+            int riderLocationX = (size.getColumns() - riderLocation.length()) / 2; // Center horizontally
+            int riderLocationY = orderStartY - 2; // Position above orders
+            
+            // Draw rider location with white text
+            TextColor.RGB whiteColor = new TextColor.RGB(255, 255, 255);
+            
+            // Draw a darker background for the rider location
+            for (int i = 0; i < riderLocation.length(); i++) {
+                if (riderLocationX + i < size.getColumns() && riderLocationY < size.getRows()) {
+                    TextCharacter darkChar = new TextCharacter(' ', 
+                                                          TextColor.ANSI.WHITE, 
+                                                          TextColor.ANSI.BLACK);
+                    screen.setCharacter(riderLocationX + i, riderLocationY, darkChar);
+                }
+            }
+            
+            drawTextOverBackground(screen, backgroundCopy, riderLocationX, riderLocationY, riderLocation, whiteColor);
+            
+            // Draw orders based on priority
+            int currentX = orderStartX;
+            int orderNumber = 1;
+            
+            while (!priorityQueue.isEmpty() && orderNumber <= 4) {
+                FoodOrderEntry order = priorityQueue.poll();
+                
+                // Priority label
+                String priorityLabel = "";
+                if ("VIP".equals(order.customerType)) {
+                    priorityLabel = "PRIORITY: VIP";
+                } else if ("Urgent".equals(order.orderType)) {
+                    priorityLabel = "PRIORITY: URGENT";
+                } else if ("Bulk".equals(order.orderType)) {
+                    priorityLabel = "PRIORITY: BULK";
+                } else {
+                    priorityLabel = "PRIORITY: STANDARD";
+                }
+                
+                // Find the distance to display
+                double distance = 0.0;
+                for (int i = 0; i < CustomerAddress.length; i++) {
+                    if (CustomerAddress[i].equals(order.address)) {
+                        distance = AddressDistance[i];
+                        break;
+                    }
+                }
+                
+                // Draw a rectangle background for better text visibility
+                for (int y = 0; y < orderHeight; y++) {
+                    for (int x = 0; x < orderWidth; x++) {
+                        if (currentX + x < size.getColumns() && orderStartY + y < size.getRows()) {
+                            // Use dark background for better readability
+                            TextCharacter darkBg = new TextCharacter(' ', 
+                                                               TextColor.ANSI.WHITE, 
+                                                               TextColor.ANSI.BLACK);
+                            screen.setCharacter(currentX + x, orderStartY + y, darkBg);
+                        }
+                    }
+                }
+                
+                // Display order details
+                drawTextOverBackground(screen, backgroundCopy, currentX, orderStartY, 
+                        String.format("Delivery #%d - %s", orderNumber, priorityLabel), whiteColor);
+                drawTextOverBackground(screen, backgroundCopy, currentX, orderStartY + 1, 
+                        String.format("Customer: %s", order.customerName), whiteColor);
+                drawTextOverBackground(screen, backgroundCopy, currentX, orderStartY + 2, 
+                        String.format("Address: %s (%.1f km)", order.address, distance), whiteColor);
+                drawTextOverBackground(screen, backgroundCopy, currentX, orderStartY + 3, 
+                        String.format("Items: %d", order.foodItems.length), whiteColor);
+                
+                // List a few items (up to 3)
+                int maxItems = Math.min(3, order.foodItems.length);
+                for (int i = 0; i < maxItems; i++) {
+                    drawTextOverBackground(screen, backgroundCopy, currentX, orderStartY + 4 + i, 
+                            String.format("  - %s x%d", order.foodItems[i], order.quantities[i]), whiteColor);
+                }
+                
+                if (order.foodItems.length > 3) {
+                    drawTextOverBackground(screen, backgroundCopy, currentX, orderStartY + 7, 
+                            String.format("  ... and %d more items", order.foodItems.length - 3), whiteColor);
+                }
+                
+                drawTextOverBackground(screen, backgroundCopy, currentX, orderStartY + 8, 
+                        String.format("Payment: %s", order.paymentMethod), whiteColor);
+                
+                // Move to next position
+                currentX += orderWidth + spacing;
+                orderNumber++;
+            }
+            
+            screen.refresh();
+            
+            // Add an instruction for the user with transparent background
+            String instruction = "Press any key to continue";
+            int instructionX = size.getColumns() / 2 - instruction.length() / 2;
+            int instructionY = size.getRows() - 2;
+            
+            // Draw a dark background for the instruction
+            for (int i = 0; i < instruction.length(); i++) {
+                if (instructionX + i < size.getColumns() && instructionY < size.getRows()) {
+                    TextCharacter darkChar = new TextCharacter(' ', 
+                                                          TextColor.ANSI.WHITE, 
+                                                          TextColor.ANSI.BLACK);
+                    screen.setCharacter(instructionX + i, instructionY, darkChar);
+                }
+            }
+            
+            // Draw the instruction with white text
+            drawTextOverBackground(screen, backgroundCopy, instructionX, instructionY, instruction, whiteColor);
+            screen.refresh();
+            
+            // Wait for key press
+            screen.readInput();
+            
+        } catch (Exception e) {
+            System.err.println("Error displaying image:");
+            e.printStackTrace();
+            
+            // Show error message on screen
+            TextGraphics tg = screen.newTextGraphics();
+            tg.setForegroundColor(TextColor.ANSI.RED);
+            tg.putString(0, 0, "Error displaying image: " + e.getMessage());
+            screen.refresh();
+            try { Thread.sleep(3000); } catch (InterruptedException ie) {}
+        }
     }
     private static String getImageTypeName(int type) {
         switch (type) {
