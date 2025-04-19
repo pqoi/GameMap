@@ -53,7 +53,7 @@ public class Version3 {
 
            // Animate loading bar (responsive)
             for (int i = 0; i <= 100; i++) {
-                Thread.sleep(5);
+                Thread.sleep(1);
 
                 screen.clear();
                 TextGraphics tg = screen.newTextGraphics();
