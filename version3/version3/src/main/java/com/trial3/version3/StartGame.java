@@ -696,10 +696,88 @@ public static void renderOrdersOnScreen(Screen screen, List<FoodOrderEntry> orde
                         }
                     }
                     
-                    displayMotorAnimation(screen);
-                    screen.clear();
-                    screen.refresh();
-                    displayDeliverySuccess(screen);
+                    try {
+                        // Create terminal factory and configure it
+                        DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory();
+            
+                        // Create the Swing terminal  
+                        SwingTerminalFrame terminal = terminalFactory.createSwingTerminal();
+            
+            
+                        terminal.setTitle("");
+                        terminal.setVisible(true);
+            
+                        // Force fullscreen after the frame is visible
+                        SwingUtilities.invokeLater(() -> terminal.setExtendedState(JFrame.MAXIMIZED_BOTH));
+            
+                        // Create and start the screen
+                        screen = new TerminalScreen(terminal);
+                        screen.startScreen();
+            
+                        // Spinner frames
+                        String[] spinnerChars = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" };
+            
+                       // Animate loading bar (responsive)
+                        for (int i = 0; i <= 100; i++) {
+                            Thread.sleep(1);
+            
+                            screen.clear();
+                            tg = screen.newTextGraphics();
+                            tg.setBackgroundColor(TextColor.ANSI.BLACK);
+                            tg.setForegroundColor(TextColor.ANSI.WHITE);
+                            tg.fill(' ');
+            
+                            // Get current terminal size
+                            size = screen.doResizeIfNecessary(); // Forces update if size changed
+                            if (size == null) {
+                                size = screen.getTerminalSize(); // fallback
+                            }
+            
+                            int centerX = size.getColumns() / 2;
+                            int centerY = size.getRows() / 2;
+            
+                            String title = "Delivery in Progress...";
+            
+                            // Responsive bar length (e.g. max 70, min 20)
+                            int maxBarLength = Math.min(70, size.getColumns() - 20);
+                            int barLength = Math.max(20, maxBarLength);
+            
+                            String bar = getProgressBar(i, barLength);
+                            String percent = i + "%";
+                            String spinner = spinnerChars[i % spinnerChars.length];
+            
+                            // Draw centered content
+                            tg.putString(centerX - title.length() / 2, centerY - 2, title);
+                            tg.putString(centerX - (bar.length() + percent.length() + spinner.length() + 2) / 2, centerY,
+                                    bar + " " + percent + " " + spinner);
+            
+                            screen.refresh();
+                        }
+            
+            
+                        // Clear loading screen
+                        screen.clear();
+                        screen.refresh();
+            
+                        // Display the FoodPanda background first
+                        displayFoodPandaBackground(screen);
+                        
+                        // Capture the background state
+                        TextCharacter[][] backgroundState = captureScreenState(screen);
+                        
+                        // Animate the boy image moving across the screen
+                        animateBoyImage(screen, backgroundState);
+                        Customer(screen);
+                        displayDeliverySuccess(screen);
+                        // Automatically close the screen after the animation finishes
+                        screen.close();
+                        screen.clear();
+                        screen.refresh();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    
+                    
                 }
             }
             
@@ -724,6 +802,304 @@ public static void renderOrdersOnScreen(Screen screen, List<FoodOrderEntry> orde
             default: return "Unknown (" + type + ")";
         }
     }
+    private static void Customer(Screen screen) throws IOException {
+        try {
+            // Load image from resources
+            InputStream imageStream = Version3.class.getClassLoader().getResourceAsStream("customer.png");
+            if (imageStream == null) {
+                throw new RuntimeException("Image not found in resources");
+            }
+
+            BufferedImage original = ImageIO.read(imageStream);
+            System.out.println("Image loaded. Dimensions: " + original.getWidth() + "x" + original.getHeight());
+            System.out.println("Image type: " + getImageTypeName(original.getType()));
+
+            // Get terminal dimensions
+            TextGraphics tg = screen.newTextGraphics();
+            TerminalSize size = screen.getTerminalSize();
+            
+            // Scale image if too large
+            int maxWidth = size.getColumns();
+            int maxHeight = size.getRows() * 2; // *2 because we use half blocks
+            if (original.getWidth() > maxWidth || original.getHeight() > maxHeight) {
+                BufferedImage scaled = new BufferedImage(maxWidth, maxHeight, BufferedImage.TYPE_INT_RGB);
+                Graphics2D g = scaled.createGraphics();
+                g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+                g.drawImage(original, 0, 0, maxWidth, maxHeight, null);
+                g.dispose();
+                original = scaled;
+                System.out.println("Image scaled to: " + maxWidth + "x" + maxHeight);
+            }
+
+            // Clear screen
+            tg.setBackgroundColor(TextColor.ANSI.BLACK);
+            tg.fill(' ');
+
+            // Calculate centered position
+            int startX = (size.getColumns() - original.getWidth()) / 2;
+            int startY = (size.getRows() - original.getHeight() / 2) / 2;
+
+            // Render image using half-block characters
+            for (int y = 0; y < original.getHeight() - 1; y += 2) {
+                for (int x = 0; x < original.getWidth(); x++) {
+                    Color top = new Color(original.getRGB(x, y), false);
+                    Color bottom = new Color(original.getRGB(x, y + 1), false);
+
+                    // Skip rendering if both pixels are transparent/black
+                    if (top.getRGB() == Color.BLACK.getRGB() && bottom.getRGB() == Color.BLACK.getRGB()) {
+                        continue;
+                    }
+
+                    TextColor.RGB bg = new TextColor.RGB(top.getRed(), top.getGreen(), top.getBlue());
+                    TextColor.RGB fg = new TextColor.RGB(bottom.getRed(), bottom.getGreen(), bottom.getBlue());
+
+                    tg.setBackgroundColor(bg);
+                    tg.setForegroundColor(fg);
+
+                    if (x + startX < size.getColumns() && (y / 2 + startY) < size.getRows()) {
+                        tg.putString(x + startX, y / 2 + startY, "▄");
+                    }
+                }
+            }
+
+            screen.refresh();
+            
+            Thread.sleep(2000); 
+
+        } catch (Exception e) {
+            System.err.println("Error displaying image:");
+            e.printStackTrace();
+            
+            // Show error message on screen
+            TextGraphics tg = screen.newTextGraphics();
+            tg.setForegroundColor(TextColor.ANSI.RED);
+            tg.putString(0, 0, "Error displaying image: " + e.getMessage());
+            screen.refresh();
+            try { Thread.sleep(3000); } catch (InterruptedException ie) {}
+        }
+    }
+   
+     // New method to animate the boy image moving across the screen
+     private static void animateBoyImage(Screen screen, TextCharacter[][] backgroundState) throws IOException {
+        try {
+            // Load image from resources
+            InputStream imageStream = Version3.class.getClassLoader().getResourceAsStream("RealBoy.png");
+            if (imageStream == null) {
+                throw new RuntimeException("Boy image not found in resources");
+            }
+
+            BufferedImage original = ImageIO.read(imageStream);
+            
+            // Get terminal dimensions
+            TerminalSize size = screen.getTerminalSize();
+            
+            // Scale image if too large (using a smaller fraction of the screen)
+            int maxWidth = size.getColumns() / 3; // Use 1/3 of screen width
+            int maxHeight = size.getRows() * 2 / 2; // Use 1/2 of screen height, * 2 for half blocks
+            
+            double scaleW = (double) maxWidth / original.getWidth();
+            double scaleH = (double) maxHeight / original.getHeight();
+            double scale = Math.min(scaleW, scaleH);
+            
+            int newWidth = (int)(original.getWidth() * scale);
+            int newHeight = (int)(original.getHeight() * scale);
+            
+            BufferedImage scaled = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g = scaled.createGraphics();
+            g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+            g.drawImage(original, 0, 0, newWidth, newHeight, null);
+            g.dispose();
+            
+            // Calculate position for bottom left starting point
+            int startY = size.getRows() - (newHeight / 2) - (-2); // Position from bottom with some padding
+            
+            // Define animation parameters
+            int startX = -newWidth; // Start off-screen to the left
+            int endX = size.getColumns(); // End off-screen to the right
+            int stepSize = 2; // How many pixels to move per frame
+            int delayMs = 50; // Delay between frames in milliseconds
+            
+            // Run the animation
+            for (int posX = startX; posX <= endX; posX += stepSize) {
+                // Clear the previous frame by restoring background
+                restoreFullBackground(screen, backgroundState);
+                
+                // Render image at the current position
+                renderBoyAtPosition(screen, scaled, posX, startY, backgroundState, newWidth, newHeight);
+                
+                // Refresh the screen and wait
+                screen.refresh();
+                Thread.sleep(delayMs);
+            }
+            
+        } catch (Exception e) {
+            System.err.println("Error animating boy image:");
+            e.printStackTrace();
+            
+            // Show error message on screen
+            TextGraphics tg = screen.newTextGraphics();
+            tg.setForegroundColor(TextColor.ANSI.RED);
+            tg.putString(0, 0, "Error animating boy image: " + e.getMessage());
+            screen.refresh();
+            try { Thread.sleep(3000); } catch (InterruptedException ie) {}
+        }
+    }
+    
+    // Helper method to render the boy at a specific position
+    private static void renderBoyAtPosition(Screen screen, BufferedImage scaled, int startX, int startY, 
+                                          TextCharacter[][] backgroundState, int newWidth, int newHeight) {
+        TerminalSize size = screen.getTerminalSize();
+        
+        // Render image using half-block characters
+        for (int y = 0; y < newHeight - 1; y += 2) {
+            for (int x = 0; x < newWidth; x++) {
+                // Calculate the position on screen
+                int screenX = x + startX;
+                int screenY = y / 2 + startY;
+                
+                // Skip if out of screen bounds
+                if (screenX >= size.getColumns() || screenY >= size.getRows() || screenX < 0 || screenY < 0) {
+                    continue;
+                }
+                
+                Color top = new Color(scaled.getRGB(x, y), true);
+                Color bottom = y + 1 < newHeight ? new Color(scaled.getRGB(x, y + 1), true) : new Color(0, 0, 0, 0);
+                
+                // Check transparency - if both pixels are mostly transparent, restore background
+                if (top.getAlpha() < 20 && bottom.getAlpha() < 20) {
+                    // Use the background character at this position
+                    if (screenY < backgroundState.length && screenX < backgroundState[0].length) {
+                        screen.setCharacter(screenX, screenY, backgroundState[screenY][screenX]);
+                    }
+                    continue;
+                }
+                
+                // For semi-transparent pixels, blend with background
+                TextCharacter bgChar = backgroundState[screenY][screenX];
+                TextColor bgColorFull = bgChar.getBackgroundColor();
+                TextColor.RGB bgColor = bgColorFull instanceof TextColor.RGB ? 
+                                      (TextColor.RGB)bgColorFull : 
+                                      new TextColor.RGB(0, 0, 0);
+                
+                // If top pixel is transparent but bottom isn't, use background for top
+                if (top.getAlpha() < 20) {
+                    top = new Color(bgColor.getRed(), bgColor.getGreen(), bgColor.getBlue());
+                }
+                
+                // If bottom pixel is transparent but top isn't, use background for bottom
+                if (bottom.getAlpha() < 20) {
+                    TextColor fgColorFull = bgChar.getForegroundColor();
+                    TextColor.RGB fgColor = fgColorFull instanceof TextColor.RGB ? 
+                                           (TextColor.RGB)fgColorFull : 
+                                           new TextColor.RGB(0, 0, 0);
+                    bottom = new Color(fgColor.getRed(), fgColor.getGreen(), fgColor.getBlue());
+                }
+                
+                // Set colors and draw the character
+                TextColor.RGB bg = new TextColor.RGB(top.getRed(), top.getGreen(), top.getBlue());
+                TextColor.RGB fg = new TextColor.RGB(bottom.getRed(), bottom.getGreen(), bottom.getBlue());
+                
+                TextGraphics tg = screen.newTextGraphics();
+                tg.setBackgroundColor(bg);
+                tg.setForegroundColor(fg);
+                tg.putString(screenX, screenY, "▄");
+            }
+        }
+    }
+    
+    // Method to restore entire background (faster than area-specific restore)
+    private static void restoreFullBackground(Screen screen, TextCharacter[][] backgroundState) {
+        TerminalSize size = screen.getTerminalSize();
+        int maxRows = Math.min(size.getRows(), backgroundState.length);
+        int maxCols = Math.min(size.getColumns(), backgroundState[0].length);
+        
+        for (int y = 0; y < maxRows; y++) {
+            for (int x = 0; x < maxCols; x++) {
+                screen.setCharacter(x, y, backgroundState[y][x]);
+            }
+        }
+    }
+    private static void displayFoodPandaBackground(Screen screen) throws IOException {
+        try {
+            // Load image from resources
+            InputStream imageStream = Version3.class.getClassLoader().getResourceAsStream("delivery.png");
+            if (imageStream == null) {
+                throw new RuntimeException("Image not found in resources");
+            }
+
+            BufferedImage original = ImageIO.read(imageStream);
+            System.out.println("Image loaded. Dimensions: " + original.getWidth() + "x" + original.getHeight());
+            System.out.println("Image type: " + getImageTypeName(original.getType()));
+
+            // Get terminal dimensions
+            TextGraphics tg = screen.newTextGraphics();
+            TerminalSize size = screen.getTerminalSize();
+            
+            // Scale image if too large
+            int maxWidth = size.getColumns();
+            int maxHeight = size.getRows() * 2; // *2 because we use half blocks
+            if (original.getWidth() > maxWidth || original.getHeight() > maxHeight) {
+                BufferedImage scaled = new BufferedImage(maxWidth, maxHeight, BufferedImage.TYPE_INT_RGB);
+                Graphics2D g = scaled.createGraphics();
+                g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+                g.drawImage(original, 0, 0, maxWidth, maxHeight, null);
+                g.dispose();
+                original = scaled;
+                System.out.println("Image scaled to: " + maxWidth + "x" + maxHeight);
+            }
+
+            // Clear screen
+            tg.setBackgroundColor(TextColor.ANSI.BLACK);
+            tg.fill(' ');
+
+            // Calculate centered position
+            int startX = (size.getColumns() - original.getWidth()) / 2;
+            int startY = (size.getRows() - original.getHeight() / 2) / 2;
+
+            // Render image using half-block characters
+            for (int y = 0; y < original.getHeight() - 1; y += 2) {
+                for (int x = 0; x < original.getWidth(); x++) {
+                    Color top = new Color(original.getRGB(x, y), false);
+                    Color bottom = new Color(original.getRGB(x, y + 1), false);
+
+                    // Skip rendering if both pixels are transparent/black
+                    if (top.getRGB() == Color.BLACK.getRGB() && bottom.getRGB() == Color.BLACK.getRGB()) {
+                        continue;
+                    }
+
+                    TextColor.RGB bg = new TextColor.RGB(top.getRed(), top.getGreen(), top.getBlue());
+                    TextColor.RGB fg = new TextColor.RGB(bottom.getRed(), bottom.getGreen(), bottom.getBlue());
+
+                    tg.setBackgroundColor(bg);
+                    tg.setForegroundColor(fg);
+
+                    if (x + startX < size.getColumns() && (y / 2 + startY) < size.getRows()) {
+                        tg.putString(x + startX, y / 2 + startY, "▄");
+                    }
+                }
+            }
+
+            screen.refresh();
+            
+            Thread.sleep(100); // Display for 5 seconds
+
+        } catch (Exception e) {
+            System.err.println("Error displaying image:");
+            e.printStackTrace();
+            
+            // Show error message on screen
+            TextGraphics tg = screen.newTextGraphics();
+            tg.setForegroundColor(TextColor.ANSI.RED);
+            tg.putString(0, 0, "Error displaying image: " + e.getMessage());
+            screen.refresh();
+            try { Thread.sleep(3000); } catch (InterruptedException ie) {}
+        }
+    }
+   
+   
+
+   
+
     private static void displayMotorAnimation (Screen screen) throws IOException, InterruptedException {
         // Create the Swing terminal  
         SwingTerminalFrame terminal = terminalFactory.createSwingTerminal();
