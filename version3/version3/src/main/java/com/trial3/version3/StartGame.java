@@ -366,31 +366,7 @@ public static void renderOrdersOnScreen(Screen screen, List<FoodOrderEntry> orde
             }
         }
        
-        
-        private static final String[] Motor = {
-            "                           `   `.",
-            "           <```--...       .---.//  < `.",
-            "            `..     `.___ /       ___`.'",
-            "              _`_ .      `      .'\\\\__",
-            "            .'---`.`.          / .'---`.",
-            "           /.'  _`.\\_\\        / /.'\\\\ `.\\",
-            "           ||  <__||_|        | ||  ~  ||",
-            "           \\`.___.'/ /________\\ \\`.___.'/",
-            "            `.___.'              `.___.'"
-        };
-        // This method draws the provided ASCII motor at a specific position
-        private static void drawMotor(Screen screen, int x, int y, TextGraphics tg) {
-            // Use the provided ASCII motor art
-            String[] motorArt = Motor;
-            
-            // Draw the motor
-            for (int i = 0; i < motorArt.length; i++) {
-                // Ensure we're not going beyond screen bounds
-                if (y + i < screen.getTerminalSize().getRows()) {
-                    tg.putString(x, y + i, motorArt[i]);
-                }
-            }
-        }
+       
 
     // Modify the getProgressBar method to calculate and return the position
     private static String[] getProgressBarWithMotorPosition(int percent, int barLength) {
@@ -1100,71 +1076,7 @@ public static void renderOrdersOnScreen(Screen screen, List<FoodOrderEntry> orde
 
    
 
-    private static void displayMotorAnimation (Screen screen) throws IOException, InterruptedException {
-        // Create the Swing terminal  
-        SwingTerminalFrame terminal = terminalFactory.createSwingTerminal();
-
-        terminal.setTitle("");
-        terminal.setVisible(true);
-
-        // Force fullscreen after the frame is visible
-        SwingUtilities.invokeLater(() -> terminal.setExtendedState(JFrame.MAXIMIZED_BOTH));
-
-        // Create and start the screen
-        screen = new TerminalScreen(terminal);
-        screen.startScreen();
-
-        // Spinner frames
-        String[] spinnerChars = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" };
-
-       // First animation block modification
-        for (int i = 0; i <= 100; i++) {
-            Thread.sleep(10);
-
-            screen.clear();
-            TextGraphics tg = screen.newTextGraphics();
-            tg.setBackgroundColor(TextColor.ANSI.BLACK);
-            tg.setForegroundColor(TextColor.ANSI.WHITE);
-            tg.fill(' ');
-
-            // Get current terminal size
-            TerminalSize size = screen.doResizeIfNecessary(); // Forces update if size changed
-            if (size == null) {
-                size = screen.getTerminalSize(); // fallback
-            }
-
-            int centerX = size.getColumns() / 2;
-            int centerY = size.getRows() / 2;
-
-            String title = "Delivering the Orders...";
-
-            // Responsive bar length (e.g. max 70, min 20)
-            int maxBarLength = Math.min(70, size.getColumns() - 20);
-            int barLength = Math.max(20, maxBarLength);
-
-            String[] progressData = getProgressBarWithMotorPosition(i, barLength);
-            String bar = progressData[0];
-            int motorPos = Integer.parseInt(progressData[1]);
-            String percent = i + "%";
-            String spinner = spinnerChars[i % spinnerChars.length];
-
-            // Calculate position for motor to move across the bar
-            int motorStartX = centerX - barLength/2;
-            int motorX = motorStartX + motorPos - 15; // Center the motor horizontally
-            int motorY = centerY - 12; // Position above the progress bar
-            
-            // Draw motor first so the bar and text appear on top
-            drawMotor(screen, motorX, motorY, tg);
-            
-            // Draw centered content
-            tg.putString(centerX - title.length() / 2, centerY - 2, title);
-            tg.putString(centerX - (bar.length() + percent.length() + spinner.length() + 2) / 2, centerY,
-                    bar + " " + percent + " " + spinner);
-
-            screen.refresh();
-        }
-        screen.stopScreen();
-    }
+   
     private static void displayDeliverySuccess(Screen screen) throws IOException {
         try {
             // Load image from resources
@@ -1352,6 +1264,106 @@ public static void renderOrdersOnScreen(Screen screen, List<FoodOrderEntry> orde
         
         return remainingOrders;
     }
+    private static void displayStart(Screen screen) throws IOException {
+        try {
+            // Load image from resources
+            InputStream imageStream = Version3.class.getClassLoader().getResourceAsStream("NewOrder.png");
+            if (imageStream == null) {
+                throw new RuntimeException("Image not found in resources");
+            }
+
+            BufferedImage original = ImageIO.read(imageStream);
+            System.out.println("Image loaded. Dimensions: " + original.getWidth() + "x" + original.getHeight());
+            System.out.println("Image type: " + getImageTypeName(original.getType()));
+
+            // Get terminal dimensions
+            TextGraphics tg = screen.newTextGraphics();
+            TerminalSize size = screen.getTerminalSize();
+            
+            // Scale image if too large
+            int maxWidth = size.getColumns();
+            int maxHeight = size.getRows() * 2; // *2 because we use half blocks
+            if (original.getWidth() > maxWidth || original.getHeight() > maxHeight) {
+                BufferedImage scaled = new BufferedImage(maxWidth, maxHeight, BufferedImage.TYPE_INT_RGB);
+                Graphics2D g = scaled.createGraphics();
+                g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+                g.drawImage(original, 0, 0, maxWidth, maxHeight, null);
+                g.dispose();
+                original = scaled;
+                System.out.println("Image scaled to: " + maxWidth + "x" + maxHeight);
+            }
+
+            // Clear screen
+            tg.setBackgroundColor(TextColor.ANSI.BLACK);
+            tg.fill(' ');
+
+            // Calculate centered position
+            int startX = (size.getColumns() - original.getWidth()) / 2;
+            int startY = (size.getRows() - original.getHeight() / 2) / 2;
+
+            // Render image using half-block characters
+            for (int y = 0; y < original.getHeight() - 1; y += 2) {
+                for (int x = 0; x < original.getWidth(); x++) {
+                    Color top = new Color(original.getRGB(x, y), false);
+                    Color bottom = new Color(original.getRGB(x, y + 1), false);
+
+                    // Skip rendering if both pixels are transparent/black
+                    if (top.getRGB() == Color.BLACK.getRGB() && bottom.getRGB() == Color.BLACK.getRGB()) {
+                        continue;
+                    }
+
+                    TextColor.RGB bg = new TextColor.RGB(top.getRed(), top.getGreen(), top.getBlue());
+                    TextColor.RGB fg = new TextColor.RGB(bottom.getRed(), bottom.getGreen(), bottom.getBlue());
+
+                    tg.setBackgroundColor(bg);
+                    tg.setForegroundColor(fg);
+
+                    if (x + startX < size.getColumns() && (y / 2 + startY) < size.getRows()) {
+                        tg.putString(x + startX, y / 2 + startY, "▄");
+                    }
+                }
+            }
+
+   
+         
+
+            screen.refresh();
+
+
+             // Add an instruction for the user with transparent background
+              // Get terminal size
+             size = screen.getTerminalSize();
+             // Still have orders to deliver
+             String instruction = "Press ENTER to continue";
+             int instructionX = size.getColumns()/2 - instruction.length()/2;
+             int instructionY = size.getRows() - 3;
+             
+             // Capture the current screen state for the instruction
+             TextCharacter[][] backgroundCopy = captureScreenState(screen);
+             TextColor.RGB blackColor = new TextColor.RGB(0, 0, 0);
+             drawTextOverBackground(screen, backgroundCopy, instructionX, instructionY, instruction, blackColor);
+             screen.refresh();
+             
+             KeyStroke key;
+            do {
+                key = screen.readInput();
+            } while (key == null || key.getKeyType() != KeyType.Enter);
+           
+        } catch (Exception e) {  
+            System.err.println("Error displaying image:");
+            e.printStackTrace();
+            
+            // Show error message on screen
+            TextGraphics tg = screen.newTextGraphics();
+            tg.setForegroundColor(TextColor.ANSI.RED);
+            tg.putString(0, 0, "Error displaying image: " + e.getMessage());
+            screen.refresh();
+            try { Thread.sleep(3000); } catch (InterruptedException ie) {}
+        }
+    } 
+    
+   
+    
     public static void main(String[] args) {
         deliveredOrderIndices = new ArrayList<>(); // Reset delivered orders
         try {
@@ -1370,9 +1382,47 @@ public static void renderOrdersOnScreen(Screen screen, List<FoodOrderEntry> orde
              // Create and start the screen
              Screen screen = new TerminalScreen(terminal);
              screen.startScreen();
- 
-             // Spinner frames
              String[] spinnerChars = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" };
+             // Animate loading bar (responsive)
+             for (int i = 0; i <= 100; i++) {
+                Thread.sleep(1);
+
+                screen.clear();
+                TextGraphics tg = screen.newTextGraphics();
+                tg.setBackgroundColor(TextColor.ANSI.BLACK);
+                tg.setForegroundColor(TextColor.ANSI.WHITE);
+                tg.fill(' ');
+
+                // Get current terminal size
+                TerminalSize size = screen.doResizeIfNecessary(); // Forces update if size changed
+                if (size == null) {
+                    size = screen.getTerminalSize(); // fallback
+                }
+
+                int centerX = size.getColumns() / 2;
+                int centerY = size.getRows() / 2;
+
+                String title = "Loading ...";
+
+                // Responsive bar length (e.g. max 70, min 20)
+                int maxBarLength = Math.min(70, size.getColumns() - 20);
+                int barLength = Math.max(20, maxBarLength);
+
+                String bar = getProgressBar(i, barLength);
+                String percent = i + "%";
+                String spinner = spinnerChars[i % spinnerChars.length];
+
+                // Draw centered content
+                tg.putString(centerX - title.length() / 2, centerY - 2, title);
+                tg.putString(centerX - (bar.length() + percent.length() + spinner.length() + 2) / 2, centerY,
+                        bar + " " + percent + " " + spinner);
+
+                screen.refresh();
+            }
+          
+            displayStart(screen);
+             // Spinner frames
+           
  
              // Animate loading bar (responsive)
              for (int i = 0; i <= 100; i++) {
