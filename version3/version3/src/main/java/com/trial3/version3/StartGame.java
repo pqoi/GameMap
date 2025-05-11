@@ -679,17 +679,6 @@ public static void renderOrdersOnScreen(Screen screen, List<FoodOrderEntry> orde
                         // Create the Swing terminal  
                         SwingTerminalFrame terminal = terminalFactory.createSwingTerminal();
             
-            
-                        terminal.setTitle("");
-                        terminal.setVisible(true);
-            
-                        // Force fullscreen after the frame is visible
-                        SwingUtilities.invokeLater(() -> terminal.setExtendedState(JFrame.MAXIMIZED_BOTH));
-            
-                        // Create and start the screen
-                        screen = new TerminalScreen(terminal);
-                        screen.startScreen();
-            
                         // Spinner frames
                         String[] spinnerChars = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" };
             
@@ -1253,17 +1242,7 @@ public static void renderOrdersOnScreen(Screen screen, List<FoodOrderEntry> orde
         
         return remainingOrders;
     }
-    private static List<FoodOrderEntry> getRemainingOrders(List<FoodOrderEntry> allOrders) {
-        List<FoodOrderEntry> remainingOrders = new ArrayList<>();
-        
-        for (int i = 0; i < allOrders.size(); i++) {
-            if (!deliveredOrderIndices.contains(i)) {
-                remainingOrders.add(allOrders.get(i));
-            }
-        }
-        
-        return remainingOrders;
-    }
+   
     private static void displayStart(Screen screen) throws IOException {
         try {
             // Load image from resources
@@ -1443,7 +1422,7 @@ public static void renderOrdersOnScreen(Screen screen, List<FoodOrderEntry> orde
                  int centerX = size.getColumns() / 2;
                  int centerY = size.getRows() / 2;
  
-                 String title = "Generating Random Orders";
+                 String title = "Viewing the Orders...";
  
                  // Responsive bar length (e.g. max 70, min 20)
                  int maxBarLength = Math.min(70, size.getColumns() - 20);

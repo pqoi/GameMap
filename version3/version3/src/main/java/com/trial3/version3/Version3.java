@@ -533,7 +533,7 @@ public class Version3 {
         System.err.println("Audio line unavailable: " + e.getMessage());
         e.printStackTrace();
     }
-}
+                }
     private static void displayFoodPandaAbout(Screen screen) throws IOException {
         try {
             // Load image from resources
