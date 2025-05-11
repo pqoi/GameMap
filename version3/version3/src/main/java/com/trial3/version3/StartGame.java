@@ -729,9 +729,18 @@ public static void renderOrdersOnScreen(Screen screen, List<FoodOrderEntry> orde
                         
                         // Capture the background state
                         TextCharacter[][] backgroundState = captureScreenState(screen);
-                        
+                        // Stop the menu music
+                        if (Version3.menuClip != null && Version3.menuClip.isRunning()) {
+                            Version3.menuClip.stop();
+                        }
                         // Animate the boy image moving across the screen
                         animateBoyImage(screen, backgroundState);
+                        // Resume the menu music
+                        if (Version3.menuClip != null) {
+                            Version3.menuClip.setFramePosition(0); // restart from beginning
+                            Version3.menuClip.loop(Clip.LOOP_CONTINUOUSLY);
+                            Version3.menuClip.start();
+                        }
                         Customer(screen);
                         displayDeliverySuccess(screen);
                         // Automatically close the screen after the animation finishes
@@ -883,7 +892,7 @@ public static void renderOrdersOnScreen(Screen screen, List<FoodOrderEntry> orde
             int endX = size.getColumns(); // End off-screen to the right
             int stepSize = 2; // How many pixels to move per frame
             int delayMs = 50; // Delay between frames in milliseconds
-            
+            Clip motorClip = StartGame.playMotorSound();
             // Run the animation
             for (int posX = startX; posX <= endX; posX += stepSize) {
                 // Clear the previous frame by restoring background
@@ -895,6 +904,11 @@ public static void renderOrdersOnScreen(Screen screen, List<FoodOrderEntry> orde
                 // Refresh the screen and wait
                 screen.refresh();
                 Thread.sleep(delayMs);
+            }
+             // Stop motor sound when animation ends
+            if (motorClip != null && motorClip.isRunning()) {
+                motorClip.stop();
+                motorClip.close();
             }
             
         } catch (Exception e) {
@@ -971,7 +985,21 @@ public static void renderOrdersOnScreen(Screen screen, List<FoodOrderEntry> orde
             }
         }
     }
-    
+   public static Clip playMotorSound() {
+    try {
+        File file = new File("C:\\Code Practice\\version3\\version3\\src\\main\\resources\\MotorSound.wav");
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
+        Clip clip = AudioSystem.getClip();
+        clip.open(audioInputStream);
+        clip.start();
+        return clip;
+    } catch (Exception e) {
+        e.printStackTrace();
+        return null;
+    }
+}
+
+
     // Method to restore entire background (faster than area-specific restore)
     private static void restoreFullBackground(Screen screen, TextCharacter[][] backgroundState) {
         TerminalSize size = screen.getTerminalSize();

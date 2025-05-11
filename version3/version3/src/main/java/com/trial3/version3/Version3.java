@@ -28,7 +28,7 @@ import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 
 public class Version3 {
-
+    public static Clip menuClip;
     public static void main(String[] args) throws IOException {
         try {
             // Create terminal factory and configure it
@@ -303,28 +303,28 @@ public class Version3 {
         final String[][] menuOptions = {
             // Option 1: "START" (5 lines)
             {
-                "███████╗████████╗ █████╗ ██████╗ ████████╗",
-                "██╔════╝╚══██╔══╝██╔══██╗██╔══██╗╚══██╔══╝",
-                "███████╗   ██║   ███████║██████╔╝   ██║   ",
-                "╚════██║   ██║   ██╔══██║██╔══██╗   ██║   ",
-                "███████║   ██║   ██║  ██║██║  ██║   ██║   "
+                "███████ ████████  █████  ██████  ████████",
+                "██         ██    ██   ██ ██   ██    ██    ",
+                "███████    ██    ███████ ██████     ██    ",
+                "     ██    ██    ██   ██ ██   ██    ██    ",
+                "███████    ██    ██   ██ ██   ██    ██    "
             },
             // Option 2: "About" (6 lines)
             {
-                " █████╗ ██████╗  ██████╗ ██╗   ██╗████████╗",
-                "██╔══██╗██╔══██╗██╔═══██╗██║   ██║╚══██╔══╝",
-                "███████║██████╔╝██║   ██║██║   ██║   ██║   ", 
-                "██╔══██║██╔══██╗██║   ██║██║   ██║   ██║   ", 
-                "██║  ██║██████╔╝╚██████╔╝╚██████╔╝   ██║   ", 
-                "╚═╝  ╚═╝╚═════╝  ╚═════╝  ╚═════╝    ╚═╝   " 
+                " █████  ██████   ██████  ██    ██ ████████ ",
+                "██   ██ ██   ██ ██    ██ ██    ██    ██    ",
+                "███████ ██████  ██    ██ ██    ██    ██    ", 
+                "██   ██ ██   ██ ██    ██ ██    ██    ██    ", 
+                "██   ██ ██████   ██████   ██████     ██    ", 
+                
             },
             // Option 3: "EXIT" (5 lines)
             {
-                "███████╗██╗  ██╗██╗████████╗        ",
-                "██╔════╝╚██╗██╔╝██║╚══██╔══╝        ",
-                "█████╗   ╚███╔╝ ██║   ██║           ",
-                "██╔══╝   ██╔██╗ ██║   ██║           ",
-                "███████╗██╔╝ ██╗██║   ██║           "
+                "███████ ██   ██ ██ ████████        ",
+                "██       ██ ██  ██    ██          ",
+                "█████     ███   ██    ██            ",
+                "██       ██ ██  ██    ██           ",
+                "███████ ██   ██ ██    ██            "
             }
         };
         int selectedIndex = 0;
@@ -497,43 +497,26 @@ public class Version3 {
             e.printStackTrace();
         }
     }
-   public static void MenuSound() {
-    File file = new File("C:\\Code Practice\\version3\\version3\\src\\main\\resources\\MenuSound.wav");
-    try {
-        // Create a Clip that will handle the audio playing
-        Clip clip = AudioSystem.getClip();
-        
-        // Get the audio input stream
-        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
-        
-        // Open the clip with the audio stream
-        clip.open(audioInputStream);
-        
-        // Set the clip to loop continuously
-        clip.loop(Clip.LOOP_CONTINUOUSLY);
-        
-        // Start playing
-        clip.start();
-        
-        // Optional: Add a shutdown hook to close the clip when the application exits
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            if (clip.isRunning()) {
-                clip.stop();
-                clip.close();
-            }
-        }));
-        
-    } catch (UnsupportedAudioFileException e) {
-        System.err.println("Audio file format is not supported: " + e.getMessage());
-        e.printStackTrace();
-    } catch (IOException e) {
-        System.err.println("Error reading audio file: " + e.getMessage());
-        e.printStackTrace();
-    } catch (LineUnavailableException e) {
-        System.err.println("Audio line unavailable: " + e.getMessage());
-        e.printStackTrace();
-    }
+    public static void MenuSound() {
+        File file = new File("C:\\Code Practice\\version3\\version3\\src\\main\\resources\\MenuSound.wav");
+        try {
+            menuClip = AudioSystem.getClip();
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
+            menuClip.open(audioInputStream);
+            menuClip.loop(Clip.LOOP_CONTINUOUSLY);
+            menuClip.start();
+
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                if (menuClip != null && menuClip.isRunning()) {
+                    menuClip.stop();
+                    menuClip.close();
                 }
+            }));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     private static void displayFoodPandaAbout(Screen screen) throws IOException {
         try {
             // Load image from resources
