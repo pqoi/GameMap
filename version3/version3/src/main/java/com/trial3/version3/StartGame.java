@@ -154,11 +154,12 @@ public class StartGame {
             for (int j = 0; j < FoodOrder.length; j++) indices.add(j);
             Collections.shuffle(indices);
             order.foodItems = new String[itemCount];
-            order.quantities = new int[itemCount];
+            order.quantities = new int[order.foodItems.length];
+
     
             for (int j = 0; j < itemCount; j++) {
                 order.foodItems[j] = FoodOrder[indices.get(j)];
-                order.quantities[j] = 1 + rand.nextInt(2);
+                order.quantities[j] = 1;
             }
     
             order.paymentMethod = PaymentMethods[rand.nextInt(PaymentMethods.length)];
@@ -368,19 +369,7 @@ public static void renderOrdersOnScreen(Screen screen, List<FoodOrderEntry> orde
        
        
 
-    // Modify the getProgressBar method to calculate and return the position
-    private static String[] getProgressBarWithMotorPosition(int percent, int barLength) {
-        int filledLength = percent * barLength / 100;
-        char[] bar = new char[barLength];
-        Arrays.fill(bar, 0, filledLength, '█');
-        Arrays.fill(bar, filledLength, barLength, '░');
-        
-        // Calculate motor position along the bar - scaled to bar length
-        int motorPosition = (percent * barLength) / 100;
-        if (motorPosition >= barLength) motorPosition = barLength - 1;
-        
-        return new String[] {"[" + new String(bar) + "]", String.valueOf(motorPosition)};
-    }
+    
     private static void displayOrdersBackground(Screen screen) throws IOException {
         try {
             // Load image from resources
@@ -891,7 +880,7 @@ public static void renderOrdersOnScreen(Screen screen, List<FoodOrderEntry> orde
             int startX = -newWidth; // Start off-screen to the left
             int endX = size.getColumns(); // End off-screen to the right
             int stepSize = 2; // How many pixels to move per frame
-            int delayMs = 27; // Delay between frames in milliseconds
+            int delayMs = 39; // Delay between frames in milliseconds
             Clip motorClip = StartGame.playMotorSound();
             // Run the animation
             for (int posX = startX; posX <= endX; posX += stepSize) {
