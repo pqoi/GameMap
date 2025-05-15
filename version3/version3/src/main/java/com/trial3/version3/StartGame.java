@@ -891,7 +891,7 @@ public static void renderOrdersOnScreen(Screen screen, List<FoodOrderEntry> orde
             int startX = -newWidth; // Start off-screen to the left
             int endX = size.getColumns(); // End off-screen to the right
             int stepSize = 2; // How many pixels to move per frame
-            int delayMs = 50; // Delay between frames in milliseconds
+            int delayMs = 27; // Delay between frames in milliseconds
             Clip motorClip = StartGame.playMotorSound();
             // Run the animation
             for (int posX = startX; posX <= endX; posX += stepSize) {
