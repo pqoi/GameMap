@@ -1,4 +1,3 @@
-// === FileTreePanel.java ===
 package com.comprog;
 
 import javax.swing.*;
@@ -45,5 +44,22 @@ public class FileTreePanel extends JPanel {
             }
         }
         return null;
+    }
+
+    // Method to update the tree
+    public void updateTree() {
+        DefaultMutableTreeNode root = (DefaultMutableTreeNode) fileTree.getModel().getRoot();
+        root.removeAllChildren(); // Remove all existing nodes
+
+        // Rebuild the tree with the current file system state
+        File[] roots = File.listRoots();
+        for (File fileRoot : roots) {
+            DefaultMutableTreeNode driveNode = new DefaultMutableTreeNode(new FileNode(fileRoot));
+            root.add(driveNode);
+            driveNode.add(new DefaultMutableTreeNode("Loading...")); // Placeholder for lazy loading
+        }
+
+        // Notify the tree that the model has changed
+        ((DefaultTreeModel) fileTree.getModel()).reload(root);
     }
 }
