@@ -1,4 +1,4 @@
-package com.comprog;
+ package com.comprog;
 
 import javax.swing.ImageIcon;
 
@@ -45,7 +45,12 @@ public class MainFileFrame {
     JLabel fileLabel = new JLabel(new ImageIcon(scaledFileImg));
     fileLabel.setBorder(BorderFactory.createEmptyBorder(20,20,10,20)); // Add padding
     leftPanel.add(fileLabel);
-
+    fileLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+        @Override
+        public void mouseClicked(java.awt.event.MouseEvent e) {
+            new FileFrame(); // Open FileFrame on click
+        }
+    });
     // Add RecycleIcon below with resized dimensions
     ImageIcon recycleIcon = new ImageIcon("FileManegement\\final\\src\\main\\resources\\Recycle Bin.png");
     Image recycleImg = recycleIcon.getImage();

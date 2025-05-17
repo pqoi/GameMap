@@ -17,7 +17,7 @@ public class FileLogin {
     File PasswordList = new File("FileManegement\\final\\src\\main\\java\\com\\comprog\\txtFile\\PasswordList.txt");
    
 
-    JFrame frame = new JFrame("Budget Planner");
+    JFrame frame = new JFrame("Login System");
     public FileLogin() {
        
 
@@ -205,7 +205,8 @@ public class FileLogin {
         
     }
     public static void main(String[] args) {
-        new FileLogin();
+       new FileLogin();
+     
     }
     
 }
