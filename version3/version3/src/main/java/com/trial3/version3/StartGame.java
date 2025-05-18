@@ -271,7 +271,7 @@ public static void renderOrdersOnScreen(Screen screen, List<FoodOrderEntry> orde
             subtotal += itemTotal;
             
             // Display item with quantity and price
-            line = String.format("  - %s x%d (₱%.2f each)", 
+            line = String.format("  - %s x%d (₱%.2f)", 
                    order.foodItems[j], order.quantities[j], price);
             drawTextOverBackground(screen, backgroundCopy, x, y + lineOffset++, line, whiteColor);
            
