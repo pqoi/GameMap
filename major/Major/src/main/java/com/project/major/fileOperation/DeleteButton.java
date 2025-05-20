@@ -23,6 +23,8 @@ public class DeleteButton extends FileOperationButton {
                 performOperation();
             }
         });
+         // ✅ Set tooltip text here
+        this.getButton().setToolTipText("Delete");
     }
 
   @Override

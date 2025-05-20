@@ -1,112 +1,83 @@
-package com.comprog.fileOperation;
+package com.project.major.fileOperation;
 
-import com.comprog.FileTreePanel;
-import com.comprog.FileTablePanel;
-import com.comprog.FileFrame;
+import com.project.major.FileFrame;
+import com.project.major.FileTablePanel;
+
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
 
 public class MoveButton extends FileOperationButton {
-    private FileTreePanel fileTreePanel;
-    private FileTablePanel fileTablePanel;
-    private JFrame directorySelectionFrame;
-
-    public MoveButton(FileTablePanel fileTablePanel) {
-        super("major\Major\src\main\resources\moveIcon.png");
-        this.fileTablePanel = fileTablePanel;
-        initializeDirectorySelectionPanel();
-    }
+    private FileFrame fileFrame;
 
     public MoveButton(FileFrame fileFrame) {
-        super("FileManegement/final/src/main/resources/moveIcon.png");
-        this.fileTablePanel = fileFrame.getTablePanel();
-        initializeDirectorySelectionPanel();
+        super("major/Major/src/main/resources/moveIcon.png");
+        this.fileFrame = fileFrame;
+
+        // Optional: Add tooltip
+        setToolTipText("Move selected file or folder");
+         // ✅ Set tooltip text here
+        this.getButton().setToolTipText("Move a file or folder");
+        // Action listener for button click
+        addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedRow = fileFrame.getTablePanel().getSelectedRow();
+                File selectedFile = null;
+                if (selectedRow >= 0) {
+                    selectedFile = (File) fileFrame.getTablePanel().getModel().getValueAt(selectedRow, 4);
+                }
+
+                if (selectedFile != null) {
+                    performMove(selectedFile);
+                } else {
+                    JOptionPane.showMessageDialog(fileFrame, "No file or folder selected.", "Error", JOptionPane.WARNING_MESSAGE);
+                }
+            }
+        });
     }
 
-    private void initializeDirectorySelectionPanel() {
-        fileTreePanel = new FileTreePanel();
-        directorySelectionFrame = new JFrame("Select Destination Folder");
-        directorySelectionFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        directorySelectionFrame.add(fileTreePanel, BorderLayout.CENTER);
-        directorySelectionFrame.setSize(400, 300);
-        directorySelectionFrame.setLocationRelativeTo(null);
+    public void setToolTipText(String text) {
+        super.getButton().setToolTipText(text);  // Correctly set tooltip on the JButton
+    }
 
-        JButton selectButton = new JButton("Select");
-        selectButton.addActionListener(e -> {
-            File selectedDirectory = fileTreePanel.getSelectedDirectory();
-            if (selectedDirectory != null) {
-                moveFile(selectedDirectory);
-            }
-            directorySelectionFrame.dispose();
-        });
-
-        JButton cancelButton = new JButton("Cancel");
-        cancelButton.addActionListener(e -> directorySelectionFrame.dispose());
-
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.add(selectButton);
-        buttonPanel.add(cancelButton);
-        directorySelectionFrame.add(buttonPanel, BorderLayout.SOUTH);
+    public void addActionListener(ActionListener listener) {
+        super.getButton().addActionListener(listener);  // Forward to internal JButton
     }
 
     @Override
     protected void performOperation() {
-        File selectedFile = fileTablePanel.getSelectedDirectory();
-        if (selectedFile != null) {
-            directorySelectionFrame.setVisible(true);
-        } else {
-            JOptionPane.showMessageDialog(null, "No file or folder selected.", "Error", JOptionPane.ERROR_MESSAGE);
+        int selectedRow = fileFrame.getTablePanel().getSelectedRow();
+        File selectedFile = null;
+        if (selectedRow >= 0) {
+            selectedFile = (File) fileFrame.getTablePanel().getModel().getValueAt(selectedRow, 4);
         }
+
+        if (selectedFile != null) {
+            performMove(selectedFile);
+        } 
     }
 
-    private void moveFile(File destination) {
-        File selectedFile = fileTablePanel.getSelectedDirectory();
-        if (selectedFile != null) {
-            SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
-                @Override
-                protected Void doInBackground() throws Exception {
-                    try {
-                        // Perform the move operation
-                        File newFile = new File(destination, selectedFile.getName());
-                        if (selectedFile.isDirectory()) {
-                            moveDirectory(selectedFile, newFile);
-                        } else {
-                            selectedFile.renameTo(newFile);
-                        }
-                    } catch (IOException ex) {
-                        JOptionPane.showMessageDialog(null, "Error moving file: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                    return null;
-                }
+    public void performMove(File sourceFile) {
+        JFileChooser chooser = new JFileChooser();
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        chooser.setDialogTitle("Select Target Directory");
+        int result = chooser.showOpenDialog(fileFrame);
 
-                @Override
-                protected void done() {
-                    // Update the file table and tree after the move operation
-                    fileTablePanel.updateTable(fileTablePanel.getCurrentDirectory());
-                    fileTreePanel.updateTree();
-                }
-            };
-            worker.execute();
-        }
-    }
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File targetDir = chooser.getSelectedFile();
+            MoveOperation moveOp = new MoveOperation(fileFrame);
+            boolean success = moveOp.moveFileOrDirectory(sourceFile, targetDir);
 
-    private void moveDirectory(File source, File destination) throws IOException {
-        if (!destination.exists()) {
-            destination.mkdir();
-        }
-        String[] files = source.list();
-        if (files != null) {
-            for (String file : files) {
-                File srcFile = new File(source, file);
-                File destFile = new File(destination, file);
-                if (srcFile.isDirectory()) {
-                    moveDirectory(srcFile, destFile);
-                } else {
-                    srcFile.renameTo(destFile);
-                }
+            if (success) {
+                JOptionPane.showMessageDialog(fileFrame, "Moved successfully.");
+                fileFrame.getTreePanel().updateTree(); // Refresh tree
+                fileFrame.getTablePanel().showFilesInDirectory(
+                    fileFrame.getTablePanel().getCurrentDirectory()
+                ); // Refresh current directory view
+            } else {
+                JOptionPane.showMessageDialog(fileFrame, "Failed to move file or folder.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }

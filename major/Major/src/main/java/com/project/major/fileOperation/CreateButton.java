@@ -14,6 +14,8 @@ public class CreateButton extends FileOperationButton {
     public CreateButton(FileFrame fileFrame) {
         super("major/Major/src/main/resources/createIcon.png");
         this.fileFrame = fileFrame;
+         // ✅ Set tooltip text here
+        this.getButton().setToolTipText("Create A File");
     }
 
     @Override
@@ -24,7 +26,7 @@ public class CreateButton extends FileOperationButton {
             return;
         }
 
-        String fileName = JOptionPane.showInputDialog("Enter the file name (default extension is .txt):");
+        String fileName = JOptionPane.showInputDialog("Enter the file name:");
         if (fileName == null || fileName.trim().isEmpty()) {
             JOptionPane.showMessageDialog(null, "File name cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
             return;

@@ -22,13 +22,34 @@ public class FileTablePanel extends JPanel{
     private SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
     private boolean actionInProgress = false;
     private File currentDirectory = null;
-    
+    private JProgressBar progressBar = new JProgressBar();
+    private JComponent progressView = null;
     private FileSystemView fileSystemView = FileSystemView.getFileSystemView();
     public FileTablePanel() {
         String[] columnNames = {"Name", "Date Modified", "Type", "Size", "FileObject"};
 
         model = new DefaultTableModel(columnNames, 0);
         table = new JTable(model);
+        // Set the background color of the table to white
+        table.setBackground(Color.WHITE);
+        table.setGridColor(Color.WHITE); // Optional: if grid lines exist
+
+        // Set the default cell renderer to white background
+        table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+                                                        boolean hasFocus, int row, int column) {
+                super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                setBackground(Color.WHITE);
+                setForeground(UIManager.getColor("Table.foreground")); // Keep default text color
+                return this;
+            }
+        });
+
+        // Set background of JScrollPane containing the table to white
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.getViewport().setBackground(Color.WHITE);
+        scrollPane.setBackground(Color.WHITE);
         table.setDefaultEditor(Object.class, null); // <-- Add this line to prevent renaming on double-click
 
         // 1. Disable table body grid lines
@@ -83,8 +104,7 @@ public class FileTablePanel extends JPanel{
         table.getColumnModel().getColumn(4).setWidth(0);
 
         setLayout(new BorderLayout());
-        add(new JScrollPane(table), BorderLayout.CENTER);
-
+       add(scrollPane, BorderLayout.CENTER);
         // Add double-click listener to open file or folder
         table.addMouseListener(new MouseAdapter() {
             @Override
@@ -102,6 +122,7 @@ public class FileTablePanel extends JPanel{
                 }
             }
         });
+        
     }
     
     public File getSelectedDirectory() {
@@ -220,6 +241,74 @@ public void updateTable(File directory) {
         });
         worker.execute();
     }
+    public void searchFiles(String searchText) {
+    DefaultTableModel model = (DefaultTableModel) table.getModel();
+    model.setRowCount(0); // Clear existing rows
 
+    if (currentDirectory == null || !currentDirectory.isDirectory()) return;
+
+    File[] files = currentDirectory.listFiles();
+    if (files == null) return;
+
+    for (File file : files) {
+        if (!file.isHidden() && (file.getName().toLowerCase().contains(searchText.toLowerCase()) || 
+                                 fileSystemView.getSystemTypeDescription(file).toLowerCase().contains(searchText.toLowerCase()))) {
+            String name = file.getName();
+            String type = fileSystemView.getSystemTypeDescription(file);
+            String size = formatSize(getFileSize(file));
+            String dateModified = dateFormat.format(new Date(file.lastModified()));
+
+            model.addRow(new Object[]{name, dateModified, type, size, file});
+        }
+    }
+}
+    public void globalSearch(String searchText) {
+        setActionInProgress(true);
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        model.setRowCount(0);
+
+        SwingWorker<Void, Void> searchWorker = new SwingWorker<>() {
+            @Override
+            protected Void doInBackground() {
+                File[] roots = File.listRoots();
+                for (File root : roots) {
+                    searchRecursively(root, searchText);
+                }
+                return null;
+            }
+
+            @Override
+            protected void done() {
+                setActionInProgress(false);
+            }
+
+            private void searchRecursively(File dir, String searchText) {
+                if (dir == null || !dir.exists() || dir.isHidden()) return;
+
+                File[] files = dir.listFiles();
+                if (files == null) return;
+
+                for (File file : files) {
+                    if (isCancelled()) return;
+
+                    if (!file.isHidden() && (file.getName().toLowerCase().contains(searchText.toLowerCase()) ||
+                            fileSystemView.getSystemTypeDescription(file).toLowerCase().contains(searchText.toLowerCase()))) {
+                        String name = file.getName();
+                        String type = fileSystemView.getSystemTypeDescription(file);
+                        String size = formatSize(getFileSize(file));
+                        String dateModified = dateFormat.format(new Date(file.lastModified()));
+
+                        SwingUtilities.invokeLater(() -> model.addRow(new Object[]{name, dateModified, type, size, file}));
+                    }
+
+                    if (file.isDirectory()) {
+                        searchRecursively(file, searchText); // Recurse
+                    }
+                }
+            }
+        };
+
+        searchWorker.execute();
+    }
 
 }

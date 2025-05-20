@@ -16,6 +16,8 @@ public class RenameButton extends FileOperationButton {
         super("major/Major/src/main/resources/renameIcon.png");
         this.tablePanel = fileFrame.getTablePanel();
         this.treePanel = fileFrame.getTreePanel();
+         // ✅ Set tooltip text here
+        this.getButton().setToolTipText("Rename");
     }
 
     @Override

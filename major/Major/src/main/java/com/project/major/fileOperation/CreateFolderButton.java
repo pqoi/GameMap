@@ -1,7 +1,7 @@
-package com.comprog.fileOperation;
+package com.project.major.fileOperation;
 
-import com.comprog.FileFrame;
-import com.comprog.FileTablePanel;
+import com.project.major.FileFrame;
+import com.project.major.FileTablePanel;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -13,42 +13,90 @@ public class CreateFolderButton extends FileOperationButton {
 
     public CreateFolderButton(FileFrame fileFrame) {
         super("major/Major/src/main/resources/createFolder.png");
-        this.fileTablePanel = fileFrame.getTablePanel(); // Ensure this is not null
+        this.fileTablePanel = fileFrame.getTablePanel();
         if (fileTablePanel == null) {
             throw new IllegalStateException("FileTablePanel is not initialized.");
         }
+         // ✅ Set tooltip text here
+        this.getButton().setToolTipText("Create A Folder");
         setActionListener();
     }
-     private void setActionListener() {
-        this.getButton().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                performOperation();
-            }
-        });
+
+   private void setActionListener() {
+    // Remove any existing listeners first
+    ActionListener[] listeners = this.getButton().getActionListeners();
+    for (ActionListener listener : listeners) {
+        this.getButton().removeActionListener(listener);
     }
+
+    // Add only one listener
+    this.getButton().addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            performOperation();
+        }
+    });
+}
+
+   private boolean isCreating = false;
 
     @Override
     protected void performOperation() {
-        if (fileTablePanel == null) {
-            JOptionPane.showMessageDialog(null, "FileTablePanel is not initialized.", "Error", JOptionPane.ERROR_MESSAGE);
+        if (isCreating) return; // Skip if already creating
+
+        isCreating = true;
+
+        File currentDirectory = fileTablePanel.getCurrentDirectory();
+        if (currentDirectory == null || !currentDirectory.isDirectory()) {
+            JOptionPane.showMessageDialog(
+                null,
+                "Cannot create folder. Invalid directory selected.",
+                "Error",
+                JOptionPane.ERROR_MESSAGE
+            );
+            isCreating = false;
             return;
         }
 
-        File selectedDirectory = fileTablePanel.getSelectedDirectory();
-        if (selectedDirectory != null && selectedDirectory.isDirectory()) {
-            String folderName = JOptionPane.showInputDialog("Enter the name for the new folder:");
-            if (folderName != null && !folderName.isEmpty()) {
-                File newFolder = new File(selectedDirectory, folderName);
-                if (newFolder.mkdir()) {
-                    JOptionPane.showMessageDialog(null, "Folder created successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                    fileTablePanel.updateTable(selectedDirectory); // Refresh the table to show the new folder
+        String folderName = JOptionPane.showInputDialog(
+            null,
+            "Enter new folder name:",
+            "Create New Folder",
+            JOptionPane.PLAIN_MESSAGE
+        );
+
+        if (folderName != null && !folderName.trim().isEmpty()) {
+            File newFolder = new File(currentDirectory, folderName.trim());
+
+            if (newFolder.exists()) {
+                JOptionPane.showMessageDialog(
+                    null,
+                    "A folder or file with that name already exists.",
+                    "Error",
+                    JOptionPane.WARNING_MESSAGE
+                );
+            } else {
+                boolean success = newFolder.mkdirs();
+
+                if (success) {
+                    JOptionPane.showMessageDialog(
+                        null,
+                        "Folder created successfully!",
+                        "Success",
+                        JOptionPane.INFORMATION_MESSAGE
+                    );
+                    fileTablePanel.updateTable(currentDirectory);
                 } else {
-                    JOptionPane.showMessageDialog(null, "Failed to create folder.", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(
+                        null,
+                        "Failed to create folder. Check permissions or path.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE
+                    );
                 }
             }
-        } else {
-            JOptionPane.showMessageDialog(null, "No directory selected. Please select a directory to create a folder.", "Error", JOptionPane.ERROR_MESSAGE);
         }
+
+        isCreating = false;
     }
 }

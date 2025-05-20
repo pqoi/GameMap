@@ -2,67 +2,118 @@ package com.project.major;
 
 import javax.swing.*;
 
-import com.project.major.fileOperation.CreateButton;
-import com.project.major.fileOperation.CreateFolderButton;
-import com.project.major.fileOperation.DeleteButton;
-import com.project.major.fileOperation.MoveButton;
-import com.project.major.fileOperation.RenameButton;
+import com.project.major.fileOperation.*;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 
-
-public class FileFrame extends FileTreePanel {
+public class FileFrame extends JFrame {
     private FileTreePanel treePanel;
     private FileTablePanel tablePanel;
+    private searchResultsPanel searchResultsPanel;
 
     public FileFrame() {
-        super(null); // Pass an appropriate FileTablePanel or required argument here
-        JFrame frame = new JFrame("File Manager");
-        frame.setSize(900, 600);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setLocationRelativeTo(null);
-        frame.setLayout(new BorderLayout());
-        // Tree and Table Panels
+        // Frame setup
+        setTitle("File Manager");
+        setSize(900, 600);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setLayout(new BorderLayout());
+
+        // Initialize panels
         tablePanel = new FileTablePanel();
         treePanel = new FileTreePanel(tablePanel);
-        // Top panel
+        searchResultsPanel = new searchResultsPanel();
+
+        // Top Panel - holds buttons and search bar
         JPanel topPanel = new JPanel(new BorderLayout());
-        JPanel searchPanel = new JPanel();
-        // Create button instances
-        CreateButton createBtn = new CreateButton(this); // Pass the FileFrame instance
-        // In FileFrame.java
-        DeleteButton deleteBtn = new DeleteButton(this); // Pass the FileFrame instance
+        topPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10)); // padding
+
+        // Button Panel - Left-aligned
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        buttonPanel.setOpaque(false);
+
+        // Create buttons
+        CreateButton createBtn = new CreateButton(this);
+        DeleteButton deleteBtn = new DeleteButton(this);
         RenameButton renameBtn = new RenameButton(this);
-        //MoveButton moveBtn = new MoveButton();
-        
-        //CreateFolderButton createFolderBtn = new CreateFolderButton();
+        MoveButton moveBtn = new MoveButton(this);
+        CreateFolderButton createFolderBtn = new CreateFolderButton(this);
+        // Add buttons to buttonPanel
+        buttonPanel.add(createBtn.getButton());
+        buttonPanel.add(deleteBtn.getButton());
+        buttonPanel.add(renameBtn.getButton());
+        buttonPanel.add(moveBtn.getButton());
+        buttonPanel.add(createFolderBtn.getButton());
 
-        // Add buttons to the searchPanel (not topPanel)
-        searchPanel.add(createBtn.getButton());
-        searchPanel.add(deleteBtn.getButton());
-        searchPanel.add(renameBtn.getButton());
-        //searchPanel.add(moveBtn.getButton());
-        //searchPanel.add(createFolderBtn.getButton());
+        // Search Panel - Right-aligned
+        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        searchPanel.setOpaque(false);
 
-        topPanel.add(searchPanel, BorderLayout.WEST);
-        
-        frame.add(topPanel, BorderLayout.NORTH);
-      
-        topPanel.add(searchPanel, BorderLayout.WEST);
-        
-        frame.add(topPanel, BorderLayout.NORTH);
+        // Search text field
+        JTextField searchBar = new JTextField("Search files or folders...");
+        searchBar.setForeground(Color.GRAY);
+        searchBar.setPreferredSize(new Dimension(200, 30));
 
-        
+        // Placeholder behavior
+        searchBar.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (searchBar.getText().equals("Search files or folders...")) {
+                    searchBar.setText("");
+                    searchBar.setForeground(Color.BLACK);
+                }
+            }
 
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (searchBar.getText().isEmpty()) {
+                    searchBar.setText("Search files or folders...");
+                    searchBar.setForeground(Color.GRAY);
+                }
+            }
+        });
+
+        // Search functionality
+        searchBar.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                String searchText = searchBar.getText();
+                if (!searchText.isEmpty() && !searchText.equals("Search files or folders...")) {
+                    tablePanel.searchFiles(searchText);
+                    searchResultsPanel.updateSearchResults(searchText);
+                } else {
+                    tablePanel.showFilesInDirectory(tablePanel.getCurrentDirectory());
+                    searchResultsPanel.clearSearchResults();
+                }
+            }
+        });
+
+        // Add search bar to searchPanel
+        searchPanel.add(searchBar);
+
+        // Add both panels to topPanel
+        topPanel.add(buttonPanel, BorderLayout.WEST);
+        topPanel.add(searchPanel, BorderLayout.EAST);
+        topPanel.add(searchResultsPanel, BorderLayout.SOUTH); // Optional: show results below
+
+        // Split pane: left = treePanel, right = tablePanel
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, treePanel, tablePanel);
-        splitPane.setDividerLocation(300);
-        frame.add(splitPane, BorderLayout.CENTER);
+        splitPane.setDividerLocation(300); // default width of the tree panel
 
-       
+        // Add everything to frame
+        add(topPanel, BorderLayout.NORTH);
+        add(splitPane, BorderLayout.CENTER);
 
-        frame.setVisible(true);
+        // Show initial directory
+        File desktop = new File(System.getProperty("user.home"), "Desktop");
+        if (desktop.exists()) {
+            tablePanel.showFilesInDirectory(desktop);
+        }
+
+        // Make visible
+        setVisible(true);
     }
 
     public FileTreePanel getTreePanel() {
@@ -72,8 +123,9 @@ public class FileFrame extends FileTreePanel {
     public FileTablePanel getTablePanel() {
         return tablePanel;
     }
+     
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(FileFrame::new);
+        SwingUtilities.invokeLater(() -> new FileFrame());
     }
 }
