@@ -52,7 +52,7 @@ public class FileFrame extends JFrame {
         searchPanel.setOpaque(false);
 
         // Search text field
-        JTextField searchBar = new JTextField("Search files or folders...");
+        JTextField searchBar = new JTextField("Search...");
         searchBar.setForeground(Color.GRAY);
         searchBar.setPreferredSize(new Dimension(200, 30));
 
@@ -60,7 +60,7 @@ public class FileFrame extends JFrame {
         searchBar.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
-                if (searchBar.getText().equals("Search files or folders...")) {
+                if (searchBar.getText().equals("Search...")) {
                     searchBar.setText("");
                     searchBar.setForeground(Color.BLACK);
                 }
@@ -69,7 +69,7 @@ public class FileFrame extends JFrame {
             @Override
             public void focusLost(FocusEvent e) {
                 if (searchBar.getText().isEmpty()) {
-                    searchBar.setText("Search files or folders...");
+                    searchBar.setText("Searchs...");
                     searchBar.setForeground(Color.GRAY);
                 }
             }
@@ -80,7 +80,7 @@ public class FileFrame extends JFrame {
             @Override
             public void keyReleased(KeyEvent e) {
                 String searchText = searchBar.getText();
-                if (!searchText.isEmpty() && !searchText.equals("Search files or folders...")) {
+                if (!searchText.isEmpty() && !searchText.equals("Search...")) {
                     tablePanel.searchFiles(searchText);
                     searchResultsPanel.updateSearchResults(searchText);
                 } else {
